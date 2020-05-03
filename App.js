@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import send from './utils/net';
 
 const Stack = createStackNavigator();
-const backend = 'http://127.0.0.1:8000/';
 const sample = {
 	birthday: "2000-01-01",
 	first_name: "Иван",
@@ -21,173 +21,77 @@ function AuthScreen({navigation}) {
 		);
 	}
 
-class PhoneScreen extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: ''
-		}
-		this.onChange = this.onChange.bind(this);
-		this.send = this.send.bind(this);
-	}
+function PhoneScreen({navigation}) {
+	const [value, setValue] = useState('');
+	const navigate = json => {
+		navigation.navigate('Code', {phone: value, isExisting: json.isExisting});
+	};
+	const press = () => {
+		send('api/user/auth', 'POST', {phone: value}, navigate);
+	};
 
-	render() {
-		return (
-			<View style={styles.container}>
-				<TextInput value={this.state.value} onChange={this.onChange}  style={styles.phone} keyboardType='phone-pad'></TextInput>
-				<TouchableOpacity style={styles.authButton} onPress={this.send}>
-					<Text>Отправить код</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
-
-	onChange(event) {
-		let text = event.target.value;
-		this.setState({
-			value: text
-		});
-	}
-
-	send() {
-		fetch(backend + 'api/user/auth', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				phone: this.state.value,
-			})
-		})
-		.then((response) => {
-			return response.json();
-		})
-		.then((json) => {
-			console.log(json);
-			const { navigation } = this.props;
-			navigation.navigate('Code', {phone: this.state.value, isExisting: json.isExisting});
-		})
-		.catch((error) => {
-		  	console.error(error);
-		})
-	}
+	return (
+		<View style={styles.container}>
+			<TextInput value={value} onChange={() => setValue(event.target.value)}  style={styles.phone} keyboardType='phone-pad'></TextInput>
+			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
+				<Text>Отправить код</Text>
+			</TouchableOpacity>
+		</View>
+	);
 }
 
-class CodeScreen extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: '',
-			wrong: false,
-		}
-		this.onChange = this.onChange.bind(this);
-		this.send = this.send.bind(this);
-	}
-
-	render() {
-		let mes = <Text>Неверный код</Text>;
-		let err = this.state.wrong ? mes : null;
-		return (
-			<View style={styles.container}>
-				<TextInput value={this.state.value} onChange={this.onChange}  style={styles.phone} keyboardType='phone-pad'></TextInput>
-				{err}
-				<TouchableOpacity style={styles.authButton} onPress={this.send}>
-					<Text>Отправить код</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
-
-	onChange(event) {
-		let text = event.target.value;
-		this.setState({
-			value: text
-		});
-	}
-
-	send() {
-		const { route, navigation } = this.props;
-		let { phone, isExisting } = route.params; 
-		console.log(phone);
-		fetch(backend + 'api/user/verify', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				phone: phone,
-				code: this.state.value
-			})
-		})
-		.then((response) => {
-			return response.json();
-		})
-		.then((json) => {
-			console.log(json);
-			let valid = json.isValid === "true";
-			let exist = isExisting === "true";
-			if(!valid) {
-				this.setState({
-					wrong: true
-				});
-			} else if(!exist) {
-				navigation.navigate('Register', {code: this.state.value, phone: phone});
-			} else {
-				navigation.navigate('Catalog');
-			}
-		})
-		.catch((error) => {
-		  	console.error(error);
-		})
-	}
-}
-
-class RegisterScreen extends React.Component {
-	constructor(props) {
-		super(props);
-		this.send = this.send.bind(this);
-	}
-
-	render() {
-		return (
-			<View style={styles.container}>
-				<TouchableOpacity style={styles.authButton} onPress={this.send}>
-					<Text>Подтвердить возраст</Text>
-				</TouchableOpacity>
-			</View>
-		);
-	}
-
-	send() {
-		const { route, navigation } = this.props;
-		let { phone, code } = route.params; 
-		let data = sample;
-		data.phone = phone;
-		data.username = phone;
-		data.password = code;
-		data.code = code;
-		console.log(data);
-		fetch(backend + 'api/user/create', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data)
-		})
-		.then((response) => {
-			return response.json();
-		})
-		.then((json) => {
-			console.log(json);
+function CodeScreen({navigation}) {
+	const route = useRoute();
+	const {phone, isExisting} = route.params;
+	const [value, setValue] = useState('');
+	const [wrong, setWrong] = useState(false);
+	const navigate = json => {
+		const valid = json.isValid === "true";
+		const exist = isExisting === "true";
+		if(!valid) {
+			setWrong(true);
+		} else if(!exist) {
+			navigation.navigate('Register', {code: value, phone: phone});
+		} else {
 			navigation.navigate('Catalog');
-		})
-		.catch((error) => {
-		  	console.error(error);
-		})
-	}
+		}
+	};
+	const press = () => {
+		send('api/user/verify', 'POST', {phone: phone, code: value}, navigate);
+	};
+	const mes = <Text>Неверный код</Text>;
+	let err = wrong ? mes : null;
+	return (
+		<View style={styles.container}>
+			<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad'></TextInput>
+			{err}
+			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
+				<Text>Отправить код</Text>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
+function RegisterScreen({navigation}) {
+	const route = useRoute();
+	let { phone, code } = route.params; 
+	let data = sample;
+	data.phone = phone;
+	data.username = phone;
+	data.password = code;
+	const navigate = json => {
+		navigation.navigate('Catalog');
+	};
+	const press = () => {
+		send('api/user/create', 'POST', data, navigate);
+	};
+	return (
+		<View style={styles.container}>
+			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
+				<Text>Подтвердить возраст</Text>
+			</TouchableOpacity>
+		</View>
+	);
 }
 
 export default function App() {
