@@ -1,14 +1,21 @@
 const backend = 'http://127.0.0.1:8000/';
 
-function send(url, method, data, callback) {
-    fetch(backend + url, {
+function send(url, method, data, callback, token='') {
+    let headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    };
+    if (token !== '') {
+        headers['Authorization'] = token;
+    }
+    let forFetch = {
         method: method,
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
+        headers: headers
+    };
+    if(method === 'POST') {
+        forFetch.body = JSON.stringify(data);
+    }  
+    fetch(backend + url, forFetch)
     .then((response) => {
         return response.json();
     })

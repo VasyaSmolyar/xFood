@@ -2,7 +2,11 @@ import React, {useState} from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import { createStore, combineReducers } from 'redux';
+import { Provider, useSelector, useDispatch } from 'react-redux';
 import send from './utils/net';
+import { tokenReducer, setToken } from './utils/store';
+import CatalogScreen from './Catalog';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -45,6 +49,7 @@ function CodeScreen({navigation}) {
 	const {phone, isExisting} = route.params;
 	const [value, setValue] = useState('');
 	const [wrong, setWrong] = useState(false);
+	const dispath = useDispatch();
 	const navigate = json => {
 		const valid = json.isValid === "true";
 		const exist = isExisting === "true";
@@ -54,6 +59,7 @@ function CodeScreen({navigation}) {
 			navigation.navigate('Register', {code: value, phone: phone});
 		} else {
 			navigation.navigate('Catalog');
+			dispath(setToken(json.token));
 		}
 	};
 	const press = () => {
@@ -75,11 +81,14 @@ function CodeScreen({navigation}) {
 function RegisterScreen({navigation}) {
 	const route = useRoute();
 	let { phone, code } = route.params; 
+	const dispath = useDispatch();
 	let data = sample;
 	data.phone = phone;
 	data.username = phone;
 	data.password = code;
+	data.code = code;
 	const navigate = json => {
+		dispath(setToken(json.token));
 		navigation.navigate('Catalog');
 	};
 	const press = () => {
@@ -94,16 +103,25 @@ function RegisterScreen({navigation}) {
 	);
 }
 
+const rootReducer = combineReducers({
+	token: tokenReducer
+});
+
+const store = createStore(rootReducer);
+
 export default function App() {
     return (
-		<NavigationContainer>
-			<Stack.Navigator>
-				<Stack.Screen name="Welcome" component={AuthScreen} />
-				<Stack.Screen name="Phone" component={PhoneScreen} />
-				<Stack.Screen name="Code" component={CodeScreen} />
-				<Stack.Screen name="Register" component={RegisterScreen} />
-			</Stack.Navigator>
-	  	</NavigationContainer>
+		<Provider store={store}>
+			<NavigationContainer>
+				<Stack.Navigator>
+					<Stack.Screen name="Welcome" component={AuthScreen} />
+					<Stack.Screen name="Phone" component={PhoneScreen} />
+					<Stack.Screen name="Code" component={CodeScreen} />
+					<Stack.Screen name="Register" component={RegisterScreen} />
+					<Stack.Screen name="Catalog" component={CatalogScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</Provider>  
     );
 }
 
