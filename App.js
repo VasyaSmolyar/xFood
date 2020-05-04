@@ -6,7 +6,7 @@ import { createStore, combineReducers } from 'redux';
 import { Provider, useSelector, useDispatch } from 'react-redux';
 import send from './utils/net';
 import { tokenReducer, setToken } from './utils/store';
-import CatalogScreen from './Catalog';
+import { CatalogScreen, ProductScreen} from './Catalog';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -119,6 +119,7 @@ export default function App() {
 					<Stack.Screen name="Code" component={CodeScreen} />
 					<Stack.Screen name="Register" component={RegisterScreen} />
 					<Stack.Screen name="Catalog" component={CatalogScreen} />
+					<Stack.Screen name="Products" component={ProductScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  
