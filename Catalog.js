@@ -65,20 +65,32 @@ export function ProductScreen(props) {
     const { title } = route.params;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
+    const [offset, setOffset] = useState(0);
+    const num = 3;
+
+    const upload = () => {
+        setOffset(offset + num);
+        setLoaded(false);
+    }
+
     const load = (json) => {
         setLoaded(true);
-        setData(json);
+        if(load.details !== undefined) {
+            return;
+        }
+        setData([...data,...json]);
     };
+
     useEffect(() => {
         if(!isLoaded) {
             const value = title === "Все категории" ? "all" : title;
-            send('api/catalog/getbycategory', 'GET', {title: value, offset: 0, num: 5}, load, token);
+            send('api/catalog/getbycategory', 'GET', {title: value, offset: offset, num: num}, load, token);
         }
     });
 
     return (
         <View>
-            <FlatList keyExtractor={(item, index) => item.title} data={data} renderItem={(item) => <Text>{item.item.title}</Text>}/>
+            <FlatList style={{height:50}} onEndReachedThreshold={0.05} onEndReached={upload} keyExtractor={(item, index) => item.title} data={data} renderItem={(item) => <Text>{item.item.title}</Text>}/>
         </View>
     );
 }
