@@ -14,7 +14,11 @@ function send(url, method, data, callback, token='') {
     };
     if(method === 'POST') {
         forFetch.body = JSON.stringify(data);
-    }  
+    } else {
+        url = Object.keys(data).reduce((str, param) => {
+            return str + param + "=" + data[param] + "&";
+        }, url + "?");
+    }
     fetch(backend + url, forFetch)
     .then((response) => {
         return response.json();

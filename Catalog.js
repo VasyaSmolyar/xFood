@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
 
 function Category(props) {
     const navigation = useNavigation();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('Products', {id: props.catId})}>
+        <TouchableOpacity onPress={() => navigation.navigate('Products', {title: props.title})}>
             <Text>{props.title}</Text>
         </TouchableOpacity>
     )
@@ -34,8 +34,8 @@ export function CatalogScreen(props) {
     });
     return (
         <View style={styles.container}>
-            <Category catId={0} title="Все категории"/>
-            <FlatList keyExtractor={(item, index) => item.key.toString()} data={data} renderItem={(item) => <Category catId={item.item.key} title={item.item.title}/>}/>
+            <Category title="Все категории"/>
+            <FlatList keyExtractor={(item, index) => item.key.toString()} data={data} renderItem={(item) => <Category title={item.item.title}/>}/>
         </View>
     );
 }
@@ -60,7 +60,25 @@ const styles = StyleSheet.create({
 });
 
 export function ProductScreen(props) {
-    return <View>
-        <Text>Products here</Text>
-    </View>
+    const token = useSelector(state => state.token.value);
+    const route = useRoute();
+    const { title } = route.params;
+    const [data, setData] = useState([]);
+    const [isLoaded, setLoaded] = useState(false);
+    const load = (json) => {
+        setLoaded(true);
+        setData(json);
+    };
+    useEffect(() => {
+        if(!isLoaded) {
+            const value = title === "Все категории" ? "all" : title;
+            send('api/catalog/getbycategory', 'GET', {title: value, offset: 0, num: 5}, load, token);
+        }
+    });
+
+    return (
+        <View>
+            <FlatList keyExtractor={(item, index) => item.title} data={data} renderItem={(item) => <Text>{item.item.title}</Text>}/>
+        </View>
+    );
 }
