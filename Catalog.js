@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
+import { addItem, removeItem } from './utils/store';
 
 function Category(props) {
     const navigation = useNavigation();
@@ -27,11 +28,13 @@ export function CatalogScreen(props) {
         });
         setData(list);
     };
+
     useEffect(() => {
         if(!isLoaded) {
             send('api/category/get', 'GET', {}, load, token);
         }
     });
+
     return (
         <View style={styles.container}>
             <Category title="Все категории"/>
@@ -59,9 +62,10 @@ const styles = StyleSheet.create({
 	}
 });
 
-export function ProductScreen(props) {
+export function ProductScreen({navigation}) {
     const token = useSelector(state => state.token.value);
     const route = useRoute();
+    const dispath = useDispatch();
     const { title } = route.params;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
@@ -81,6 +85,11 @@ export function ProductScreen(props) {
         setData([...data,...json]);
     };
 
+    const addToCart = (item) => {
+        dispath(addItem(item));
+        navigation.navigate('Cart');
+    }
+
     useEffect(() => {
         if(!isLoaded) {
             const value = title === "Все категории" ? "all" : title;
@@ -90,7 +99,14 @@ export function ProductScreen(props) {
 
     return (
         <View>
-            <FlatList style={{height:50}} onEndReachedThreshold={0.05} onEndReached={upload} keyExtractor={(item, index) => item.title} data={data} renderItem={(item) => <Text>{item.item.title}</Text>}/>
+            <FlatList style={{height:50}} onEndReachedThreshold={0.05} onEndReached={upload} keyExtractor={(item, index) => item.title} data={data} renderItem={
+                (item) => (
+                    <View>
+                        <Text>{item.item.title}</Text>
+                        <Button title="Добавить" onPress={() => addToCart(item.item)} />
+                    </View>
+                )
+            }/>
         </View>
     );
 }

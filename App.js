@@ -3,10 +3,11 @@ import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
 import { createStore, combineReducers } from 'redux';
-import { Provider, useSelector, useDispatch } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import send from './utils/net';
-import { tokenReducer, setToken } from './utils/store';
+import { tokenReducer, setToken, cartReducer } from './utils/store';
 import { CatalogScreen, ProductScreen} from './Catalog';
+import CartScreen from './Cart';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -104,7 +105,8 @@ function RegisterScreen({navigation}) {
 }
 
 const rootReducer = combineReducers({
-	token: tokenReducer
+	token: tokenReducer,
+	cart: cartReducer
 });
 
 const store = createStore(rootReducer);
@@ -120,6 +122,7 @@ export default function App() {
 					<Stack.Screen name="Register" component={RegisterScreen} />
 					<Stack.Screen name="Catalog" component={CatalogScreen} />
 					<Stack.Screen name="Products" component={ProductScreen} />
+					<Stack.Screen name="Cart" component={CartScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  
