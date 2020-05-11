@@ -11,7 +11,7 @@ export const addItem = (item) => {
 } 
 
 export const removeItem = (item) => {
-    return {type: REMOVE_ITEM, id: item, count: 1 };
+    return {type: REMOVE_ITEM, item: item, count: 1 };
 } 
 
 const initialState = {
@@ -50,10 +50,10 @@ export const cartReducer = (state = initialCart, action) => {
             items = state.items;
             if(items.some((item) => {
                 pos++;
-                return action.id === item.id;
+                return action.item.id === item.item.id;
             })) {
                 if(items[pos].count === 1) {
-                    items.splice(index, 1);
+                    items.splice(pos, 1);
                 } else {
                     items[pos].count = items[pos].count - 1;
                 }

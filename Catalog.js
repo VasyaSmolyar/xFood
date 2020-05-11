@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'reac
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
-import { addItem, removeItem } from './utils/store';
+import { addItem } from './utils/store';
 
 function Category(props) {
     const navigation = useNavigation();
