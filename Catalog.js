@@ -87,6 +87,7 @@ export function ProductScreen({navigation}) {
 
     const addToCart = (item) => {
         dispath(addItem(item));
+        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
         navigation.navigate('Cart');
     }
 

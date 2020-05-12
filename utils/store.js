@@ -1,6 +1,7 @@
 const SET_TOKEN = "SET_TOKEN";
 const ADD_ITEM = "ADD_ITEM";
 const REMOVE_ITEM = "REMOVE_ITEM";
+const LOAD_CART = "LOAD_CART";
 
 export const setToken = (value) => {
     return {type: SET_TOKEN, value: value}
@@ -12,6 +13,10 @@ export const addItem = (item) => {
 
 export const removeItem = (item) => {
     return {type: REMOVE_ITEM, item: item, count: 1 };
+} 
+
+export const loadCart = (items) => {
+    return {type: LOAD_CART, items: items };
 } 
 
 const initialState = {
@@ -59,6 +64,8 @@ export const cartReducer = (state = initialCart, action) => {
                 }
             }
             return {...state, items: items};
+        case LOAD_CART:
+            return {...state, items: action.items};
         default:
             return state;
     }
