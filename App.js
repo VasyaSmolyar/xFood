@@ -1,13 +1,19 @@
 import React, {useState} from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
+import * as Font from 'expo-font';
+import { useFonts } from '@use-expo/font';
+import { AppLoading } from 'expo';
 import send from './utils/net';
 import { tokenReducer, setToken, cartReducer } from './utils/store';
-import { CatalogScreen, ProductScreen} from './Catalog';
+import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
+import background from './files/background.png';
+import logo from './files/logo.png';
+import tahoma from './files/tahoma.ttf';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -19,9 +25,14 @@ const sample = {
 function AuthScreen({navigation}) {
 	return (
 		<View style={styles.container}>
-			<TouchableOpacity style={styles.authButton} onPress={() => navigation.navigate('Phone')}>
-				<Text>Авторизация</Text>
-			</TouchableOpacity>
+			<ImageBackground source={background} style={styles.backContainer}>
+				<View style={styles.opac}>
+				</View>
+				<Image source={logo} style={{width: '50%', height: '15%', resizeMode: 'contain'}}/>
+				<TouchableOpacity style={styles.authButton} onPress={() => navigation.navigate('Phone')}>
+					<Text style={styles.text}>Авторизация</Text>
+				</TouchableOpacity>
+			</ImageBackground>
 		</View>
 		);
 	}
@@ -39,7 +50,7 @@ function PhoneScreen({navigation}) {
 		<View style={styles.container}>
 			<TextInput value={value} onChange={() => setValue(event.target.value)}  style={styles.phone} keyboardType='phone-pad'></TextInput>
 			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-				<Text>Отправить код</Text>
+				<Text style={{fontFamily: 'Tahoma-Regular'}} >Отправить код</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -73,7 +84,7 @@ function CodeScreen({navigation}) {
 			<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad'></TextInput>
 			{err}
 			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-				<Text>Отправить код</Text>
+				<Text style={{fontFamily: 'Tahoma-Regular'}}>Отправить код</Text>
 			</TouchableOpacity>
 		</View>
 	);
@@ -112,10 +123,19 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer);
 
 export default function App() {
+	//const [fontLoad, setFondLoad] = useState(false);
+	const fontLoad = useFonts({
+		'Tahoma-Regular': tahoma
+	});
+
+	if(!fontLoad) {
+		return <AppLoading />
+	}
+
     return (
 		<Provider store={store}>
 			<NavigationContainer>
-				<Stack.Navigator>
+				<Stack.Navigator screenOptions={{headerShown: false}}>
 					<Stack.Screen name="Welcome" component={AuthScreen} />
 					<Stack.Screen name="Phone" component={PhoneScreen} />
 					<Stack.Screen name="Code" component={CodeScreen} />
@@ -132,18 +152,34 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+	},
+	backContainer: {
+		flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
 	},
 	authButton: {
 		alignItems: "center",
-		backgroundColor: "#DDDDDD",
-		padding: 10
+		backgroundColor: "#fff",
+		width: '75%',
+		padding: 10,
+		borderRadius: 5,
 	},
 	phone: {
 		height: 40, 
 		borderColor: 'gray', 
 		borderWidth: 1
+	},
+	text: {
+		fontFamily: 'Tahoma-Regular',
+		fontSize: 20
+	},
+	opac: {
+		position: 'absolute',
+		top: 0,
+  		bottom: 0,
+  		left: 0,
+  		right: 0,
+		backgroundColor: 'rgba(52, 52, 52, 0.5)'
 	}
 });
