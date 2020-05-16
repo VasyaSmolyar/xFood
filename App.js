@@ -47,11 +47,16 @@ function PhoneScreen({navigation}) {
 	};
 
 	return (
-		<View style={styles.container}>
-			<TextInput value={value} onChange={() => setValue(event.target.value)}  style={styles.phone} keyboardType='phone-pad'></TextInput>
-			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-				<Text style={{fontFamily: 'Tahoma-Regular'}} >Отправить код</Text>
-			</TouchableOpacity>
+		<View style={styles.backContainer}>
+			<View style={{flex: 1, backgroundColor: 'white'}}>
+			</View>
+			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
+				<Text style={styles.header} >Регистрация или вход</Text>
+				<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {10} style={styles.phone} keyboardType='phone-pad' />
+				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
+					<Text style={styles.phoneText} >Отправить код</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -81,11 +86,15 @@ function CodeScreen({navigation}) {
 	let err = wrong ? mes : null;
 	return (
 		<View style={styles.container}>
-			<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad'></TextInput>
-			{err}
-			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-				<Text style={{fontFamily: 'Tahoma-Regular'}}>Отправить код</Text>
-			</TouchableOpacity>
+			<View style={{flex: 1}}>
+			</View>
+			<View style={{flex: 3}}>
+				<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad'></TextInput>
+				{err}
+				<TouchableOpacity style={styles.authButton} onPress={() => press()}>
+					<Text style={{fontFamily: 'Tahoma-Regular'}}>Отправить код</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -156,7 +165,12 @@ const styles = StyleSheet.create({
 	backContainer: {
 		flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-around',
+		justifyContent: 'space-around',
+		backgroundColor: 'white'
+	},
+	phoneContainer: {
+		flex: 1,
+		alignItems: 'center'
 	},
 	authButton: {
 		alignItems: "center",
@@ -166,9 +180,12 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 	phone: {
-		height: 40, 
-		borderColor: 'gray', 
-		borderWidth: 1
+		width: '75%',
+		backgroundColor: '#f2f3f5', 
+		padding: 5,
+		marginBottom: 30,
+		fontSize: 25,
+		borderRadius: 7
 	},
 	text: {
 		fontFamily: 'Tahoma-Regular',
@@ -181,5 +198,24 @@ const styles = StyleSheet.create({
   		left: 0,
   		right: 0,
 		backgroundColor: 'rgba(52, 52, 52, 0.5)'
+	},
+	header: {
+		fontFamily: 'Tahoma-Regular',
+		fontSize: 30,
+		marginBottom: 40
+	},
+	phoneButton: {
+		backgroundColor: '#f1c40f',
+		textAlign: 'center',
+		paddingVertical: 10,
+		marginHorizontal: 5,
+		borderRadius: 7,
+		width: '75%',
+		
+	},
+	phoneText: {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 18, 
+		color: 'white'
 	}
 });
