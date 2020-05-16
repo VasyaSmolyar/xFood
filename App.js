@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
-import * as Font from 'expo-font';
 import { useFonts } from '@use-expo/font';
 import { AppLoading } from 'expo';
 import send from './utils/net';
@@ -52,7 +51,7 @@ function PhoneScreen({navigation}) {
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
 				<Text style={styles.header} >Регистрация или вход</Text>
-				<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {10} style={styles.phone} keyboardType='phone-pad' />
+				<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {12} style={styles.phone} keyboardType='phone-pad' />
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<Text style={styles.phoneText} >Отправить код</Text>
 				</TouchableOpacity>
@@ -85,14 +84,15 @@ function CodeScreen({navigation}) {
 	const mes = <Text>Неверный код</Text>;
 	let err = wrong ? mes : null;
 	return (
-		<View style={styles.container}>
-			<View style={{flex: 1}}>
+		<View style={styles.backContainer}>
+			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
-			<View style={{flex: 3}}>
-				<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad'></TextInput>
+			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
+			<Text style={styles.header}>Ввод кода</Text>
+				<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad' />
 				{err}
-				<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-					<Text style={{fontFamily: 'Tahoma-Regular'}}>Отправить код</Text>
+				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
+					<Text style={styles.phoneText}>Отправить код</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -116,10 +116,23 @@ function RegisterScreen({navigation}) {
 		send('api/user/create', 'POST', data, navigate);
 	};
 	return (
-		<View style={styles.container}>
-			<TouchableOpacity style={styles.authButton} onPress={() => press()}>
-				<Text>Подтвердить возраст</Text>
-			</TouchableOpacity>
+		<View style={styles.backContainer}>
+			<View style={{height: '10%', width: '100%'}}>
+			</View>
+			<View style={{height: '30%', width: '100%', alignItems: 'center', backgroundColor: 'white', alignItems: 'center'}}>
+				<Text style={styles.header}>Регистрация или вход</Text>
+				<Text style={{marginHorizontal: 15, textAlign: "center", fontFamily: 'Tahoma-Regular'}}>Минздрав предупреждает: употребление алкогольной продукции несовершеннолетними вредит здоровью</Text>
+			</View>
+			<View style={{height: '15%', width: '100%'}}>
+			</View>
+			<View style={{height: '30%', width: '100%',alignItems: 'center', backgroundColor: 'white', alignItems: 'center'}}>
+				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#08a652'}]} onPress={() => press()}>
+					<Text style={styles.phoneText}>Войти по Сбербанк ID</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#0063ad'}]} onPress={() => press()}>
+					<Text style={styles.phoneText}>Войти через ЕСИА</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -217,5 +230,14 @@ const styles = StyleSheet.create({
 		fontFamily: 'Tahoma-Regular', 
 		fontSize: 18, 
 		color: 'white'
+	},
+	confirmButtom: {
+		backgroundColor: '#f1c40f',
+		textAlign: 'center',
+		paddingVertical: 10,
+		marginHorizontal: 5,
+		borderRadius: 7,
+		width: '90%',
+		marginBottom: 10
 	}
 });
