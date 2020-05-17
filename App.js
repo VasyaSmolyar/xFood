@@ -51,7 +51,11 @@ function PhoneScreen({navigation}) {
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
 				<Text style={styles.header} >Регистрация или вход</Text>
-				<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {12} style={styles.phone} keyboardType='phone-pad' />
+				<View style={styles.inputWrap}>
+					<Text style={styles.inputWrapText}>Номер телефона</Text>
+					<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {12} 
+					style={styles.phone} keyboardType='phone-pad' />
+				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<Text style={styles.phoneText} >Отправить код</Text>
 				</TouchableOpacity>
@@ -193,12 +197,8 @@ const styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 	phone: {
-		width: '75%',
 		backgroundColor: '#f2f3f5', 
-		padding: 5,
-		marginBottom: 30,
 		fontSize: 25,
-		borderRadius: 7
 	},
 	text: {
 		fontFamily: 'Tahoma-Regular',
@@ -239,5 +239,18 @@ const styles = StyleSheet.create({
 		borderRadius: 7,
 		width: '90%',
 		marginBottom: 10
+	},
+	inputWrap: {
+		padding: 5,
+		backgroundColor: "#f2f3f5",
+		marginBottom: 30,
+		borderRadius: 7,
+		width: '75%',
+	},
+	inputWrapText: {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 10,
+		color: '#a7aaaf',
+		textAlignVertical: 'center'
 	}
 });
