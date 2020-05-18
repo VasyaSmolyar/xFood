@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
@@ -8,8 +8,9 @@ import { addItem } from './utils/store';
 function Category(props) {
     const navigation = useNavigation();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('Products', {title: props.title})}>
-            <Text>{props.title}</Text>
+        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title})}>
+            <Text style={styles.catText}>{props.title}</Text>
+            <Image source={{uri: props.image}} resizeMode={'contain'} style={styles.catImage} />
         </TouchableOpacity>
     )
 }
@@ -23,7 +24,8 @@ export function CatalogScreen(props) {
         const list = json.map((item) => {
             return {
                 key: item.id,
-                title: item.title 
+                title: item.title,
+                poster_url: item.poster_url 
             };
         });
         setData(list);
@@ -38,29 +40,13 @@ export function CatalogScreen(props) {
     return (
         <View style={styles.container}>
             <Category title="Все категории"/>
-            <FlatList keyExtractor={(item, index) => item.key.toString()} data={data} renderItem={(item) => <Category title={item.item.title}/>}/>
+            <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
+            keyExtractor={(item, index) => item.key.toString()} data={data} 
+            contentContainerStyle={styles.catList} renderItem={(item) => 
+            <Category title={item.item.title} image={item.item.poster_url} />}/>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-	},
-	authButton: {
-		alignItems: "center",
-		backgroundColor: "#DDDDDD",
-		padding: 10
-	},
-	phone: {
-		height: 40, 
-		borderColor: 'gray', 
-		borderWidth: 1
-	}
-});
 
 export function ProductScreen({navigation}) {
     const token = useSelector(state => state.token.value);
@@ -100,8 +86,9 @@ export function ProductScreen({navigation}) {
 
     return (
         <View>
-            <FlatList style={{height:50}} onEndReachedThreshold={0.05} onEndReached={upload} keyExtractor={(item, index) => item.title} data={data} renderItem={
-                (item) => (
+            <FlatList style={styles.item} onEndReachedThreshold={0.05} 
+            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data}  renderItem={
+              (item) => (
                     <View>
                         <Text>{item.item.title}</Text>
                         <Button title="Добавить" onPress={() => addToCart(item.item)} />
@@ -110,4 +97,48 @@ export function ProductScreen({navigation}) {
             }/>
         </View>
     );
+
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+	},
+	authButton: {
+		alignItems: "center",
+		backgroundColor: "#DDDDDD",
+		padding: 10
+	},
+	phone: {
+		height: 40, 
+		borderColor: 'gray', 
+		borderWidth: 1
+    },
+    category: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        width: '40%'
+    },
+    catImage: {
+        width: 75,
+        height: 75
+    },
+    catText: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 16,
+        marginRight: 5,
+        maxWidth: 100
+    },
+    catList: {
+        
+    },
+    oneRow: {
+        flex: 1,
+        justifyContent: "space-around"
+    } 
+});
