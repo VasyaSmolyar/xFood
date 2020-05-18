@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image } from 'react-native';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
-import { useFonts } from '@use-expo/font';
+import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import send from './utils/net';
 import { tokenReducer, setToken, cartReducer } from './utils/store';
@@ -12,7 +12,6 @@ import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
 import background from './files/background.png';
 import logo from './files/logo.png';
-import tahoma from './files/tahoma.ttf';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -53,7 +52,7 @@ function PhoneScreen({navigation}) {
 				<Text style={styles.header} >Регистрация или вход</Text>
 				<View style={styles.inputWrap}>
 					<Text style={styles.inputWrapText}>Номер телефона</Text>
-					<TextInput value={value} onChange={() => setValue(event.target.value)} maxLength = {12} 
+					<TextInput value={value} onChange={() => setValue({value})} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
@@ -146,6 +145,10 @@ function RegisterScreen({navigation}) {
 	);
 }
 
+let customFonts = {
+	'Tahoma-Regular': require('./assets/fonts/tahoma.ttf'),
+};
+
 const rootReducer = combineReducers({
 	token: tokenReducer,
 	cart: cartReducer
@@ -153,16 +156,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer);
 
-export default function App() {
-	//const [fontLoad, setFondLoad] = useState(false);
-	const fontLoad = useFonts({
-		'Tahoma-Regular': tahoma
-	});
-
-	if(!fontLoad) {
-		return <AppLoading />
-	}
-
+function AppFunc() {
     return (
 		<Provider store={store}>
 			<NavigationContainer>
@@ -178,6 +172,31 @@ export default function App() {
 			</NavigationContainer>
 		</Provider>  
     );
+}
+
+export default class App extends React.Component {
+	state = {
+	  fontsLoaded: false,
+	};
+  
+	async _loadFontsAsync() {
+	  await Font.loadAsync(customFonts);
+	  this.setState({ fontsLoaded: true });
+	}
+  
+	componentDidMount() {
+	  this._loadFontsAsync();
+	}
+  
+	render() {
+	  if (this.state.fontsLoaded) {
+		return (
+		  <AppFunc />
+		);
+	  } else {
+		return <AppLoading />;
+	  }
+	}
 }
 
 const styles = StyleSheet.create({
