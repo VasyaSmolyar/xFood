@@ -85,7 +85,7 @@ function CodeScreen({navigation}) {
 	const press = () => {
 		send('api/user/verify', 'POST', {phone: phone, code: value}, navigate);
 	};
-	const mes = <Text>Неверный код</Text>;
+	const mes = <Text style={styles.error}>Неверный код</Text>;
 	let err = wrong ? mes : null;
 	return (
 		<View style={styles.backContainer}>
@@ -93,7 +93,7 @@ function CodeScreen({navigation}) {
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
 			<Text style={styles.header}>Ввод кода</Text>
-				<TextInput value={value} onChange={() => setValue(event.target.value)} style={styles.phone} keyboardType='phone-pad' />
+				<TextInput value={value} onChange={() => setValue(event.target.value)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
 				{err}
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<Text style={styles.phoneText}>Отправить код</Text>
@@ -133,6 +133,11 @@ function RegisterScreen({navigation}) {
 				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#08a652'}]} onPress={() => press()}>
 					<Text style={styles.phoneText}>Войти по Сбербанк ID</Text>
 				</TouchableOpacity>
+				<View style={styles.orContainer}>
+					<View style={styles.orView}></View>
+					<Text style={styles.orText}>или</Text>
+					<View style={styles.orView}></View>
+				</View>
 				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#0063ad'}]} onPress={() => press()}>
 					<Text style={styles.phoneText}>Войти через ЕСИА</Text>
 				</TouchableOpacity>
@@ -252,5 +257,34 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 		color: '#a7aaaf',
 		textAlignVertical: 'center'
-	}
+	},
+	orText : {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 14,
+		color: '#a7aaaf',
+		textAlignVertical: 'center'
+	},
+	orView: {
+		height: 2,
+		width: '37%',
+		backgroundColor: '#a7aaaf',
+		marginHorizontal: 5
+	},
+	orContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingVertical: 10,
+		width: '100%',
+		color: '#a7aaaf',
+		marginBottom: 10,
+	},
+	error : {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 14,
+		color: 'red',
+		textAlignVertical: 'center',
+		marginTop: -20,
+		paddingBottom: 10
+	},
 });
