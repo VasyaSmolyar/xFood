@@ -36,7 +36,7 @@ function AuthScreen({navigation}) {
 	}
 
 function PhoneScreen({navigation}) {
-	const [value, setValue] = useState('+7');
+	const [value, setValue] = useState('');
 	const navigate = json => {
 		navigation.navigate('Code', {phone: value, isExisting: json.isExisting});
 	};
@@ -52,7 +52,7 @@ function PhoneScreen({navigation}) {
 				<Text style={styles.header} >Регистрация или вход</Text>
 				<View style={styles.inputWrap}>
 					<Text style={styles.inputWrapText}>Номер телефона</Text>
-					<TextInput value={value} onChangeText={(text) => setValue(text)} maxLength = {12} 
+					<TextInput value={'+7' + value} onChangeText={(text) => setValue(text.slice(2))} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
