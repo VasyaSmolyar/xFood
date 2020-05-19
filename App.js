@@ -36,7 +36,7 @@ function AuthScreen({navigation}) {
 	}
 
 function PhoneScreen({navigation}) {
-	const [value, setValue] = useState('');
+	const [value, setValue] = useState('+7');
 	const navigate = json => {
 		navigation.navigate('Code', {phone: value, isExisting: json.isExisting});
 	};
@@ -48,11 +48,11 @@ function PhoneScreen({navigation}) {
 		<View style={styles.backContainer}>
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
-			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
+			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
 				<Text style={styles.header} >Регистрация или вход</Text>
 				<View style={styles.inputWrap}>
 					<Text style={styles.inputWrapText}>Номер телефона</Text>
-					<TextInput value={value} onChange={() => setValue({value})} maxLength = {12} 
+					<TextInput value={value} onChangeText={(text) => setValue(text)} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
@@ -90,9 +90,9 @@ function CodeScreen({navigation}) {
 		<View style={styles.backContainer}>
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
-			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center'}}>
+			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
 			<Text style={styles.header}>Ввод кода</Text>
-				<TextInput value={value} onChange={() => setValue(event.target.value)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
+				<TextInput value={value} onChangeText={(text) => setValue(text)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
 				{err}
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<Text style={styles.phoneText}>Отправить код</Text>
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
 		marginHorizontal: 5,
 		borderRadius: 7,
 		width: '75%',
-		
+		alignItems: 'center'
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
 	},
 	confirmButtom: {
 		backgroundColor: '#f1c40f',
-		textAlign: 'center',
+		alignItems: 'center',
 		paddingVertical: 10,
 		marginHorizontal: 5,
 		borderRadius: 7,
