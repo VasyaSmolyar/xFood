@@ -104,9 +104,9 @@ export function ProductScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#f2f3f5',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
 	},
 	authButton: {
 		alignItems: "center",
@@ -122,15 +122,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        width: '40%'
+        padding: 10,
+        width: 140,
+        backgroundColor: '#fff',
+        marginHorizontal: 10,
+        marginVertical: 5
     },
     catImage: {
-        width: 75,
-        height: 75
+        width: 55,
+        height: 55
     },
     catText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         marginRight: 5,
         maxWidth: 100
     },
@@ -139,6 +143,6 @@ const styles = StyleSheet.create({
     },
     oneRow: {
         flex: 1,
-        justifyContent: "space-around"
+        justifyContent: 'space-between'
     } 
 });

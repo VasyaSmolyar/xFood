@@ -82,7 +82,7 @@ function CodeScreen({navigation}) {
 		}
 	};
 	const press = () => {
-		send('api/user/verify', 'POST', {phone: phone, code: value}, navigate);
+		send('api/user/verify', 'POST', {phone: "+7" + phone, code: value}, navigate);
 	};
 	const mes = <Text style={styles.error}>Неверный код</Text>;
 	let err = wrong ? mes : null;
@@ -107,8 +107,8 @@ function RegisterScreen({navigation}) {
 	let { phone, code } = route.params; 
 	const dispath = useDispatch();
 	let data = sample;
-	data.phone = phone;
-	data.username = phone;
+	data.phone = "+7" + phone;
+	data.username = "+7" + phone;
 	data.password = code;
 	data.code = code;
 	const navigate = json => {
