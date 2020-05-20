@@ -41,7 +41,7 @@ function PhoneScreen({navigation}) {
 		navigation.navigate('Code', {phone: value, isExisting: json.isExisting});
 	};
 	const press = () => {
-		send('api/user/auth', 'POST', {phone: value}, navigate);
+		send('api/user/auth', 'POST', {phone: "+7" + value}, navigate);
 	};
 
 	return (
@@ -75,7 +75,7 @@ function CodeScreen({navigation}) {
 		if(!valid) {
 			setWrong(true);
 		} else if(!exist) {
-			navigation.navigate('Register', {code: value, phone: phone});
+			navigation.navigate('Register', {code: value, phone: "+7" + phone});
 		} else {
 			navigation.navigate('Catalog');
 			dispath(setToken(json.token));
@@ -107,8 +107,8 @@ function RegisterScreen({navigation}) {
 	let { phone, code } = route.params; 
 	const dispath = useDispatch();
 	let data = sample;
-	data.phone = "+7" + phone;
-	data.username = "+7" + phone;
+	data.phone = phone;
+	data.username = phone;
 	data.password = code;
 	data.code = code;
 	const navigate = json => {

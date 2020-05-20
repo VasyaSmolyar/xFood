@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
 import { addItem } from './utils/store';
+import SearchBar from './components/SearchBar';
 
 function Category(props) {
     const navigation = useNavigation();
@@ -39,7 +40,10 @@ export function CatalogScreen(props) {
 
     return (
         <View style={styles.container}>
+            {/*
             <Category title="Все категории"/>
+            */}
+            <SearchBar placeholder={"Поиск по категориям"} />
             <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
             keyExtractor={(item, index) => item.key.toString()} data={data} 
             contentContainerStyle={styles.catList} renderItem={(item) => 
