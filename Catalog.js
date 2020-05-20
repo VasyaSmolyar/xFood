@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     category: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'center',
         padding: 10,
         width: 140,
         backgroundColor: '#fff',
@@ -139,8 +139,7 @@ const styles = StyleSheet.create({
     catText: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
-        marginRight: 5,
-        maxWidth: 100
+        maxWidth: 55
     },
     catList: {
         

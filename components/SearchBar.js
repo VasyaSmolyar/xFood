@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'black',
         padding: 5,
-        marginBottom: 10
+        marginBottom: 10,
+		marginTop: 25
     },
     inputContainer: {
         width: '100%',
