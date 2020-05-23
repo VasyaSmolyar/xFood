@@ -69,7 +69,7 @@ export function ProductScreen({navigation}) {
 
     const load = (json) => {
         setLoaded(true);
-        if(load.details !== undefined) {
+        if(json.details !== undefined) {
             return;
         }
         setData([...data,...json]);
@@ -89,13 +89,22 @@ export function ProductScreen({navigation}) {
     });
 
     return (
-        <View>
-            <FlatList style={styles.item} onEndReachedThreshold={0.05} 
+        <View style={[styles.container, {backgroundColor: '#fff'}]}>
+            <SearchBar placeholder={"Поиск по категории"} />
+            <View>
+
+            </View>
+            <FlatList onEndReachedThreshold={0.05}
+            numColumns={2} columnWrapperStyle={styles.oneRow} 
             onEndReached={upload} keyExtractor={(item, index) => item.title} data={data}  renderItem={
               (item) => (
-                    <View>
-                        <Text>{item.item.title}</Text>
-                        <Button title="Добавить" onPress={() => addToCart(item.item)} />
+                    <View style={styles.item}>
+                        <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+                        <Text style={styles.itemPrice}>{item.item.price}₽</Text>
+                        <Text style={styles.itemText}>{item.item.title}</Text>
+                        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
+                            <Text style={styles.phoneText}>Добавить в корзину</Text>
+                        </TouchableOpacity>
                     </View>
                 )
             }/>
@@ -132,6 +141,25 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginVertical: 5
     },
+    item: {
+        width: 140,
+        backgroundColor: '#fff',
+        marginVertical: 10,
+        marginHorizontal: 20
+    },
+    itemText: {
+        fontSize: 12,
+        marginVertical: 5
+    },
+    itemPrice: {
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    itemImage: {
+        width: 140,
+        height: 140,
+        marginBottom: 5
+    },
     catImage: {
         width: 55,
         height: 55
@@ -147,5 +175,18 @@ const styles = StyleSheet.create({
     oneRow: {
         flex: 1,
         justifyContent: 'space-between'
-    } 
+    },
+    phoneButton: {
+		backgroundColor: '#f1c40f',
+		textAlign: 'center',
+		paddingVertical: 5,
+		paddingHorizontal: 10,
+		borderRadius: 5,
+		alignItems: 'center'
+	},
+	phoneText: {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 12, 
+		color: 'white'
+	}, 
 });
