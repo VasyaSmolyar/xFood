@@ -16,6 +16,28 @@ function Category(props) {
     )
 }
 
+function Item(props) {
+    const item = props.item;
+    if(item.item.empty !== undefined) {
+        return <View style={{width: '40%', height: 10}}></View>
+    }
+    return (
+        <View style={styles.item}>
+            <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+            <Text style={styles.itemPrice}>{item.item.price}₽</Text>
+            <Text numberOfLines={3} ellipsizeMode='head'
+            style={styles.itemText}>{item.item.title}</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+                <Text>{item.item.flag}</Text> 
+                <Text style={styles.itemFlag}>{item.item.country}</Text>
+            </View>
+            <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
+                <Text style={styles.phoneText}>Добавить в корзину</Text>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
 export function CatalogScreen(props) {
     const token = useSelector(state => state.token.value);
     const [data, setData] = useState([]);
@@ -60,7 +82,7 @@ export function ProductScreen({navigation}) {
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [offset, setOffset] = useState(0);
-    const num = 3;
+    const num = 5;
 
     const upload = () => {
         setOffset(offset + num);
@@ -94,19 +116,10 @@ export function ProductScreen({navigation}) {
             <View>
 
             </View>
-            <FlatList onEndReachedThreshold={0.05}
+            <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
-            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data}  renderItem={
-              (item) => (
-                    <View style={styles.item}>
-                        <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
-                        <Text style={styles.itemPrice}>{item.item.price}₽</Text>
-                        <Text style={styles.itemText}>{item.item.title}</Text>
-                        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
-                            <Text style={styles.phoneText}>Добавить в корзину</Text>
-                        </TouchableOpacity>
-                    </View>
-                )
+            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data}  renderItem={
+              (item) => <Item item={item} addToCart={addToCart} />
             }/>
         </View>
     );
@@ -142,23 +155,28 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     item: {
-        width: 140,
+        width: '40%',
         backgroundColor: '#fff',
-        marginVertical: 10,
-        marginHorizontal: 20
+        marginVertical: 10
     },
     itemText: {
-        fontSize: 12,
+        fontSize: 14,
         marginVertical: 5
+    },
+    itemFlag: {
+        color: '#97999d',
+        fontSize: 12,
+        fontFamily: 'Tahoma-Regular',
+        marginLeft: 10
     },
     itemPrice: {
         fontSize: 16,
         fontWeight: 'bold'
     },
     itemImage: {
-        width: 140,
-        height: 140,
-        marginBottom: 5
+        width: 120,
+        height: 120,
+        marginBottom: 5,
     },
     catImage: {
         width: 55,
@@ -173,8 +191,7 @@ const styles = StyleSheet.create({
         
     },
     oneRow: {
-        flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-around'
     },
     phoneButton: {
 		backgroundColor: '#f1c40f',
@@ -186,7 +203,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 12, 
+		fontSize: 10, 
 		color: 'white'
 	}, 
 });
