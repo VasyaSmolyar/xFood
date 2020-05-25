@@ -8,8 +8,11 @@ import SearchBar from './components/SearchBar';
 
 function Category(props) {
     const navigation = useNavigation();
+    if(props.empty !== undefined) {
+        return <View style={{width: '45%', height: 10}}></View>
+    }
     return (
-        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title})}>
+        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title, subs: props.subs})}>
             <Text style={styles.catText}>{props.title}</Text>
             <Image source={{uri: props.image}} resizeMode={'contain'} style={styles.catImage} />
         </TouchableOpacity>
@@ -48,7 +51,8 @@ export function CatalogScreen(props) {
             return {
                 key: item.id,
                 title: item.title,
-                poster_url: item.poster_url 
+                poster_url: item.poster_url,
+                subcategories: item.subcategories
             };
         });
         setData(list);
@@ -67,9 +71,10 @@ export function CatalogScreen(props) {
             */}
             <SearchBar placeholder={"Поиск по категориям"} />
             <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
-            keyExtractor={(item, index) => item.key.toString()} data={data} 
+            keyExtractor={(item, index) => item.key.toString()} 
+            data={data.length % 2 === 1 ? [...data, {empty: true}] : data}
             contentContainerStyle={styles.catList} renderItem={(item) => 
-            <Category title={item.item.title} image={item.item.poster_url} />}/>
+            <Category title={item.item.title} image={item.item.poster_url} empty={item.empty} subs={item.item.subcategories} />}/>
         </View>
     );
 }
@@ -77,6 +82,8 @@ export function CatalogScreen(props) {
 export function ProductScreen({navigation}) {
     const token = useSelector(state => state.token.value);
     const route = useRoute();
+    let { subs } = route.params;
+    console.log(subs); 
     const dispath = useDispatch();
     const { title } = route.params;
     const [data, setData] = useState([]);
@@ -113,8 +120,19 @@ export function ProductScreen({navigation}) {
     return (
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
             <SearchBar placeholder={"Поиск по категории"} />
-            <View>
-
+            <View style={{flexDirection: 'row', width: '100%'}}>
+                <FlatList data={subs} renderItem={
+                    (item) => (
+                    <TouchableOpacity style={styles.subButton}>
+                        <Text style={styles.subText}>{item.item}</Text>
+                    </TouchableOpacity>
+                    )
+                } horizontal={true} style={{flex: 3}} />
+                <View style={{flex: 1, alignItems: 'center'}}>
+                    <TouchableOpacity style={styles.subFilter}>
+                        <Text style={styles.subText}>ФИЛЬТРЫ</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
@@ -149,9 +167,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 10,
-        width: 140,
+        width: '45%',
         backgroundColor: '#fff',
-        marginHorizontal: 10,
         marginVertical: 5
     },
     item: {
@@ -179,16 +196,15 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     catImage: {
-        width: 55,
-        height: 55
+        width: 70,
+        height: 70
     },
     catText: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
-        maxWidth: 55
     },
     catList: {
-        
+        width: '100%'
     },
     oneRow: {
         justifyContent: 'space-around'
@@ -205,5 +221,18 @@ const styles = StyleSheet.create({
 		fontFamily: 'Tahoma-Regular', 
 		fontSize: 10, 
 		color: 'white'
-	}, 
+    }, 
+    subButton: {
+        padding: 10,
+        marginHorizontal: 10,
+        backgroundColor: "#f2f3f5",
+        borderRadius: 5
+    },
+    subText: {
+        fontFamily: 'Tahoma-Regular', 
+		fontSize: 14, 
+    },
+    subFilter: {
+        padding: 10,
+    }
 });
