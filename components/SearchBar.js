@@ -10,7 +10,7 @@ export default function SearchBar(props) {
                 <Image source={search}  style={{width: 20, height: 20}} />
                 <TextInput style={styles.input} placeholder={props.placeholder} />
                 <TouchableWithoutFeedback>
-                    <Image source={scanner}  style={{width: 20, height: 20}} />
+                    <Image source={scanner}  style={{width: 25, height: 22}} />
                 </TouchableWithoutFeedback>
             </View>
         </View>
