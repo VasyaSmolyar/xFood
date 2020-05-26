@@ -23,12 +23,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginBottom: 10,
-		paddingTop: 25
+        paddingTop: 25,
+        alignItems: 'center'
     },
     inputContainer: {
-        width: '100%',
+        width: '95%',
         backgroundColor: 'white',
-        borderRadius: 5,
+        borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 5

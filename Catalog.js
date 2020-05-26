@@ -22,20 +22,20 @@ function Category(props) {
 function Item(props) {
     const item = props.item;
     if(item.item.empty !== undefined) {
-        return <View style={{width: '40%', height: 10}}></View>
+        return <View style={{width: '50%', height: 10}}></View>
     }
     return (
         <View style={styles.item}>
             <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
             <Text style={styles.itemPrice}>{item.item.price}₽</Text>
-            <Text numberOfLines={3} ellipsizeMode='head'
+            <Text numberOfLines={2} ellipsizeMode='head'
             style={styles.itemText}>{item.item.title}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
                 <Text>{item.item.flag}</Text> 
                 <Text style={styles.itemFlag}>{item.item.country}</Text>
             </View>
             <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
-                <Text style={styles.phoneText}>Добавить в корзину</Text>
+                <Text style={styles.phoneText}>В корзину</Text>
             </TouchableOpacity>
         </View>
     );
@@ -127,8 +127,9 @@ export function ProductScreen({navigation}) {
                         <Text style={styles.subText}>{item.item}</Text>
                     </TouchableOpacity>
                     )
-                } horizontal={true} style={{flex: 3}} />
-                <View style={{flex: 1, alignItems: 'center'}}>
+                } horizontal={true} style={{width: '70%'}}
+                showsHorizontalScrollIndicator={false} />
+                <View style={{width: '30%', alignItems: 'center'}}>
                     <TouchableOpacity style={styles.subFilter}>
                         <Text style={styles.subText}>ФИЛЬТРЫ</Text>
                     </TouchableOpacity>
@@ -172,9 +173,10 @@ const styles = StyleSheet.create({
         marginVertical: 5
     },
     item: {
-        width: '40%',
+        width: '50%',
         backgroundColor: '#fff',
-        marginVertical: 10
+        marginVertical: 10,
+        paddingHorizontal: 10
     },
     itemText: {
         fontSize: 14,
@@ -202,6 +204,7 @@ const styles = StyleSheet.create({
     catText: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
+        maxWidth: 65
     },
     catList: {
         width: '100%'
@@ -219,7 +222,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 10, 
+		fontSize: 14, 
 		color: 'white'
     }, 
     subButton: {
