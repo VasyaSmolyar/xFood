@@ -204,7 +204,8 @@ const styles = StyleSheet.create({
     catText: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
-        maxWidth: 65
+        maxWidth: 65,
+        marginLeft: 10
     },
     catList: {
         width: '100%'
