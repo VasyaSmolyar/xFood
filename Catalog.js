@@ -26,19 +26,45 @@ function Item(props) {
     }
     return (
         <View style={styles.item}>
-            <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+            <View style={{alignItems: 'center'}}>
+                <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+            </View>
             <Text style={styles.itemPrice}>{item.item.price}₽</Text>
-            <Text numberOfLines={2} ellipsizeMode='head'
+            <Text numberOfLines={2}
             style={styles.itemText}>{item.item.title}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
                 <Text>{item.item.flag}</Text> 
                 <Text style={styles.itemFlag}>{item.item.country}</Text>
             </View>
             <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
-                <Text style={styles.phoneText}>В корзину</Text>
+                <Text style={styles.phoneText}>Добавить</Text>
             </TouchableOpacity>
         </View>
     );
+}
+
+function CartBar() {
+    const cart = useSelector(state => state.cart);
+    const dispath = useDispatch();
+    const token = useSelector(state => state.token.value);
+
+    const setCart = (json) => {
+        const cart = json.map((item) => {
+            return {item: {...item.product[0]}, count: item.num};
+        });
+        dispath(loadCart(cart));
+    }
+
+    useEffect(() => {
+        send('api/cart/getcart', 'POST', {}, setCart, token);
+    }, []);
+
+    return (
+        <View>
+            
+        </View>
+    );
+    
 }
 
 export function CatalogScreen(props) {
@@ -83,7 +109,6 @@ export function ProductScreen({navigation}) {
     const token = useSelector(state => state.token.value);
     const route = useRoute();
     let { subs } = route.params;
-    console.log(subs); 
     const dispath = useDispatch();
     const { title } = route.params;
     const [data, setData] = useState([]);
@@ -186,7 +211,7 @@ const styles = StyleSheet.create({
         color: '#97999d',
         fontSize: 12,
         fontFamily: 'Tahoma-Regular',
-        marginLeft: 10
+        marginLeft: 5
     },
     itemPrice: {
         fontSize: 16,
@@ -219,7 +244,8 @@ const styles = StyleSheet.create({
 		paddingVertical: 5,
 		paddingHorizontal: 10,
 		borderRadius: 5,
-		alignItems: 'center'
+        alignItems: 'center',
+        width: '70%'
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 

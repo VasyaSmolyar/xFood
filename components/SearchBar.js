@@ -7,10 +7,10 @@ export default function SearchBar(props) {
     return (
         <View style={styles.barContainer}>
             <View style={styles.inputContainer}>
-                <Image source={search}  style={{width: 20, height: 20}} />
+                <Image source={search}  style={{width: 25, height: 25}} />
                 <TextInput style={styles.input} placeholder={props.placeholder} />
                 <TouchableWithoutFeedback>
-                    <Image source={scanner}  style={{width: 25, height: 22}} />
+                    <Image source={scanner}  style={{width: 30, height: 25}} />
                 </TouchableWithoutFeedback>
             </View>
         </View>
@@ -29,10 +29,11 @@ const styles = StyleSheet.create({
     inputContainer: {
         width: '95%',
         backgroundColor: 'white',
-        borderRadius: 10,
+        borderRadius: 8,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
+        paddingVertical: 5
     },
     input: {
         flex: 1,

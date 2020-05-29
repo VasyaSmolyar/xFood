@@ -2,6 +2,7 @@ const SET_TOKEN = "SET_TOKEN";
 const ADD_ITEM = "ADD_ITEM";
 const REMOVE_ITEM = "REMOVE_ITEM";
 const LOAD_CART = "LOAD_CART";
+const SET_PRICE = "SET_PRICE"; 
 
 export const setToken = (value) => {
     return {type: SET_TOKEN, value: value}
@@ -15,9 +16,17 @@ export const removeItem = (item) => {
     return {type: REMOVE_ITEM, item: item, count: 1 };
 } 
 
+export const removeAllItem = (item) => {
+    return {type: REMOVE_ITEM, item: item, count: item.count };
+} 
+
 export const loadCart = (items) => {
     return {type: LOAD_CART, items: items };
-} 
+}
+
+export const setPrice = (price, delivery) => {
+    return {type: SET_PRICE, price: price, delivery: delivery };
+}
 
 const initialState = {
     value: ""
@@ -25,6 +34,20 @@ const initialState = {
 
 const initialCart = {
     items: []
+}
+
+const initialPrice = {
+    price: 0,
+    delivery: 0
+}
+
+export const priceReducer = (state = initialPrice, action) => {
+    switch(action.type) {
+        case SET_PRICE:
+            return {...state, price: action.price, delivery: action.delivery}
+        default:
+            return state;
+    }
 }
 
 export const tokenReducer = (state = initialState, action) => {
@@ -46,9 +69,9 @@ export const cartReducer = (state = initialCart, action) => {
                 pos++;
                 return action.item.id === item.item.id;
             })) {
-                items[pos].count = items[pos].count + 1;
+                items[pos].count = items[pos].count + action.count;
             } else {
-                items.push({item: action.item, count: 1});
+                items.push({item: action.item, count: action.count});
             }
             return {...state, items: items};
         case REMOVE_ITEM:
@@ -57,10 +80,10 @@ export const cartReducer = (state = initialCart, action) => {
                 pos++;
                 return action.item.id === item.item.id;
             })) {
-                if(items[pos].count === 1) {
+                if(items[pos].count <= action.count) {
                     items.splice(pos, 1);
                 } else {
-                    items[pos].count = items[pos].count - 1;
+                    items[pos].count = items[pos].count - action.count;
                 }
             }
             return {...state, items: items};

@@ -7,7 +7,7 @@ import { Provider, useDispatch } from 'react-redux';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import send from './utils/net';
-import { tokenReducer, setToken, cartReducer } from './utils/store';
+import { tokenReducer, setToken, cartReducer, priceReducer } from './utils/store';
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
 import background from './files/background.png';
@@ -151,7 +151,8 @@ let customFonts = {
 
 const rootReducer = combineReducers({
 	token: tokenReducer,
-	cart: cartReducer
+	cart: cartReducer,
+	prices: priceReducer
 });
 
 const store = createStore(rootReducer);

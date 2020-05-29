@@ -3,24 +3,40 @@ import { StyleSheet, Text, View, FlatList, Button, Image, TouchableWithoutFeedba
 import { useSelector, useDispatch, useStore } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net';
-import { addItem, removeItem, loadCart } from './utils/store';
+import { addItem, removeItem, loadCart, removeAllItem, setPrice } from './utils/store';
 import trash from './files/trash.png';
 import up from './files/up.png';
 import down from './files/down.png';
 
 const CartItem = (props) => {
-    const item = props.item.item;
+    let item = props.item.item;
+    item.count = props.item.count;
     const dispath = useDispatch();
     const token = useSelector(state => state.token.value);
+
+    const getPrice = () => {
+        send('api/cart/getcart', 'POST', {}, (json) => {
+            const other = json.reverse()[0];
+            dispath(setPrice(other.products_cost, other.delivery_cost));
+        }, token);
+    }
 
     const add = (item) => {
         dispath(addItem(item));
         send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        getPrice();
     }
 
     const remove = (item) => {
         dispath(removeItem(item));
         send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        getPrice();
+    }
+
+    const removeAll = (item) => {
+        dispath(removeAllItem(item));
+        send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: item.count}, () => {}, token);
+        getPrice();
     }
 
     return (
@@ -40,7 +56,7 @@ const CartItem = (props) => {
                 </View>
             </View>
             <View style={styles.secondLine}> 
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => {removeAll(item)}}>
                     <Image source={trash} style={styles.trash} resizeMode={'contain'} />
                 </TouchableWithoutFeedback>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -61,23 +77,25 @@ const CartItem = (props) => {
 
 const CartScreen = () => {
     const cart = useSelector(state => state.cart);
+    const prices = useSelector(state => state.prices);
     const dispath = useDispatch();
     const token = useSelector(state => state.token.value);
 
     const setCart = (json) => {
-        const cart = json.map((item) => {
+        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
             return {item: {...item.product[0]}, count: item.num};
         });
         dispath(loadCart(cart));
+        const other = json.reverse()[0];
+        dispath(setPrice(other.products_cost, other.delivery_cost));
     }
 
     useEffect(() => {
-        console.log("Called by once");
         send('api/cart/getcart', 'POST', {}, setCart, token);
     }, []);
 
     return (
-        <View>
+        <View style={{flex: 1}}>
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Корзина</Text>
             </View>
@@ -91,12 +109,12 @@ const CartScreen = () => {
                     <Text style={styles.textBold}>Общая стоимость</Text>
                 </View>
                 <View style={{alignItems: 'flex-end'}}>
-                    <Text style={styles.textBold}>54.90₽</Text>
-                    <Text style={styles.textBold}>150₽</Text>
-                    <Text style={styles.textBold}>194.90₽</Text>
+                    <Text style={styles.textBold}>{prices.price}₽</Text>
+                    <Text style={styles.textBold}>{prices.delivery}₽</Text>
+                    <Text style={styles.textBold}>{prices.price + prices.delivery}₽</Text>
                 </View>
             </View>
-            <View style={{alignItems: "center", width: '100%'}}>
+            <View style={{alignItems: "center", width: '100%', marginBottom: 20}}>
                 <TouchableOpacity style={styles.phoneButton} onPress={() => {}}>
                     <Text style={styles.phoneText}>Оформить заказ</Text>
                 </TouchableOpacity>
@@ -155,7 +173,7 @@ const styles = StyleSheet.create({
         color: '#97999d',
         fontSize: 12,
         fontFamily: 'Tahoma-Regular',
-        marginLeft: 10
+        marginLeft: 5
     },
     itemPrice: {
         fontSize: 16,
