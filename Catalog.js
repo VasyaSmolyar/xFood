@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
 import { addItem } from './utils/store';
+import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 
 function Category(props) {
@@ -67,7 +68,7 @@ function CartBar() {
     
 }
 
-export function CatalogScreen(props) {
+export function CatalogScreen({navigation}) {
     const token = useSelector(state => state.token.value);
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
@@ -92,15 +93,13 @@ export function CatalogScreen(props) {
 
     return (
         <View style={styles.container}>
-            {/*
-            <Category title="Все категории"/>
-            */}
             <SearchBar placeholder={"Поиск по категориям"} />
             <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
             keyExtractor={(item, index) => item.key.toString()} 
             data={data.length % 2 === 1 ? [...data, {empty: true}] : data}
             contentContainerStyle={styles.catList} renderItem={(item) => 
             <Category title={item.item.title} image={item.item.poster_url} empty={item.empty} subs={item.item.subcategories} />}/>
+            <NavigationBar navigation={navigation} />
         </View>
     );
 }

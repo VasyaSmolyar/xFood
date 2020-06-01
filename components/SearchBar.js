@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Image, TouchableWithoutFeedback} from 'react-native';
+import Constants from 'expo-constants';
 import search from '../files/search.png';
 import scanner from '../files/scanner.png';
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginBottom: 10,
-        paddingTop: 25,
+        marginTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     inputContainer: {

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Button, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
-import { useSelector, useDispatch, useStore } from 'react-redux';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import send from './utils/net';
 import { addItem, removeItem, loadCart, removeAllItem, setPrice } from './utils/store';
+import NavigationBar from './components/NavigationBar';
+import Constants from 'expo-constants';
+import { useNavigation } from '@react-navigation/native';
 import trash from './files/trash.png';
 import up from './files/up.png';
 import down from './files/down.png';
@@ -80,6 +82,7 @@ const CartScreen = () => {
     const prices = useSelector(state => state.prices);
     const dispath = useDispatch();
     const token = useSelector(state => state.token.value);
+    const navigation = useNavigation();
 
     const setCart = (json) => {
         const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
@@ -119,6 +122,7 @@ const CartScreen = () => {
                     <Text style={styles.phoneText}>Оформить заказ</Text>
                 </TouchableOpacity>
             </View>
+            <NavigationBar navigation={navigation} />
         </View>
     );
 };
@@ -129,7 +133,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginBottom: 10,
-        paddingTop: 25,
+        marginTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     barText: {
