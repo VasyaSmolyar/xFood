@@ -164,6 +164,7 @@ export function ProductScreen({navigation}) {
             onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data}  renderItem={
               (item) => <Item item={item} addToCart={addToCart} />
             }/>
+            <NavigationBar navigation={navigation} />
         </View>
     );
 
