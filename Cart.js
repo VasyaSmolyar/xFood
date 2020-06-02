@@ -122,7 +122,7 @@ const CartScreen = () => {
                     <Text style={styles.phoneText}>Оформить заказ</Text>
                 </TouchableOpacity>
             </View>
-            <NavigationBar navigation={navigation} />
+            <NavigationBar navigation={navigation} routeName="Cart"/>
         </View>
     );
 };

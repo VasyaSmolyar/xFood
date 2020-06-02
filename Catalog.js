@@ -99,7 +99,7 @@ export function CatalogScreen({navigation}) {
             data={data.length % 2 === 1 ? [...data, {empty: true}] : data}
             contentContainerStyle={styles.catList} renderItem={(item) => 
             <Category title={item.item.title} image={item.item.poster_url} empty={item.empty} subs={item.item.subcategories} />}/>
-            <NavigationBar navigation={navigation} />
+            <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
 }
@@ -164,7 +164,7 @@ export function ProductScreen({navigation}) {
             onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data}  renderItem={
               (item) => <Item item={item} addToCart={addToCart} />
             }/>
-            <NavigationBar navigation={navigation} />
+            <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
 
