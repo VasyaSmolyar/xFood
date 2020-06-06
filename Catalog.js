@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button, Image } fro
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
-import { addItem } from './utils/store';
+import { addItem, loadCart, removeItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
+import minus from './files/minus.png';
+import plus from './files/plus.png';
 
 function Category(props) {
     const navigation = useNavigation();
@@ -21,48 +23,58 @@ function Category(props) {
 }
 
 function Item(props) {
+    const cart = useSelector(state => state.cart);
     const item = props.item;
     if(item.item.empty !== undefined) {
         return <View style={{width: '50%', height: 10}}></View>
     }
+    const inCart = cart.items.find((i) => (item.item.title === i.item.title));
+    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count}/> : (
+        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item)}>
+            <Text style={styles.phoneText}>Добавить</Text>
+        </TouchableOpacity>
+    );
+
     return (
         <View style={styles.item}>
             <View style={{alignItems: 'center'}}>
                 <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
             </View>
-            <Text style={styles.itemPrice}>{item.item.price}₽</Text>
+            <Text style={styles.itemPrice}>{item.item.price} ₽</Text>
             <Text numberOfLines={2}
             style={styles.itemText}>{item.item.title}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
                 <Text>{item.item.flag}</Text> 
                 <Text style={styles.itemFlag}>{item.item.country}</Text>
             </View>
-            <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
-                <Text style={styles.phoneText}>Добавить</Text>
-            </TouchableOpacity>
+            {add}
         </View>
     );
 }
 
-function CartBar() {
-    const cart = useSelector(state => state.cart);
+function CartBar(props) {
     const dispath = useDispatch();
     const token = useSelector(state => state.token.value);
 
-    const setCart = (json) => {
-        const cart = json.map((item) => {
-            return {item: {...item.product[0]}, count: item.num};
-        });
-        dispath(loadCart(cart));
+    const add = () => {
+        dispath(addItem(props.item));
+        send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
     }
 
-    useEffect(() => {
-        send('api/cart/getcart', 'POST', {}, setCart, token);
-    }, []);
+    const remove = () => {
+        dispath(removeItem(props.item));
+        send('api/cart/deletefromcart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
+    }
 
     return (
-        <View>
-            
+        <View style={styles.cartBar}>
+            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f2f3f5'}]} onPress={remove}>
+                <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
+            </TouchableOpacity>
+            <Text style={styles.cartText}>{props.value} шт.</Text>
+            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f1c40f'}]} onPress={add}>
+                <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
+            </TouchableOpacity>
         </View>
     );
     
@@ -114,6 +126,18 @@ export function ProductScreen({navigation}) {
     const [isLoaded, setLoaded] = useState(false);
     const [offset, setOffset] = useState(0);
     const num = 5;
+
+    const setCart = (json) => {
+        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
+            return {item: {...item.product[0]}, count: item.num};
+        });
+        dispath(loadCart(cart));
+    }
+
+    useEffect(() => {
+        send('api/cart/getcart', 'POST', {}, setCart, token);
+    }, []);
+    
 
     const upload = () => {
         setOffset(offset + num);
@@ -240,7 +264,6 @@ const styles = StyleSheet.create({
     },
     phoneButton: {
 		backgroundColor: '#f1c40f',
-		textAlign: 'center',
 		paddingVertical: 5,
 		paddingHorizontal: 10,
 		borderRadius: 5,
@@ -264,5 +287,23 @@ const styles = StyleSheet.create({
     },
     subFilter: {
         padding: 10,
+    },
+    cartBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    cartImage: {
+        width: 15,
+        height: 15
+    },
+    cartButton: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5
+    },
+    cartText: {
+        fontFamily: 'Tahoma-Regular', 
+		fontSize: 16, 
     }
 });

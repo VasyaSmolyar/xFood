@@ -244,7 +244,6 @@ const styles = StyleSheet.create({
 	},
 	phoneButton: {
 		backgroundColor: '#f1c40f',
-		textAlign: 'center',
 		paddingVertical: 10,
 		marginHorizontal: 5,
 		borderRadius: 7,

@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'black',
         padding: 10,
-        paddingBottom: 20,
         justifyContent: 'space-around',
         alignItems: 'center'
     },
@@ -55,19 +54,19 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     image: {
-        width: 50,
-        height: 50
+        width: 30,
+        height: 30
     },
     text: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 10,
+        fontSize: 8,
         color: '#989898',
         marginTop: 5,
         textAlign: 'center'
     },
     ytext: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 10,
+        fontSize: 8,
         color: '#f1c40f',
         marginTop: 5,
         textAlign: 'center'
