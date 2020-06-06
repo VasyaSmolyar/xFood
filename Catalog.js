@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import send from './utils/net'
@@ -30,7 +30,7 @@ function Item(props) {
     }
     const inCart = cart.items.find((i) => (item.item.title === i.item.title));
     const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count}/> : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item)}>
+        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
             <Text style={styles.phoneText}>Добавить</Text>
         </TouchableOpacity>
     );
@@ -155,7 +155,6 @@ export function ProductScreen({navigation}) {
     const addToCart = (item) => {
         dispath(addItem(item));
         send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
-        navigation.navigate('Cart');
     }
 
     useEffect(() => {
@@ -278,6 +277,7 @@ const styles = StyleSheet.create({
     subButton: {
         padding: 10,
         marginHorizontal: 10,
+        marginBottom: 10,
         backgroundColor: "#f2f3f5",
         borderRadius: 5
     },
