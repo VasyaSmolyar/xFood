@@ -10,6 +10,7 @@ import send from './utils/net';
 import { tokenReducer, setToken, cartReducer, priceReducer } from './utils/store';
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
+import PaymentScreen from './Payment';
 import background from './files/background.png';
 import logo from './files/logo.png';
 
@@ -169,6 +170,7 @@ function AppFunc() {
 					<Stack.Screen name="Catalog" component={CatalogScreen} />
 					<Stack.Screen name="Products" component={ProductScreen} />
 					<Stack.Screen name="Cart" component={CartScreen} />
+					<Stack.Screen name="Payment" component={PaymentScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  

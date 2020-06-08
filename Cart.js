@@ -118,7 +118,7 @@ const CartScreen = () => {
                 </View>
             </View>
             <View style={{alignItems: "center", width: '100%', marginBottom: 20}}>
-                <TouchableOpacity style={styles.phoneButton} onPress={() => {}}>
+                <TouchableOpacity style={styles.phoneButton} onPress={() => {navigation.navigate('Payment')}}>
                     <Text style={styles.phoneText}>Оформить заказ</Text>
                 </TouchableOpacity>
             </View>
