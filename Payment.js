@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import passport from './files/passport.png';
+import path from './files/path.png';
 
 export default function PaymentScreen() {
     return (
         <View styles={styles.container}>
             <View style={styles.barContainer}>
-                <Text style={styles.barText}>Офоромление заказа</Text>
+                <Text style={styles.barText}>Оформление заказа</Text>
             </View>
-            <View style={{backgroundColor: 'white', flex: 1}}>
+            <ScrollView style={{backgroundColor: 'white', flex: 1}}>
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
                     <View>
@@ -55,7 +56,24 @@ export default function PaymentScreen() {
                         <TextInput style={styles.phone} />
                     </View>
                 </View>
-            </View>
+                <View style={{alignItems: 'center', width: '100%'}}>
+                    <TouchableOpacity style={styles.geoButton} onPress={() => press()}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.geoText}>Отправить код</Text>
+                            <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.header}>Оплата</Text>
+                <View style={styles.paymentContainer}>
+                    <Text style={styles.paymentHeader}>Наличными</Text>
+                    <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
+                </View>
+                <View style={styles.paymentContainer}>
+                    <Text style={styles.paymentHeader}>Картой</Text>
+                    <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -81,7 +99,8 @@ const styles = StyleSheet.create({
     warning: {
         flexDirection: 'row',
         paddingHorizontal: 10,
-        paddingVertical: 20,
+        paddingTop: 20,
+        paddingBottom: 10,
         backgroundColor: 'white',
         width: '100%'
     },
@@ -106,12 +125,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'Tahoma-Regular',
         padding: 15,
-        backgroundColor: '#f4f4f6'
+        backgroundColor: '#f4f4f6',
+        marginTop: 10
     },
     inputWrap: {
 		padding: 5,
 		backgroundColor: "#f2f3f5",
-        marginVertical: 10,
+        marginTop: 10,
         marginHorizontal: 20,
 		borderRadius: 7,
 		width: '75%',
@@ -132,7 +152,7 @@ const styles = StyleSheet.create({
     geoWrap: {
         padding: 5,
 		backgroundColor: "#f2f3f5",
-        marginVertical: 10,
+        marginTop: 10,
 		borderRadius: 7,
 		width: '45%',
     },
@@ -143,4 +163,45 @@ const styles = StyleSheet.create({
 		borderRadius: 7,
 		width: '20%',
     },
+    geoButton: {
+		backgroundColor: '#f1c40f',
+		paddingVertical: 10,
+		marginHorizontal: 5,
+		borderRadius: 7,
+		width: '95%',
+		alignItems: 'center'
+	},
+	geoText: {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 18, 
+		color: 'white'
+    },
+    geoImage: {
+        width: 30,
+        height: 30,
+        marginLeft: 20
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    paymentContainer: {
+        borderColor: "#efefef",
+        borderRadius: 8,
+        borderWidth: 1,
+        padding: 10,
+        paddingLeft: 20,
+        margin: 10,
+        marginBottom: 0
+    },
+    paymentHeader: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 18,
+        marginBottom: 5 
+    },
+    paymentText: {
+        fontFamily: 'Tahoma-Regular', 
+		fontSize: 14, 
+        color: '#8b95a1'
+    }
 });
