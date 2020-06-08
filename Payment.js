@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
 import passport from './files/passport.png';
 import path from './files/path.png';
 
 export default function PaymentScreen() {
+    const user = useSelector(state => state.user);
+    const [login, setLogin] = useState(user.user);
+    const [phone, setPhone] = useState(user.phone);
     return (
         <View styles={styles.container}>
             <View style={styles.barContainer}>
@@ -21,11 +25,12 @@ export default function PaymentScreen() {
                 <Text style={styles.header}>Данные получателя</Text>
                 <View style={styles.inputWrap}>
                     <Text style={styles.inputWrapText}>Имя и фамилия</Text>
-                    <TextInput style={styles.phone} />
+                    <TextInput value={login} style={styles.phone} onChangeText={(text) => setLogin(text)} />
                 </View>
                 <View style={styles.inputWrap}>
                     <Text style={styles.inputWrapText}>Номер телефона</Text>
-                    <TextInput style={styles.phone} keyboardType='phone-pad' />
+                    <TextInput value={'+7' + phone} onChangeText={(text) => setPhone(text.slice(2))} maxLength = {12} 
+					style={styles.phone} keyboardType='phone-pad' />
                 </View>
                 <Text style={styles.header}>Доставка</Text>
                 <View style={styles.geoContainer}>

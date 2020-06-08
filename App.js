@@ -7,7 +7,7 @@ import { Provider, useDispatch } from 'react-redux';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import send from './utils/net';
-import { tokenReducer, setToken, cartReducer, priceReducer } from './utils/store';
+import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer } from './utils/store';
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
 import PaymentScreen from './Payment';
@@ -80,6 +80,7 @@ function CodeScreen({navigation}) {
 		} else {
 			navigation.navigate('Catalog');
 			dispath(setToken(json.token));
+			dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
 		}
 	};
 	const press = () => {
@@ -114,6 +115,7 @@ function RegisterScreen({navigation}) {
 	data.code = code;
 	const navigate = json => {
 		dispath(setToken(json.token));
+		dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
 		navigation.navigate('Catalog');
 	};
 	const press = () => {
@@ -153,7 +155,8 @@ let customFonts = {
 const rootReducer = combineReducers({
 	token: tokenReducer,
 	cart: cartReducer,
-	prices: priceReducer
+	prices: priceReducer,
+	user: userReducer
 });
 
 const store = createStore(rootReducer);
