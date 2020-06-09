@@ -1,12 +1,16 @@
 const backend = 'http://194.67.92.163:8000/';
 
-function send(url, method, data, callback, token='') {
+function send(url, method, data, callback, token={}) {
     let headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
     };
-    if (token !== '') {
-        headers['Authorization'] = token;
+    if (token !== {}) {
+		console.log("Token");
+		console.log(token);
+        headers['Login'] = token.login;
+        headers['Times'] = token.times;
+        headers['Token'] = token.token;
     }
     let forFetch = {
         method: method,

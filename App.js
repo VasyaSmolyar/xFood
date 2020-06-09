@@ -78,9 +78,9 @@ function CodeScreen({navigation}) {
 		} else if(!exist) {
 			navigation.navigate('Register', {code: value, phone: "+7" + phone});
 		} else {
-			navigation.navigate('Catalog');
-			dispath(setToken(json.token));
+			dispath(setToken(json.login, json.times, json.token));
 			dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
+			navigation.navigate('Catalog');
 		}
 	};
 	const press = () => {
@@ -114,7 +114,7 @@ function RegisterScreen({navigation}) {
 	data.password = code;
 	data.code = code;
 	const navigate = json => {
-		dispath(setToken(json.token));
+		dispath(setToken(json.login, json.times, json.token));
 		dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
 		navigation.navigate('Catalog');
 	};

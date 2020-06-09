@@ -14,7 +14,7 @@ const CartItem = (props) => {
     let item = props.item.item;
     item.count = props.item.count;
     const dispath = useDispatch();
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
 
     const getPrice = () => {
         send('api/cart/getcart', 'POST', {}, (json) => {
@@ -81,7 +81,7 @@ const CartScreen = () => {
     const cart = useSelector(state => state.cart);
     const prices = useSelector(state => state.prices);
     const dispath = useDispatch();
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
     const navigation = useNavigation();
 
     const setCart = (json) => {

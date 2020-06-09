@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import send from '../utils/net';
 
 export default function ModalList(props) {
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
     const [places, setPlaces] = useState();
     let choice = 1;
     useEffect(() => {

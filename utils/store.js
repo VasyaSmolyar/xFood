@@ -5,8 +5,8 @@ const LOAD_CART = "LOAD_CART";
 const SET_PRICE = "SET_PRICE"; 
 const SET_USER = "SET_USER";
 
-export const setToken = (value) => {
-    return {type: SET_TOKEN, value: value}
+export const setToken = (login, times, token) => {
+    return {type: SET_TOKEN, login: login, times: times, token: token}
 }
 
 export const addItem = (item) => {
@@ -34,7 +34,9 @@ export const setUser = (user, phone) => {
 }
 
 const initialState = {
-    value: ""
+    login: "",
+    times: "",
+    token: ""
 };
 
 const initialCart = {
@@ -63,7 +65,7 @@ export const priceReducer = (state = initialPrice, action) => {
 export const tokenReducer = (state = initialState, action) => {
     switch(action.type) {
         case SET_TOKEN:
-            return {...state, value: action.value}
+            return {...state, login: action.login, times: action.times, token: action.token}
         default:
             return state;
     }

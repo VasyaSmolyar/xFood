@@ -54,7 +54,7 @@ function Item(props) {
 
 function CartBar(props) {
     const dispath = useDispatch();
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
 
     const add = () => {
         dispath(addItem(props.item));
@@ -81,7 +81,7 @@ function CartBar(props) {
 }
 
 export function CatalogScreen({navigation}) {
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const load = (json) => {
@@ -117,7 +117,7 @@ export function CatalogScreen({navigation}) {
 }
 
 export function ProductScreen({navigation}) {
-    const token = useSelector(state => state.token.value);
+    const token = useSelector(state => state.token);
     const route = useRoute();
     let { subs } = route.params;
     const dispath = useDispatch();
