@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
+import ModalList from './components/ModalList';
+import NavigationBar from './components/NavigationBar';
 import passport from './files/passport.png';
 import path from './files/path.png';
 
@@ -9,12 +11,14 @@ export default function PaymentScreen() {
     const user = useSelector(state => state.user);
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
+    const [modal, setModal] = useState(false);
     return (
         <View styles={styles.container}>
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Оформление заказа</Text>
             </View>
-            <ScrollView style={{backgroundColor: 'white', flex: 1}}>
+            <ScrollView style={{backgroundColor: 'white'}}>
+                <ModalList visible={modal} />
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
                     <View>
@@ -36,7 +40,7 @@ export default function PaymentScreen() {
                 <View style={styles.geoContainer}>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Регион</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput style={styles.phone} onChangeText={() => {setModal(true)}} />
                     </View>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Город, улица, дом</Text>
@@ -79,6 +83,7 @@ export default function PaymentScreen() {
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
                 </View>
             </ScrollView>
+            <NavigationBar />
         </View>
     );
 }
