@@ -6,8 +6,6 @@ function send(url, method, data, callback, token={}) {
         'Content-Type': 'application/json',
     };
     if (token !== {}) {
-		console.log("Token");
-		console.log(token);
         headers['Login'] = token.login;
         headers['Times'] = token.times;
         headers['Token'] = token.token;

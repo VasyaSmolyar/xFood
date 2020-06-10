@@ -12,13 +12,20 @@ export default function PaymentScreen() {
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
     const [modal, setModal] = useState(false);
+    const [region, setRegion] = useState("");
+
+    const choiceRegion = (name) => {
+        setRegion(name);
+        setModal(false);
+    };
+
     return (
         <View styles={styles.container}>
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Оформление заказа</Text>
             </View>
             <ScrollView style={{backgroundColor: 'white'}}>
-                <ModalList visible={modal} />
+                <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} />
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
                     <View>
@@ -40,7 +47,7 @@ export default function PaymentScreen() {
                 <View style={styles.geoContainer}>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Регион</Text>
-                        <TextInput style={styles.phone} onChangeText={() => {setModal(true)}} />
+                        <TextInput value={region} style={styles.phone} onChangeText={() => {setModal(true)}} />
                     </View>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Город, улица, дом</Text>
