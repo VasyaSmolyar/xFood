@@ -47,7 +47,7 @@ export default function PaymentScreen() {
                 <View style={styles.geoContainer}>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Регион</Text>
-                        <TextInput value={region} style={styles.phone} onChangeText={() => {setModal(true)}} />
+                        <TextInput value={region} style={styles.phone} onFocus={() => {setModal(true)}} />
                     </View>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Город, улица, дом</Text>
@@ -90,7 +90,6 @@ export default function PaymentScreen() {
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
                 </View>
             </ScrollView>
-            <NavigationBar />
         </View>
     );
 }

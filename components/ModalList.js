@@ -10,8 +10,7 @@ export default function ModalList(props) {
 
     useEffect(() => {
         send('api/area/get', 'POST', {}, (json) => {
-            //setPlaces(json);
-            setPlaces([{id: 0, area_name: 'Москва'},{id: 1, area_name: 'Дмитров'}]);
+            setPlaces(json);
         }, token);
     }, []);
 
