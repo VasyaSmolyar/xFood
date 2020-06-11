@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView 
 import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
 import ModalList from './components/ModalList';
-import NavigationBar from './components/NavigationBar';
+import ModalMap from './components/ModalMap';
 import passport from './files/passport.png';
 import path from './files/path.png';
 
@@ -12,6 +12,7 @@ export default function PaymentScreen() {
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
     const [modal, setModal] = useState(false);
+    const [map, setMap] = useState(false);
     const [region, setRegion] = useState("");
 
     const choiceRegion = (name) => {
@@ -26,6 +27,7 @@ export default function PaymentScreen() {
             </View>
             <ScrollView style={{backgroundColor: 'white'}}>
                 <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} />
+                <ModalMap visible={map} />
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
                     <View>
@@ -73,7 +75,7 @@ export default function PaymentScreen() {
                     </View>
                 </View>
                 <View style={{alignItems: 'center', width: '100%'}}>
-                    <TouchableOpacity style={styles.geoButton} onPress={() => press()}>
+                    <TouchableOpacity style={styles.geoButton} onPress={() => setMap(true)}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.geoText}>Отправить код</Text>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
