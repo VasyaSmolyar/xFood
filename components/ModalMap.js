@@ -1,13 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MapView from 'react-native-maps';
-import { StyleSheet, View, Modal } from 'react-native';
+import { StyleSheet, View, Modal, Text } from 'react-native';
+import * as Location from 'expo-location';
 
 export default function ModalList(props) {
 
-/*
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [region, setRegion] = useState(null);
+
+    const choiceLocate = (region) => {
+        setRegion(null);
+        const loc = {latitude: region.latitude, longitude: region.longitude};
+        (async () => {
+            if(region === null) {
+                return null;
+            }
+            return await Location.reverseGeocodeAsync(loc);
+        })().then((res) => {
+            setLocation(res);
+        });
+        
+    }
 
     useEffect(() => {
         (async () => {
@@ -17,24 +31,31 @@ export default function ModalList(props) {
         }
 
         let location = await Location.getCurrentPositionAsync({});
-        setLocation(JSON.stringify(location));
+
+        let result = await Location.reverseGeocodeAsync(location.coords);
+        setLocation(result);
 
         setRegion({ 
-            mapRegion: { 
-                latitude: location.coords.latitude, 
-                longitude: location.coords.longitude, 
-                latitudeDelta: 0.0922, 
-                longitudeDelta: 0.0421 
-            }
+            latitude: location.coords.latitude, 
+            longitude: location.coords.longitude, 
+            latitudeDelta: 0.0022, 
+            longitudeDelta: 0.0021 
         });
+        
 
         })();
     }, []);
-*/
+
     return (
         <Modal visible={props.visible}>
             <View style={styles.container}>
-                <MapView style={{width: 100, height: 100}} />
+            <View style={{flex: 1}}>
+                <Text>Ошибка: {errorMsg}</Text>
+                <Text>Локация: {JSON.stringify(location)}</Text>
+            </View>
+                <MapView style={{flex: 5}} region={region} onRegionChange={(region) => choiceLocate(region)}
+                showsUserLocation>
+                </MapView>
             </View>
         </Modal>
     );
