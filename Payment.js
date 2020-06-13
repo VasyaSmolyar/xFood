@@ -14,11 +14,26 @@ export default function PaymentScreen() {
     const [modal, setModal] = useState(false);
     const [map, setMap] = useState(false);
     const [region, setRegion] = useState("");
+    const [street, setStreet] = useState("");
 
     const choiceRegion = (name) => {
         setRegion(name);
         setModal(false);
     };
+
+    const choiceLocate = (location) => {
+        setMap(false);
+        if(location === null || location === undefined) {
+            return;
+        }
+        const loc = location[0];
+        setRegion(loc.city);
+        if(loc.street === null) {
+            setStreet(loc.name);
+        } else {
+            setStreet(loc.street + ', ' + loc.name);
+        }
+    }
 
     return (
         <View styles={styles.container}>
@@ -27,7 +42,7 @@ export default function PaymentScreen() {
             </View>
             <ScrollView style={{backgroundColor: 'white'}}>
                 <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} />
-                <ModalMap visible={map} />
+                <ModalMap visible={map} close={() => setMap(false)} locate={choiceLocate} />
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
                     <View>
@@ -53,7 +68,7 @@ export default function PaymentScreen() {
                     </View>
                     <View style={styles.geoWrap}>
                         <Text style={styles.inputWrapText}>Город, улица, дом</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput value={street} style={styles.phone} />
                     </View>
                 </View>
                 <View style={styles.geoContainer}>
