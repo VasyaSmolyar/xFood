@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import MapView, { LocalTile } from 'react-native-maps';
+import MapView, {AnimatedRegion, Animated} from 'react-native-maps';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 import path from '../files/ypath.png';
@@ -13,7 +13,7 @@ export default function ModalList(props) {
     const [region, setRegion] = useState(null);
 
     const choiceLocate = (region) => {
-        setRegion(null);
+        setRegion(region);
         const loc = {latitude: region.latitude, longitude: region.longitude};
         (async () => {
             if(region === null) {
@@ -27,6 +27,9 @@ export default function ModalList(props) {
     }
 
     const serialize = () => {
+        if(errorMsg !== null) {
+            return <Text style={{color: 'red'}}>{errorMsg}</Text>;
+        }
         if(location === null || location === undefined) {
             return '';
         }
@@ -47,12 +50,12 @@ export default function ModalList(props) {
             let result = await Location.reverseGeocodeAsync(location.coords);
             setLocation(result);
 
-            setRegion({ 
+            setRegion( new AnimatedRegion({ 
                 latitude: location.coords.latitude, 
                 longitude: location.coords.longitude, 
                 latitudeDelta: 0.0022, 
                 longitudeDelta: 0.0021 
-            });
+            }));
         })();
     }, []);
 
@@ -60,13 +63,14 @@ export default function ModalList(props) {
         <Modal visible={props.visible}>
             <View style={styles.container}>
                 <View style={{flex: 3}}>
-                    <MapView style={{flex: 1}} region={region} onRegionChange={(region) => choiceLocate(region)} showsUserLocation></MapView>
+                    <Animated style={{flex: 1}} region={region} 
+                    onRegionChange={(region) => choiceLocate(region)} showsUserLocation></Animated>
                     <View style={{top: 0, left: 0, right: 0, bottom: 0, position: "absolute", alignItems: 'center', justifyContent: 'center'}}>
                         <Image source={place} style={{width: 40, height: 60}} resizeMode={'contain'} />
                     </View> 
                     <View style={{top: 0, left: 0, right: 0, bottom: 0, position: "absolute"}}>
                         <TouchableOpacity style={{backgroundColor: '#fff', width: 50, height: 50, alignItems: 'center', 
-                        justifyContent: 'center', borderRadius: 100, margin: 10}} onPress={() => props.close()}>
+                        justifyContent: 'center', borderRadius: 100, margin: 20}} onPress={() => props.close()}>
                             <Image source={x} style={{width: 20, height: 20}} resizeMode={'contain'} />
                         </TouchableOpacity>
                     </View>
