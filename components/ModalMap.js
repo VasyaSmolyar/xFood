@@ -12,11 +12,11 @@ export default function ModalList(props) {
     const [errorMsg, setErrorMsg] = useState(null);
     const [region, setRegion] = useState(null);
 
-    const choiceLocate = (region) => {
-        setRegion(region);
-        const loc = {latitude: region.latitude, longitude: region.longitude};
+    const choiceLocate = (reg) => {
+        region.setValue(reg);
+        const loc = {latitude: reg.latitude, longitude: reg.longitude};
         (async () => {
-            if(region === null) {
+            if(reg === null) {
                 return null;
             }
             return await Location.reverseGeocodeAsync(loc);
@@ -64,7 +64,7 @@ export default function ModalList(props) {
             <View style={styles.container}>
                 <View style={{flex: 3}}>
                     <Animated style={{flex: 1}} region={region} 
-                    onRegionChange={(region) => choiceLocate(region)} showsUserLocation></Animated>
+                    onRegionChange={(reg) => choiceLocate(reg)} showsUserLocation></Animated>
                     <View style={{top: 0, left: 0, right: 0, bottom: 0, position: "absolute", alignItems: 'center', justifyContent: 'center'}}>
                         <Image source={place} style={{width: 40, height: 60}} resizeMode={'contain'} />
                     </View> 
