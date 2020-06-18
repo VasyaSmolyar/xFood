@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Modal, Text, FlatList, TouchableOpacity} from 'react-native';
-import { useSelector } from 'react-redux'; 
+import { StyleSheet, View, Modal, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import { useSelector } from 'react-redux';
+import checkbox from '../files/checkbox_yellow.png';  
 import send from '../utils/net';
 
 export default function ModalList(props) {
@@ -28,7 +29,7 @@ export default function ModalList(props) {
     const button = choice !== undefined ? (
         <View style={styles.buttonContainer}>
             <TouchableOpacity onPress={onSubmit} style={styles.phoneButton}>
-                <Text style={styles.phoneText}>Выбрать</Text>
+                <Text style={styles.phoneText}>Подтвердить выбор</Text>
             </TouchableOpacity>
         </View>
     ) : null;
@@ -37,8 +38,19 @@ export default function ModalList(props) {
         <Modal transparent={true} visible={props.visible}>
             <View style={styles.modalContainer}>
                 <View style={styles.boxContainer}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.headerCell}></View>
+                        <View style={styles.headerCell}>
+                            <Text style={styles.header}>Выбор города</Text>
+                        </View>
+                        <View style={styles.headerCell}>
+                            <TouchableOpacity onPress={props.onExit}>
+                                <Text style={styles.close}>Закрыть</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                     <FlatList keyExtractor={(item, index) => index.toString()} data={places} extraData={choice} renderItem={(item) => {
-                        const checked = item.item.id === choice ? <View style={styles.fillBox}></View> : null;
+                        const checked = item.item.id === choice ? <Image source={checkbox} style={styles.fillBox} /> : null;
                         return (
                             <View style={styles.choiceContainer}>
                                 <TouchableOpacity style={styles.choiceBox}
@@ -56,41 +68,56 @@ export default function ModalList(props) {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'black',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%'
     },
+    headerContainer: {
+        flexDirection: 'row',
+        paddingVertical: 20,
+        borderBottomWidth: 2,
+        borderBottomColor: "#f4f4f4" 
+    },
+    headerCell: {
+        flex: 1,
+        alignItems: 'center'
+    },
+    header: {
+        fontFamily: 'Tahoma-Regular', 
+        fontWeight: 'bold',
+        fontSize: 16
+    },
+    close: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+        color: '#f1c40f'
+    },
     boxContainer: {
-        width: '80%',
-        height: 500,
-        backgroundColor: '#fff'
+        flex: 1,
+        width: '100%',
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        backgroundColor: '#fff',
     },
     choiceContainer: {
         padding: 10,
-        borderBottomColor: '#97999d',
+        borderBottomColor: '#f4f4f4',
         borderBottomWidth: 1,
         flexDirection: 'row',
         height: 50,
         alignItems: "center"
     },
     choiceBox: {
-        borderColor: '#97999d',
-        borderWidth: 1,
         width: 20,
         height: 20,
         backgroundColor: "#fff",
-        borderRadius: 10,
-        marginRight: 20,
-        justifyContent: 'center',
-        alignItems: 'center'
+        marginRight: 10
     },
     fillBox: {
-        width: 10,
-        height: 10,
-        backgroundColor: "#f1c40f",
-        borderRadius: 10,
+        width: 20,
+        height: 20
     },
     boxText: {
         fontSize: 16,
@@ -102,12 +129,14 @@ const styles = StyleSheet.create({
 		paddingVertical: 10,
 		marginHorizontal: 5,
 		borderRadius: 7,
-		width: '75%',
+		width: '95%',
 		alignItems: 'center'
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 18,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#fff'
     },
     buttonContainer: {
         width: '100%',

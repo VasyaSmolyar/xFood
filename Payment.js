@@ -41,7 +41,7 @@ export default function PaymentScreen() {
                 <Text style={styles.barText}>Оформление заказа</Text>
             </View>
             <ScrollView style={{backgroundColor: 'white'}}>
-                <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} />
+                <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} onExit={() => setModal(false)} />
                 <ModalMap visible={map} close={() => setMap(false)} locate={choiceLocate} />
                 <View style={styles.warning}>
                     <Image source={passport} style={styles.warningImage} resizeMode={'contain'} />
