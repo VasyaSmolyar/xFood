@@ -1,29 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import MapView, {AnimatedRegion, Animated} from 'react-native-maps';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 import path from '../files/ypath.png';
 import place from '../files/place.png';
 import x from '../files/x.png';
+
+const screenWidth = Math.round((Dimensions.get('window').width - 40) / 2);
+const screenHeight = Math.round((Dimensions.get('window').height - 160) / 2);
 
 export default function ModalList(props) {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [region, setRegion] = useState(null);
+    const [block, setBlock] = useState(false);
 
-    const choiceLocate = (reg) => {
-        region.setValue(reg);
-        const loc = {latitude: reg.latitude, longitude: reg.longitude};
+    const inProgress = (reg) => {
+        setBlock(false);
         (async () => {
             if(reg === null) {
                 return null;
             }
+            const loc = {latitude: reg.latitude, longitude: reg.longitude};
             return await Location.reverseGeocodeAsync(loc);
         })().then((res) => {
             setLocation(res);
         });
-        
+    }
+
+    const choiceLocate = (reg) => {
+        setRegion(null);
+        if(block === false) {
+            setBlock(true);
+            setTimeout(inProgress, 1000, reg);
+        }
     }
 
     const serialize = () => {
@@ -50,12 +62,12 @@ export default function ModalList(props) {
             let result = await Location.reverseGeocodeAsync(location.coords);
             setLocation(result);
 
-            setRegion( new AnimatedRegion({ 
+            setRegion({ 
                 latitude: location.coords.latitude, 
                 longitude: location.coords.longitude, 
                 latitudeDelta: 0.0022, 
                 longitudeDelta: 0.0021 
-            }));
+            });
         })();
     }, []);
 
@@ -63,17 +75,13 @@ export default function ModalList(props) {
         <Modal visible={props.visible}>
             <View style={styles.container}>
                 <View style={{flex: 3}}>
-                    <Animated style={{flex: 1}} region={region} 
-                    onRegionChange={(reg) => choiceLocate(reg)} showsUserLocation></Animated>
-                    <View style={{top: 0, left: 0, right: 0, bottom: 0, position: "absolute", alignItems: 'center', justifyContent: 'center'}}>
-                        <Image source={place} style={{width: 40, height: 60}} resizeMode={'contain'} />
-                    </View> 
-                    <View style={{top: 0, left: 0, right: 0, bottom: 0, position: "absolute"}}>
-                        <TouchableOpacity style={{backgroundColor: '#fff', width: 50, height: 50, alignItems: 'center', 
+                    <MapView style={{flex: 1}} region={region} 
+                    onRegionChange={(reg) => choiceLocate(reg)} showsUserLocation></MapView>
+                        <Image source={place} style={{position: "absolute", width: 40, height: 60, top: screenHeight, left: screenWidth}} resizeMode={'contain'} />
+                        <TouchableOpacity style={{position: "absolute", backgroundColor: '#fff', width: 50, height: 50, alignItems: 'center', 
                         justifyContent: 'center', borderRadius: 100, margin: 20}} onPress={() => props.close()}>
                             <Image source={x} style={{width: 20, height: 20}} resizeMode={'contain'} />
                         </TouchableOpacity>
-                    </View>
                 </View>
                 <View style={styles.uiContainer}>
                     <Text style={styles.header}>Выбор места доставки</Text>
