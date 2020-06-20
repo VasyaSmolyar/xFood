@@ -55,7 +55,7 @@ export default function PaymentScreen() {
                     <Text style={styles.inputWrapText}>Имя и фамилия</Text>
                     <TextInput value={login} style={styles.phone} onChangeText={(text) => setLogin(text)} />
                 </View>
-                <View style={styles.inputWrap}>
+                <View style={[styles.inputWrap, {width: '50%'}]}>
                     <Text style={styles.inputWrapText}>Номер телефона</Text>
                     <TextInput value={'+7' + phone} onChangeText={(text) => setPhone(text.slice(2))} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
@@ -105,6 +105,15 @@ export default function PaymentScreen() {
                 <View style={styles.paymentContainer}>
                     <Text style={styles.paymentHeader}>Картой</Text>
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
+                </View>
+                <View style={{alignItems: 'center', width: '100%', marginTop: 5}}>
+                    <TouchableOpacity style={styles.geoButton} onPress={() => {}}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.geoText}>Оформить заказ</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{height: 150}}>
                 </View>
             </ScrollView>
         </View>
@@ -167,7 +176,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginHorizontal: 20,
 		borderRadius: 7,
-		width: '75%',
+		width: '45%',
 	},
 	inputWrapText: {
 		fontFamily: 'Tahoma-Regular', 
@@ -176,7 +185,7 @@ const styles = StyleSheet.create({
     },
     phone: {
 		backgroundColor: '#f2f3f5', 
-		fontSize: 25,
+		fontSize: 20,
     },
     geoContainer: {
         flexDirection: 'row',
