@@ -15,6 +15,7 @@ export default function ModalList(props) {
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [region, setRegion] = useState(null);
+    const [find, setFind] = useState(null);
     const [block, setBlock] = useState(false);
 
     const inProgress = (reg) => {
@@ -24,6 +25,7 @@ export default function ModalList(props) {
                 return null;
             }
             const loc = {latitude: reg.latitude, longitude: reg.longitude};
+            setFind(reg);
             return await Location.reverseGeocodeAsync(loc);
         })().then((res) => {
             setLocation(res);
@@ -68,6 +70,13 @@ export default function ModalList(props) {
                 latitudeDelta: 0.0022, 
                 longitudeDelta: 0.0021 
             });
+
+            setFind({ 
+                latitude: location.coords.latitude, 
+                longitude: location.coords.longitude, 
+                latitudeDelta: 0.0022, 
+                longitudeDelta: 0.0021 
+            });
         })();
     }, []);
 
@@ -94,7 +103,7 @@ export default function ModalList(props) {
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.geoButton} onPress={() => props.locate(location)}>
+                    <TouchableOpacity style={styles.geoButton} onPress={() => props.locate(location, find)}>
                         <Text style={styles.geoText}>Продолжить оформление</Text>
                     </TouchableOpacity>
                 </View>

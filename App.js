@@ -11,6 +11,7 @@ import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
 import PaymentScreen from './Payment';
+import CabinetScreen from './Cabinet';
 import background from './files/background.png';
 import logo from './files/logo.png';
 
@@ -174,6 +175,7 @@ function AppFunc() {
 					<Stack.Screen name="Products" component={ProductScreen} />
 					<Stack.Screen name="Cart" component={CartScreen} />
 					<Stack.Screen name="Payment" component={PaymentScreen} />
+					<Stack.Screen name="Cabinet" component={CabinetScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  

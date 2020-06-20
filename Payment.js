@@ -4,15 +4,17 @@ import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
 import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
+import send from './utils/net';
 import passport from './files/passport.png';
 import path from './files/path.png';
 
-export default function PaymentScreen() {
+export default function PaymentScreen({navigation}) {
     const user = useSelector(state => state.user);
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
     const [modal, setModal] = useState(false);
     const [map, setMap] = useState(false);
+    const [coords, setCoords] = useState("");
     const [region, setRegion] = useState("");
     const [street, setStreet] = useState("");
 
@@ -21,11 +23,12 @@ export default function PaymentScreen() {
         setModal(false);
     };
 
-    const choiceLocate = (location) => {
+    const choiceLocate = (location, geo) => {
         setMap(false);
         if(location === null || location === undefined) {
             return;
         }
+        setCoords(geo.latitude, ',', geo.longitude);
         const loc = location[0];
         setRegion(loc.city);
         if(loc.street === null) {
@@ -33,6 +36,18 @@ export default function PaymentScreen() {
         } else {
             setStreet(loc.street + ', ' + loc.name);
         }
+    }
+
+    const makeOrder = () => {
+        const token = useSelector(state => state.token);
+        let data = {
+            place_geo: coords,
+            pay_type: '',
+            
+        };
+        send('api/order/createorder', 'POST', data, (json) => {
+            navigation.navigate('Cabinet');
+        }, token);
     }
 
     return (
@@ -106,8 +121,8 @@ export default function PaymentScreen() {
                     <Text style={styles.paymentHeader}>Картой</Text>
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
                 </View>
-                <View style={{alignItems: 'center', width: '100%', marginTop: 5}}>
-                    <TouchableOpacity style={styles.geoButton} onPress={() => {}}>
+                <View style={{alignItems: 'center', width: '100%', marginTop: 10}}>
+                    <TouchableOpacity style={styles.geoButton} onPress={makeOrder}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.geoText}>Оформить заказ</Text>
                         </View>
