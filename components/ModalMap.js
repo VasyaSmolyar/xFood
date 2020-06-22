@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import MapView, {AnimatedRegion, Animated} from 'react-native-maps';
-import { StyleSheet, View, Modal, Text, Image, TouchableOpacity } from 'react-native';
+import MapView from 'react-native-maps';
+import { StyleSheet, View, Modal, Text, Image, TouchableOpacity} from 'react-native';
+import { useSelector } from 'react-redux';
 import { Dimensions } from 'react-native';
 import * as Location from 'expo-location';
+import send from '../utils/net';
 import path from '../files/ypath.png';
 import place from '../files/place.png';
 import x from '../files/x.png';
@@ -17,9 +19,12 @@ export default function ModalList(props) {
     const [region, setRegion] = useState(null);
     const [find, setFind] = useState(null);
     const [block, setBlock] = useState(false);
+    const [avaiable, setAvailable] = useState(false);
+    const token = useSelector(state => state.token);
 
     const inProgress = (reg) => {
         setBlock(false);
+        setAvailable(false);
         (async () => {
             if(reg === null) {
                 return null;
@@ -29,6 +34,12 @@ export default function ModalList(props) {
             return await Location.reverseGeocodeAsync(loc);
         })().then((res) => {
             setLocation(res);
+            const addr = reg.latitude + ',' + reg.longitude;
+            send('api/area/check', 'POST', {geo : addr}, (json) => {
+                if(json === true) {
+                    setAvailable(true);
+                }
+            }, token);
         });
     }
 
@@ -80,6 +91,16 @@ export default function ModalList(props) {
         })();
     }, []);
 
+    const sbutton = avaiable ? (
+        <TouchableOpacity style={styles.geoButton} onPress={() => props.locate(location, find)}>
+            <Text style={styles.geoText}>Продолжить оформление</Text>
+        </TouchableOpacity>
+    ) : (
+        <TouchableOpacity style={[styles.geoButton, {backgroundColor: '#aaaaaa'}]} onPress={() => {}} activeOpacity={1}>
+            <Text style={styles.geoText}>Доставка невозможна</Text>
+        </TouchableOpacity>
+    );
+
     return (
         <Modal visible={props.visible}>
             <View style={styles.container}>
@@ -103,9 +124,7 @@ export default function ModalList(props) {
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.geoButton} onPress={() => props.locate(location, find)}>
-                        <Text style={styles.geoText}>Продолжить оформление</Text>
-                    </TouchableOpacity>
+                    {sbutton}
                 </View>
             </View>
         </Modal>

@@ -23,9 +23,11 @@ function send(url, method, data, callback, token={}) {
     }
     fetch(backend + url, forFetch)
     .then((response) => {
-        return response.json();
+        return response.text();
     })
-    .then((json) => {
+    .then((text) => {
+        console.log(text);
+        const json = JSON.parse(text);
         console.log(json);
         callback(json);
     })
