@@ -34,8 +34,8 @@ export default function ModalList(props) {
             return await Location.reverseGeocodeAsync(loc);
         })().then((res) => {
             setLocation(res);
-            const addr = reg.latitude + ',' + reg.longitude;
-            send('api/area/check', 'POST', {geo : addr}, (json) => {
+            const addr = {lat: reg.latitude, lon: reg.longitude};
+            send('api/area/check', 'POST', addr, (json) => {
                 if(json === true) {
                     setAvailable(true);
                 }

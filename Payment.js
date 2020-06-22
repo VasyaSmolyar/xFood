@@ -14,9 +14,15 @@ export default function PaymentScreen({navigation}) {
     const [phone, setPhone] = useState(user.phone);
     const [modal, setModal] = useState(false);
     const [map, setMap] = useState(false);
-    const [coords, setCoords] = useState("");
+    const [coords, setCoords] = useState(null);
     const [region, setRegion] = useState("");
     const [street, setStreet] = useState("");
+    const [payType, setPayType] = useState("cash");
+    const [house, setHouse] = useState("");
+    const [apartament, setApartament] = useState("");
+    const [corpus, setCorpus] = useState("");
+    const [stage, setStage] = useState("");
+    const [doorphone, setDoorphone] = useState("");
 
     const choiceRegion = (name) => {
         setRegion(name);
@@ -28,9 +34,10 @@ export default function PaymentScreen({navigation}) {
         if(location === null || location === undefined) {
             return;
         }
-        setCoords(geo.latitude, ',', geo.longitude);
+        setCoords({lat: geo.latitude, lon: geo.longitude});
         const loc = location[0];
         setRegion(loc.city);
+        setHouse(loc.name);
         if(loc.street === null) {
             setStreet(loc.name);
         } else {
@@ -38,15 +45,23 @@ export default function PaymentScreen({navigation}) {
         }
     }
 
+    const getValue = (val) => {
+        return val !== "" ? val : "-";
+    }
+
     const makeOrder = () => {
         const token = useSelector(state => state.token);
-        let data = {
-            place_geo: coords,
-            pay_type: '',
-            
-        };
+        let data = coords;
+        data.pay_type = payType;
+        data.house = getValue(house);
+        data.apartament = getValue(apartament);
+        data.corpus = getValue(corpus);
+        data.stage = getValue(stage);
+        data.doorphone = getValue(doorphone);
         send('api/order/createorder', 'POST', data, (json) => {
-            navigation.navigate('Cabinet');
+            if (json["order.id"] !== undefined) {
+                navigation.navigate('Cabinet');
+            }
         }, token);
     }
 
@@ -89,19 +104,19 @@ export default function PaymentScreen({navigation}) {
                 <View style={styles.geoContainer}>
                     <View style={styles.cellWrap}>
                         <Text style={styles.inputWrapText}>Корпус</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput value={corpus} onChangeText={setCorpus} style={styles.phone} />
                     </View>
                     <View style={styles.cellWrap}>
                         <Text style={styles.inputWrapText}>Квартира</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput value={apartament} onChangeText={setApartament} style={styles.phone} />
                     </View>
                     <View style={styles.cellWrap}>
                         <Text style={styles.inputWrapText}>Этаж</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput value={stage} onChangeText={setStage} style={styles.phone} />
                     </View>
                     <View style={styles.cellWrap}>
                         <Text style={styles.inputWrapText}>Домофон</Text>
-                        <TextInput style={styles.phone} />
+                        <TextInput value={doorphone} onChangeText={setDoorphone} style={styles.phone} />
                     </View>
                 </View>
                 <View style={{alignItems: 'center', width: '100%'}}>
@@ -113,14 +128,16 @@ export default function PaymentScreen({navigation}) {
                     </TouchableOpacity>
                 </View>
                 <Text style={styles.header}>Оплата</Text>
-                <View style={styles.paymentContainer}>
+                <TouchableOpacity style={payType === "cash" ? styles.selectedContainer : styles.paymentContainer} 
+                onPress={() => setPayType("cash")}>
                     <Text style={styles.paymentHeader}>Наличными</Text>
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
-                </View>
-                <View style={styles.paymentContainer}>
+                </TouchableOpacity>
+                <TouchableOpacity style={payType === "transfer" ? styles.selectedContainer : styles.paymentContainer} 
+                onPress={() => setPayType("transfer")}>
                     <Text style={styles.paymentHeader}>Картой</Text>
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={{alignItems: 'center', width: '100%', marginTop: 10}}>
                     <TouchableOpacity style={styles.geoButton} onPress={makeOrder}>
                         <View style={styles.buttonContainer}>
@@ -244,6 +261,15 @@ const styles = StyleSheet.create({
     },
     paymentContainer: {
         borderColor: "#efefef",
+        borderRadius: 8,
+        borderWidth: 1,
+        padding: 10,
+        paddingLeft: 20,
+        margin: 10,
+        marginBottom: 0
+    },
+    selectedContainer: {
+        borderColor: "red",
         borderRadius: 8,
         borderWidth: 1,
         padding: 10,
