@@ -10,6 +10,7 @@ import path from './files/path.png';
 
 export default function PaymentScreen({navigation}) {
     const user = useSelector(state => state.user);
+    const token = useSelector(state => state.token);
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
     const [modal, setModal] = useState(false);
@@ -17,6 +18,7 @@ export default function PaymentScreen({navigation}) {
     const [coords, setCoords] = useState(null);
     const [region, setRegion] = useState("");
     const [street, setStreet] = useState("");
+    const [streetName, setStreetName] = useState("");
     const [payType, setPayType] = useState("cash");
     const [house, setHouse] = useState("");
     const [apartament, setApartament] = useState("");
@@ -37,11 +39,16 @@ export default function PaymentScreen({navigation}) {
         setCoords({lat: geo.latitude, lon: geo.longitude});
         const loc = location[0];
         setRegion(loc.city);
-        setHouse(loc.name);
+        const tmp = loc.name.split(", ");
+        console.log(tmp);
+        const name = tmp.length > 1 ? tmp[1] : loc.name;
+        setHouse(name);
         if(loc.street === null) {
             setStreet(loc.name);
+            setStreetName("");
         } else {
-            setStreet(loc.street + ', ' + loc.name);
+            setStreet(loc.street + ', ' + name);
+            setStreetName(loc.street);
         }
     }
 
@@ -50,14 +57,15 @@ export default function PaymentScreen({navigation}) {
     }
 
     const makeOrder = () => {
-        const token = useSelector(state => state.token);
         let data = coords;
         data.pay_type = payType;
+        data.street = getValue(streetName);
         data.house = getValue(house);
-        data.apartament = getValue(apartament);
+        data.apartment = getValue(apartament);
         data.corpus = getValue(corpus);
         data.stage = getValue(stage);
         data.doorphone = getValue(doorphone);
+        console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {
                 navigation.navigate('Cabinet');
@@ -122,7 +130,7 @@ export default function PaymentScreen({navigation}) {
                 <View style={{alignItems: 'center', width: '100%'}}>
                     <TouchableOpacity style={styles.geoButton} onPress={() => setMap(true)}>
                         <View style={styles.buttonContainer}>
-                            <Text style={styles.geoText}>Отправить код</Text>
+                            <Text style={styles.geoText}>Выбрать на карте</Text>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
                         </View>
                     </TouchableOpacity>
@@ -138,8 +146,8 @@ export default function PaymentScreen({navigation}) {
                     <Text style={styles.paymentHeader}>Картой</Text>
                     <Text style={styles.paymentText}>Приготовьте нужную сумму</Text>
                 </TouchableOpacity>
-                <View style={{alignItems: 'center', width: '100%', marginTop: 10}}>
-                    <TouchableOpacity style={styles.geoButton} onPress={makeOrder}>
+                <View style={{alignItems: 'center', width: '100%', marginTop: 30}}>
+                    <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.geoText}>Оформить заказ</Text>
                         </View>
@@ -199,6 +207,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'Tahoma-Regular',
         padding: 15,
+        paddingLeft: 10,
         backgroundColor: '#f4f4f6',
         marginTop: 10
     },
@@ -206,7 +215,7 @@ const styles = StyleSheet.create({
 		padding: 5,
 		backgroundColor: "#f2f3f5",
         marginTop: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
 		borderRadius: 7,
 		width: '45%',
 	},
@@ -269,7 +278,7 @@ const styles = StyleSheet.create({
         marginBottom: 0
     },
     selectedContainer: {
-        borderColor: "red",
+        borderColor: "#f1c40f",
         borderRadius: 8,
         borderWidth: 1,
         padding: 10,

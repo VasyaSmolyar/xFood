@@ -55,7 +55,7 @@ export default function ModalList(props) {
         if(errorMsg !== null) {
             return <Text style={{color: 'red'}}>{errorMsg}</Text>;
         }
-        if(location === null || location === undefined) {
+        if(location === null || location === undefined || location[0] === undefined) {
             return '';
         }
         const loc = location[0];

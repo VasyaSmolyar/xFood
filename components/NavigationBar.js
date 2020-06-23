@@ -31,10 +31,10 @@ export default function SearchBar(props) {
                     <Text style={props.routeName === 'Cart' ? styles.ytext : styles.text}>Корзина</Text>
                 </View>
             </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback onPress={() => {navigation.navigate('Catalog')}}>
+            <TouchableWithoutFeedback onPress={() => {navigation.navigate('Cabinet')}}>
                 <View style={styles.touch}>
-                    <Image source={male}  style={styles.image} />
-                    <Text style={styles.text}>Кабинет</Text>
+                    <Image source={props.routeName === 'Cabinet' ? ymale : male} style={styles.image} />
+                    <Text style={props.routeName === 'Cabinet' ? styles.ytext : styles.text}>Кабинет</Text>
                 </View>
             </TouchableWithoutFeedback>
         </View>
