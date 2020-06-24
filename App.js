@@ -6,12 +6,14 @@ import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
+import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
 import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer } from './utils/store';
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
 import PaymentScreen from './Payment';
 import CabinetScreen from './Cabinet';
+import OrderListScreen from './OrderList';
 import background from './files/background.png';
 import logo from './files/logo.png';
 
@@ -165,6 +167,7 @@ const store = createStore(rootReducer);
 function AppFunc() {
     return (
 		<Provider store={store}>
+			<StatusBar style="light" backgroundColor="black" />
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false}}>
 					<Stack.Screen name="Welcome" component={AuthScreen} />
@@ -176,6 +179,7 @@ function AppFunc() {
 					<Stack.Screen name="Cart" component={CartScreen} />
 					<Stack.Screen name="Payment" component={PaymentScreen} />
 					<Stack.Screen name="Cabinet" component={CabinetScreen} />
+					<Stack.Screen name="OrderList" component={OrderListScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  

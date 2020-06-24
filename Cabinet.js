@@ -1,22 +1,10 @@
 import React, { useState } from 'react';
 import NavigationBar from './components/NavigationBar';
-import useNavigation from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import arrow from './files/arrow.png';
 import man from './files/man.png';
 import check from './files/checkbox_yellow.png';
-
-function MenuItem(props) {
-    return (
-        <View style={styles.itemContainer}>
-            <Text style={styles.itemText}>{props.title}</Text>
-            <TouchableOpacity>
-                <Image source={arrow} resizeMode={'contain'} style={{width: 10, height: 20}}></Image>
-            </TouchableOpacity>
-        </View>
-    );
-}
 
 function Header(props) {
     return (
@@ -26,10 +14,20 @@ function Header(props) {
     );
 }
 
-export default function CabinetScreen() {
+export default function CabinetScreen({navigation}) {
     const [name, setName] = useState("Иван Иванов");
     const [phone, setPhone] = useState("+7(977)517-48-22");
     const [icon, setIcon] = useState(man);
+
+    const MenuItem = (props) => {
+        return (
+            <TouchableOpacity style={styles.itemContainer} onPress={() => navigation.navigate(props.page)}>
+                <Text style={styles.itemText}>{props.title}</Text>
+                <Image source={arrow} resizeMode={'contain'} style={{width: 10, height: 20}}></Image>
+            </TouchableOpacity>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.barContainer}>
@@ -38,23 +36,27 @@ export default function CabinetScreen() {
             <ScrollView>
                 <View style={styles.itemContainer}>
                     <View style={styles.imageBox}>
-                        <Image source={icon} resizeMode={'contain'} style={{width: 60, height: 60}}/>
+                        <View style={{overflow: "hidden"}}>
+                            <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
+                        </View>
                     </View>
                     <View style={{justifyContent: "space-around"}}>
-                        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                            <Text style={styles.nameText}>{name}</Text>
-                            <Image source={check} resizeMode={'contain'} style={{width: 20, height: 20}}/>
-                        </View>
+                        <View>
+                            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                                <Text style={styles.nameText}>{name}</Text>
+                                <Image source={check} resizeMode={'contain'} style={{width: 20, height: 20}}/>
+                            </View>
                         <Text style={styles.phoneText}>{phone}</Text>
+                        </View>
                         <Text style={styles.dataText}>Изменить данные</Text>
                     </View>
                 </View>
                 <Header title="Основные" />
-                <MenuItem title="Мои заказы" page="" />
-                <MenuItem title="Помощь" page="" />
-                <MenuItem title="Сканер акцизов" page="" />
+                <MenuItem title="Мои заказы" page="OrderList" />
+                <MenuItem title="Помощь" page="Catalog" />
+                <MenuItem title="Сканер акцизов" page="Catalog" />
                 <Header title="Акции" />
-                <MenuItem title="Купоны" page="" />
+                <MenuItem title="Купоны" page="Catalog" />
                 <Header title="Другое" />
                 <View style={styles.itemContainer}>
                     <TouchableOpacity>
@@ -62,6 +64,7 @@ export default function CabinetScreen() {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+            <NavigationBar navigation={navigation} routeName="Cabinet"/>
         </View>
     );
 }
@@ -120,7 +123,7 @@ const styles = StyleSheet.create({
     imageBox: {
         backgroundColor: '#201f1b',
         borderRadius: 100,
-        padding: 20,
+        overflow: 'hidden',
         alignItems: 'center',
         justifyContent: 'center'
     } 
