@@ -3,7 +3,8 @@ import NavigationBar from './components/NavigationBar';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
-import { View, StyleSheet, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import repeat from './files/repeat.png';
 
 function OrderItem(props) {
     return (
@@ -47,10 +48,10 @@ function Order(props) {
             <View style={styles.orderTop}>
                 <View>
                     <Text style={styles.orderTitle}>Заказ {getData(item.date)}</Text>
-                    <View>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={styles.orderCost}>{pad(item.id)}</Text>
                         <View style={styles.orderDel}></View>
-                        <Text style={styles.orderCost}>{item.summ + item.delivery} ₽</Text>
+                        <Text style={styles.orderCost}>{item.summ + item.delivery_summ} ₽</Text>
                     </View>
                 </View>
                 <View>
@@ -59,18 +60,12 @@ function Order(props) {
                     </View>
                 </View>
             </View>
-            { /*
-            <FlatList data={orders} extraData={orders} keyExtractor={(item, index) => (index)}
-            renderItem={(item) => {
-                
-            }} />
-            */ }
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.orderButton}>
                     <Text style={styles.buttonText}>Подробнее</Text>
                 </TouchableOpacity>
-                <TouchableOpacity>
-                    <Image />
+                <TouchableOpacity style={styles.repeatButton}>
+                    <Image source={repeat} style={{width: 25, height: 25}} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -83,19 +78,24 @@ export default function OrderListScreen({navigation}) {
 
     useEffect(() => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
-            setOrders(json)
+            setOrders(json);
         }, token);
     }, []);
 
+    const data = orders.map((item, id) => {
+        return (
+            <Order key={id} item={item} />
+        )
+    });
+
     return (
-        <View>
+        <View style={styles.container}>
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Личный кабинет</Text>
             </View>
-            <FlatList data={orders} extraData={orders} keyExtractor={(item, index) => (String(index))}
-            renderItem={(item) => {
-                <Order item={item.item} />
-            }} />
+            <ScrollView>
+                {data}
+            </ScrollView>
             <NavigationBar navigation={navigation} routeName="OrderList" />
         </View>
     );
@@ -123,14 +123,16 @@ const styles = StyleSheet.create({
     orderContainer: {
         backgroundColor: '#fff',
         borderColor: 10,
-        padding: 10,
+        padding: 15,
+        paddingHorizontal: 20,
         margin: 10,
-        marginBottom: 5
+        marginBottom: 5,
+        borderRadius: 15
     },
     orderTop: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 20
+        marginBottom: 20
     },
     orderTitle: {
         fontFamily: 'Tahoma-Regular',
@@ -143,18 +145,22 @@ const styles = StyleSheet.create({
         color: '#979ca2'
     },
     orderDel: {
-        width: 12,
-        height: 12,
+        width: 6,
+        height: 6,
         backgroundColor: '#979ca2',
-        borderRadius: 10
+        borderRadius: 10,
+        marginHorizontal: 5
     },
     orderStatus: {
         borderRadius: 5,
-        padding: 5
+        paddingHorizontal: 10,
+        paddingVertical: 5
     },
     statusText: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 12,
+        color: 'white',
+        textTransform: 'uppercase'
     },
     buttons: {
         flexDirection: 'row',
@@ -164,7 +170,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: '80%',
         alignItems: "center",
-        backgroundColor: '#f1c40f'
+        backgroundColor: '#f1c40f',
+        paddingVertical: 10,
+        justifyContent: "center"
+    },
+    repeatButton: {
+        borderRadius: 5,
+        width: '15%',
+        paddingVertical: 10,
+        alignItems: "center",
+        backgroundColor: '#f1c40f',
     },
     buttonText: {
         fontFamily: 'Tahoma-Regular',
