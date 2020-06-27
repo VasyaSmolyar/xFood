@@ -6,21 +6,19 @@ import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import repeat from './files/repeat.png';
 
-function OrderItem(props) {
+function OrderItem({item}) {
     return (
-        <View>
-            <View>
-                <Text></Text>
-                <Text></Text>
+        <View style={styles.productString}>
+            <View style={{flexDirection: 'row'}}>
+                <Text style={styles.productText} numberOfLines={1}>{item.title}</Text>
+                <Text style={styles.productNum}>x{item.num}</Text>
             </View>
-            <Text></Text>
+            <Text style={styles.productPrice}>{item.price} ₽</Text>
         </View>
     );
 }
 
-function Order(props) {
-    const item = props.item;
-
+function Order({item}) {
     const getData = (str) => {
         const date = Date.parse(str);
         const options = {
@@ -40,8 +38,14 @@ function Order(props) {
 
     const pad = (num) => {
         const size = String(num).length;
-        return ('0000000000000' + num).substr(-size);
+        return '0000000000000'.substr(size) + num;
     }
+
+    const data = item.products.map((item, id) => {
+        return (
+            <OrderItem key={id} item={item} />
+        )
+    });
     
     return (
         <View style={styles.orderContainer}>
@@ -60,6 +64,9 @@ function Order(props) {
                     </View>
                 </View>
             </View>
+            <ScrollView>
+                {data}
+            </ScrollView>
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.orderButton}>
                     <Text style={styles.buttonText}>Подробнее</Text>
@@ -91,7 +98,7 @@ export default function OrderListScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.barContainer}>
-                <Text style={styles.barText}>Личный кабинет</Text>
+                <Text style={styles.barText}>Мои заказы</Text>
             </View>
             <ScrollView>
                 {data}
@@ -186,5 +193,25 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 14,
         color: 'white'
+    },
+    productString: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 20
+    },
+    productText: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 14,
+        width: '75%',
+        marginRight: 10,
+    },
+    productPrice: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 13,
+    },
+    productNum: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 12,
+        color: '#bec1c5'
     }
 });
