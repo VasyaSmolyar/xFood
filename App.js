@@ -167,7 +167,7 @@ const store = createStore(rootReducer);
 function AppFunc() {
     return (
 		<Provider store={store}>
-			<StatusBar style="light" backgroundColor="black" />
+			<StatusBar style="light" backgroundColor="black" barStyle="light-content" />
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false}}>
 					<Stack.Screen name="Welcome" component={AuthScreen} />
