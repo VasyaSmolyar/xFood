@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import repeat from './files/repeat.png';
+import back from './files/back.png';
 
 function OrderItem({item}) {
     return (
@@ -20,7 +21,7 @@ function OrderItem({item}) {
 
 function Order({item}) {
     const getData = (str) => {
-        const date = Date.parse(str);
+        const date = new Date(Date.parse(str));
         const options = {
             year: 'numeric',
             month: 'long',
@@ -98,7 +99,16 @@ export default function OrderListScreen({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.barContainer}>
-                <Text style={styles.barText}>Мои заказы</Text>
+                <View style={styles.barCell}>
+                    <TouchableOpacity onPress={() => navigation.back()}>
+                        <Image source={back} style={{width: 60, height: 20}} resizeMode='contain' />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.barCell}>
+                    <Text style={styles.barText}>Мои заказы</Text>
+                </View>
+                <View style={styles.barCell}>
+                </View>
             </View>
             <ScrollView>
                 {data}
@@ -119,7 +129,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginTop: Constants.statusBarHeight,
-        alignItems: 'center'
+        flexDirection: 'row',
+    },
+    barCell: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     barText: {
         color: "#f1c40f",
