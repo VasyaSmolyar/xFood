@@ -20,16 +20,6 @@ function OrderItem({item}) {
 }
 
 function Order({item}) {
-    const getData = (str) => {
-        const date = new Date(Date.parse(str));
-        const options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        };
-        return date.toLocaleString("ru", options);
-    }
-
     const getColor = (status) => {
         switch(status) {
             default:
@@ -52,7 +42,7 @@ function Order({item}) {
         <View style={styles.orderContainer}>
             <View style={styles.orderTop}>
                 <View>
-                    <Text style={styles.orderTitle}>Заказ {getData(item.date)}</Text>
+                    <Text style={styles.orderTitle}>Заказ {item.date}</Text>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={styles.orderCost}>{pad(item.id)}</Text>
                         <View style={styles.orderDel}></View>
@@ -100,8 +90,8 @@ export default function OrderListScreen({navigation}) {
         <View style={styles.container}>
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
-                    <TouchableOpacity onPress={() => navigation.back()}>
-                        <Image source={back} style={{width: 60, height: 20}} resizeMode='contain' />
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={back} style={{width: 80, height: 35}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
@@ -159,7 +149,7 @@ const styles = StyleSheet.create({
     orderTitle: {
         fontFamily: 'Tahoma-Regular',
         fontWeight: 'bold',
-        fontSize: 18
+        fontSize: 15,
     },
     orderCost: {
         fontFamily: 'Tahoma-Regular',
