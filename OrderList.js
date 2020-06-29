@@ -4,6 +4,7 @@ import send from './utils/net';
 import { useSelector } from 'react-redux';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import ModalOrder from './components/Order';
 import repeat from './files/repeat.png';
 import back from './files/back.png';
 
@@ -19,7 +20,7 @@ function OrderItem({item}) {
     );
 }
 
-function Order({item}) {
+function Order({item, onChoice}) {
     const getColor = (status) => {
         switch(status) {
             default:
@@ -59,7 +60,7 @@ function Order({item}) {
                 {data}
             </ScrollView>
             <View style={styles.buttons}>
-                <TouchableOpacity style={styles.orderButton}>
+                <TouchableOpacity style={styles.orderButton} onPress={() => onChoice(item)}>
                     <Text style={styles.buttonText}>Подробнее</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.repeatButton}>
@@ -73,6 +74,7 @@ function Order({item}) {
 export default function OrderListScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [orders, setOrders] = useState([]);
+    const [current, setCurrent] = useState(null);
 
     useEffect(() => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
@@ -82,7 +84,7 @@ export default function OrderListScreen({navigation}) {
 
     const data = orders.map((item, id) => {
         return (
-            <Order key={id} item={item} />
+            <Order key={id} item={item} onChoice={setCurrent} />
         )
     });
 
@@ -100,6 +102,7 @@ export default function OrderListScreen({navigation}) {
                 <View style={styles.barCell}>
                 </View>
             </View>
+            <ModalOrder visible={current !== null} item={current} onExit={() => setCurrent(null)} />
             <ScrollView>
                 {data}
             </ScrollView>
