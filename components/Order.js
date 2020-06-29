@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Modal, Text, Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import cancel from '../files/xorder.png';
 import time from '../files/time.png';
 import moto from '../files/moto.png';
 import money from '../files/money.png';
 
+function Product({item}) {
+    return (
+        <View style={styles.firstLine}>
+            <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.image} />
+            <View>
+                <Text style={styles.itemPrice}>{item.price}₽</Text>
+                <View style={{justifyContent: 'space-between', flex: 1}} >
+                    <Text style={styles.itemText}>{item.title}</Text>
+                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+                        <Text>{item.flag}</Text> 
+                        <Text style={styles.itemFlag}>{item.country}</Text>
+                    </View>
+                </View>
+            </View>
+        </View>
+    );
+}
 
 function Key({title, pic, value}) {
     const img = pic !== null ? <Image source={pic} style={{width: 20, height: 20}} resizeMode='contain' /> : null;
@@ -30,35 +47,45 @@ export default function ModalOrder({item, visible, onExit}) {
         return <Modal visible={false}></Modal>
     }
 
+    const data = item.products.map((product, id) => {
+        return <Product key={id} item={product} />
+    });
+
     return (
-    <Modal transparent={true} visible={visible}>
-        <View style={styles.modalContainer}>
-            <View style={styles.boxContainer}>
-                <View style={styles.headerContainer}>
-                    <View style={styles.headerCell}></View>
-                    <View style={[styles.headerCell, {flex: 2}]}>
-                        <Text style={styles.header}>Заказ {pad(item.id)}</Text>
+        <Modal transparent={true} visible={visible}>
+            <View style={styles.modalContainer}>
+                <View style={styles.boxContainer}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.headerCell}></View>
+                        <View style={[styles.headerCell, {flex: 3}]}>
+                            <Text style={styles.header}>Заказ {pad(item.id)}</Text>
+                        </View>
+                        <View style={styles.headerCell}>
+                            <TouchableOpacity onPress={onExit}>
+                                <Image source={cancel} style={{width: 20, height: 20}} resizeMode='contain' />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={styles.headerCell}>
-                        <TouchableOpacity onPress={onExit}>
-                            <Image source={cancel} style={{width: 20, height: 20}} resizeMode='contain' />
+                    <View style={{marginBottom: 30, marginTop: 10}}>
+                        <Key title="Дата и время оформления заказа" value={item.date} pic={time} />
+                        <Key title="Способ оплаты" value={item.pay_type} pic={money} />
+                        <Key title="Адрес доставки" value={item.adress} pic={moto} />
+                        <Key title="Осталось ждать примерно" value={item.before_delivery} pic={null} />
+                    </View>
+                    <View style={{alignItems: 'center'}}>
+                        <TouchableOpacity style={styles.orderButton}>
+                            <Text style={styles.buttonText}>Связаться с курьером</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <View style={{marginBottom: 30, marginTop: 10}}>
-                    <Key title="Дата и время оформления заказа" value={item.date} pic={time} />
-                    <Key title="Способ оплаты" value={item.pay_type} pic={money} />
-                    <Key title="Адрес доставки" value={item.adress} pic={moto} />
-                    <Key title="Осталось ждать примерно" value={item.before_delivery} pic={null} />
-                </View>
-                <View style={{alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.orderButton}>
-                        <Text style={styles.buttonText}>Связаться с курьером</Text>
-                    </TouchableOpacity>
+                    <View style={{marginTop: 30, paddingHorizontal: 20}}>
+                        <Text style={styles.header}>Заказанные товары</Text>
+                        <ScrollView scrollEnabled={true}>
+                            {data}
+                        </ScrollView>
+                    </View>
                 </View>
             </View>
-        </View>
-    </Modal>
+        </Modal>
     );
 }           
 
@@ -116,5 +143,35 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 14,
         color: 'white'
+    },
+    header: {
+        fontFamily: 'Tahoma-Regular',
+        fontWeight: 'bold',
+        fontSize: 18,
+    },
+    image: {
+        width: 120,
+        height: 120,
+    },
+    firstLine: {
+        flexDirection: 'row',
+        backgroundColor: "#fff",
+        paddingVertical: 10
+    },
+    itemText: {
+        fontSize: 14,
+        marginVertical: 5,
+        maxWidth: '80%'
+    },
+    itemFlag: {
+        color: '#97999d',
+        fontSize: 12,
+        fontFamily: 'Tahoma-Regular',
+        marginLeft: 5
+    },
+    itemPrice: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingRight: 10
     },
 });

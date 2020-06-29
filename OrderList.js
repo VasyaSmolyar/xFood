@@ -47,7 +47,7 @@ function Order({item, onChoice}) {
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                         <Text style={styles.orderCost}>{pad(item.id)}</Text>
                         <View style={styles.orderDel}></View>
-                        <Text style={styles.orderCost}>{item.summ + item.delivery_summ} ₽</Text>
+                        <Text style={styles.orderCost}>{(item.summ + item.delivery_summ).toFixed(2)} ₽</Text>
                     </View>
                 </View>
                 <View>
