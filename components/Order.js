@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import cancel from '../files/xorder.png';
 import time from '../files/time.png';
@@ -26,6 +26,10 @@ function Product({item}) {
 function Key({title, pic, value}) {
     const img = pic !== null ? <Image source={pic} style={{width: 20, height: 20}} resizeMode='contain' /> : null;
 
+    if(value === undefined || value === null) {
+        return null;
+    }
+
     return (
         <View style={{paddingHorizontal: 20}}>
             <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center'}}>
@@ -51,6 +55,14 @@ export default function ModalOrder({item, visible, onExit}) {
         return <Product key={id} item={product} />
     });
 
+    const button = item.status.trim().toLowerCase() === "в пути" ? (
+        <View style={{alignItems: 'center'}}>
+            <TouchableOpacity style={styles.orderButton}>
+                <Text style={styles.buttonText}>Связаться с курьером</Text>
+            </TouchableOpacity>
+        </View>
+    ) : null;
+
     return (
         <Modal transparent={true} visible={visible} animationType="slide">
             <View style={styles.modalContainer}>
@@ -72,11 +84,7 @@ export default function ModalOrder({item, visible, onExit}) {
                         <Key title="Адрес доставки" value={item.adress} pic={moto} />
                         <Key title="Осталось ждать примерно" value={item.before_delivery} pic={null} />
                     </View>
-                    <View style={{alignItems: 'center'}}>
-                        <TouchableOpacity style={styles.orderButton}>
-                            <Text style={styles.buttonText}>Связаться с курьером</Text>
-                        </TouchableOpacity>
-                    </View>
+                    {button}
                     <Text style={[styles.header, {marginTop: 30, paddingHorizontal: 20}]}>Заказанные товары</Text>
                     <ScrollView>
                         {data}

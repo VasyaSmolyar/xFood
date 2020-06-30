@@ -21,10 +21,19 @@ function OrderItem({item}) {
 }
 
 function Order({item, onChoice}) {
-    const getColor = (status) => {
+    const getColor = (str) => {
+        const status = str.trim().toLowerCase();
         switch(status) {
+            case "ищем курьера":
+                return '#00c761'
+            case "в пути":
+                return '#fc9e15'
+            case "доставлено":
+                return '#bec2c7'
+            case "отменён":
+                return '#ee361d'
             default:
-                return '#bec1c5'
+                return '#bec2c7'
         }
     }
 
