@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import cancel from '../files/xorder.png';
 import time from '../files/time.png';
 import moto from '../files/moto.png';
@@ -52,7 +52,7 @@ export default function ModalOrder({item, visible, onExit}) {
     });
 
     return (
-        <Modal transparent={true} visible={visible}>
+        <Modal transparent={true} visible={visible} animationType="slide">
             <View style={styles.modalContainer}>
                 <View style={styles.boxContainer}>
                     <View style={styles.headerContainer}>
@@ -77,12 +77,10 @@ export default function ModalOrder({item, visible, onExit}) {
                             <Text style={styles.buttonText}>Связаться с курьером</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{marginTop: 30, paddingHorizontal: 20}}>
-                        <Text style={styles.header}>Заказанные товары</Text>
-                        <ScrollView scrollEnabled={true}>
-                            {data}
-                        </ScrollView>
-                    </View>
+                    <Text style={[styles.header, {marginTop: 30, paddingHorizontal: 20}]}>Заказанные товары</Text>
+                    <ScrollView>
+                        {data}
+                    </ScrollView>
                 </View>
             </View>
         </Modal>
