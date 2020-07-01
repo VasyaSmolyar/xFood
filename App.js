@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image } from 'react-native';
@@ -8,6 +8,7 @@ import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
+import { readToken, writeToken } from './utils/token';
 import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer } from './utils/store';
 import { CatalogScreen, ProductScreen } from './Catalog';
 import CartScreen from './Cart';
@@ -25,6 +26,20 @@ const sample = {
 };
 
 function AuthScreen({navigation}) {
+
+	const dispath = useDispatch();
+
+	useEffect(async () => {
+		const myToken = await readToken();
+		console.log(myToken);
+		send('api/cart/getcart', 'POST', {}, () => {
+			dispath(setToken(myToken.login, myToken.times, myToken.token));
+			navigation.navigate('Catalog');
+		}, myToken, (response) => {
+			console.log("error: " + response.status + "\n" + response.body);
+		});
+	}, []);
+
 	return (
 		<View style={styles.container}>
 			<ImageBackground source={background} style={styles.backContainer}>
@@ -73,6 +88,7 @@ function CodeScreen({navigation}) {
 	const [value, setValue] = useState('');
 	const [wrong, setWrong] = useState(false);
 	const dispath = useDispatch();
+
 	const navigate = json => {
 		const valid = json.isValid === "true";
 		const exist = isExisting === "true";
@@ -81,14 +97,17 @@ function CodeScreen({navigation}) {
 		} else if(!exist) {
 			navigation.navigate('Register', {code: value, phone: "+7" + phone});
 		} else {
+			writeToken(json);
 			dispath(setToken(json.login, json.times, json.token));
 			dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
 			navigation.navigate('Catalog');
 		}
 	};
+
 	const press = () => {
 		send('api/user/verify', 'POST', {phone: "+7" + phone, code: value}, navigate);
 	};
+
 	const mes = <Text style={styles.error}>Неверный код</Text>;
 	let err = wrong ? mes : null;
 	return (
@@ -116,14 +135,18 @@ function RegisterScreen({navigation}) {
 	data.username = phone;
 	data.password = code;
 	data.code = code;
+
 	const navigate = json => {
+		writeToken(json);
 		dispath(setToken(json.login, json.times, json.token));
 		dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
 		navigation.navigate('Catalog');
 	};
+
 	const press = () => {
 		send('api/user/create', 'POST', data, navigate);
 	};
+
 	return (
 		<View style={styles.backContainer}>
 			<View style={{height: '10%', width: '100%'}}>
