@@ -38,7 +38,7 @@ function send(url, method, data, callback, token={}, onError=(() => {})) {
         }
     })
     .catch((error) => {
-        console.error(error);
+        console.log(error);
     })
 }
 

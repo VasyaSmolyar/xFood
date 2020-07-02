@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
+import { delToken } from './utils/token';
+import send from './utils/net';
 import arrow from './files/arrow.png';
 import man from './files/man.png';
 import check from './files/checkbox_yellow.png';
@@ -18,6 +21,15 @@ export default function CabinetScreen({navigation}) {
     const [name, setName] = useState("Иван Иванов");
     const [phone, setPhone] = useState("+7(977)517-48-22");
     const [icon, setIcon] = useState(man);
+    const token = useSelector(state => state.token);
+
+    useEffect(() => {
+        send('api/user/get', 'POST', {}, (json) => {
+            setName(json.first_name + ' ' + json.last_name);
+            setPhone(json.phone);
+            setIcon(man);
+		}, token);
+    }, []);
 
     const MenuItem = (props) => {
         return (
@@ -26,6 +38,11 @@ export default function CabinetScreen({navigation}) {
                 <Image source={arrow} resizeMode={'contain'} style={{width: 10, height: 20}}></Image>
             </TouchableOpacity>
         );
+    }
+
+    const onExit = () => {
+        delToken();
+        navigation.navigate('Welcome');
     }
 
     return (
@@ -58,11 +75,11 @@ export default function CabinetScreen({navigation}) {
                 <Header title="Акции" />
                 <MenuItem title="Купоны" page="Catalog" />
                 <Header title="Другое" />
-                <View style={styles.itemContainer}>
-                    <TouchableOpacity>
+                <TouchableOpacity onPress={onExit}>
+                    <View style={styles.itemContainer}>
                         <Text style={[styles.itemText, {color: '#ed3823'}]}>Выйти из аккаунта</Text>
-                    </TouchableOpacity>
-                </View>
+                    </View>
+                </TouchableOpacity>
             </ScrollView>
             <NavigationBar navigation={navigation} routeName="Cabinet"/>
         </View>
