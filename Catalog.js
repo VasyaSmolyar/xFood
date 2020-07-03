@@ -11,7 +11,7 @@ import plus from './files/plus.png';
 
 function Category(props) {
     const navigation = useNavigation();
-    if(props.empty !== undefined) {
+    if(props.empty === true) {
         return <View style={{width: '45%', height: 10}}></View>
     }
     return (
@@ -83,7 +83,10 @@ function CartBar(props) {
 export function CatalogScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [data, setData] = useState([]);
+    const [filtered, setFiltered] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
+    const [query, setQuery] = useState("");
+
     const load = (json) => {
         setLoaded(true);
         const list = json.map((item) => {
@@ -95,7 +98,17 @@ export function CatalogScreen({navigation}) {
             };
         });
         setData(list);
+        setFiltered(list);
     };
+
+    const filter = (value) => {
+        setQuery(value);
+            const list = data.filter((item) => {
+                return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
+            });
+            setFiltered(list);
+        
+    }
 
     useEffect(() => {
         if(!isLoaded) {
@@ -105,12 +118,12 @@ export function CatalogScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <SearchBar placeholder={"Поиск по категориям"} />
+            <SearchBar placeholder="Поиск по категориям" value={query} onChangeText={filter} />
             <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
-            keyExtractor={(item, index) => item.key.toString()} 
-            data={data.length % 2 === 1 ? [...data, {empty: true}] : data}
+            keyExtractor={(item, index) => index.toString()} 
+            data={filtered.length % 2 === 1 ? [...filtered, {empty: true}] : filtered}
             contentContainerStyle={styles.catList} renderItem={(item) => 
-            <Category title={item.item.title} image={item.item.poster_url} empty={item.empty} subs={item.item.subcategories} />}/>
+            <Category title={item.item.title} image={item.item.poster_url} empty={item.item.empty} subs={item.item.subcategories} />}/>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
