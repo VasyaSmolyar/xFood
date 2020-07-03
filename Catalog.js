@@ -103,11 +103,10 @@ export function CatalogScreen({navigation}) {
 
     const filter = (value) => {
         setQuery(value);
-            const list = data.filter((item) => {
-                return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
-            });
-            setFiltered(list);
-        
+        const list = data.filter((item) => {
+            return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
+        });
+        setFiltered(list);    
     }
 
     useEffect(() => {
@@ -138,6 +137,9 @@ export function ProductScreen({navigation}) {
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [offset, setOffset] = useState(0);
+    const [filtered, setFiltered] = useState([]);
+    const [query, setQuery] = useState("");
+
     const num = 5;
 
     const setCart = (json) => {
@@ -157,12 +159,24 @@ export function ProductScreen({navigation}) {
         setLoaded(false);
     }
 
+    const filter = (value) => {
+        setQuery(value);
+        const list = data.filter((item) => {
+            return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
+        });
+        setFiltered(list);    
+    }
+
     const load = (json) => {
         setLoaded(true);
         if(json.details !== undefined) {
             return;
         }
         setData([...data,...json]);
+        const list = [...data,...json].filter((item) => {
+            return item.title.toLowerCase().search(query.toLowerCase()) !== -1;
+        });
+        setFiltered(list);    
     };
 
     const addToCart = (item) => {
@@ -179,7 +193,7 @@ export function ProductScreen({navigation}) {
 
     return (
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
-            <SearchBar placeholder={"Поиск по категории"} />
+            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filter} />
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={
                     (item) => (
@@ -197,7 +211,7 @@ export function ProductScreen({navigation}) {
             </View>
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
-            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data}  renderItem={
+            onEndReached={upload} keyExtractor={(item, index) => item.title} data={filtered.length % 2 === 1 ? [...filtered, {empty: true}] : filtered}  renderItem={
               (item) => <Item item={item} addToCart={addToCart} />
             }/>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
