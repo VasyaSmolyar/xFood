@@ -167,7 +167,11 @@ export function ProductScreen({navigation}) {
         setOffset(0);
         setQuery(value);
         const title = "Все категории" ? "all" : title;
-        send('api/catalog/getbycategory', 'GET', {title: title, offset: 0, num: num, search: value}, (json) => {
+        let data = {title: value, offset: offset, num: num, search: query};
+        if (sub !== -1) {
+            data.subcategory = subs[sub];
+        }
+        send('api/catalog/getbycategory', 'GET', data, (json) => {
             if(json.details !== undefined) {
                 return;
             }
@@ -191,7 +195,11 @@ export function ProductScreen({navigation}) {
     useEffect(() => {
         if(!isLoaded) {
             const value = title === "Все категории" ? "all" : title;
-            send('api/catalog/getbycategory', 'GET', {title: value, offset: offset, num: num, search: query}, load, token);
+            let data = {title: value, offset: offset, num: num, search: query};
+            if (sub !== -1) {
+                data.subcategory = subs[sub];
+            }
+            send('api/catalog/getbycategory', 'GET', data, load, token);
         }
     });
 
@@ -204,6 +212,18 @@ export function ProductScreen({navigation}) {
                         const color = sub === item.index ? [styles.subButton, {backgroundColor: '#cccccc'}] : styles.subButton; 
                         return (
                             <TouchableOpacity style={color} onPress={() => {
+                                setOffset(0);
+                                const title = "Все категории" ? "all" : title;
+                                let data = {title: title, offset: 0, num: num, search: query};
+                                if (sub !== item.index) {
+                                    data.subcategory = subs[item.index];
+                                }
+                                send('api/catalog/getbycategory', 'GET', data, (json) => {
+                                    if(json.details !== undefined) {
+                                        return;
+                                    }
+                                    setData(json);
+                                }, token);
                                 setSub(sub === item.index ? -1 : item.index);
                             }}>
                                 <Text style={styles.subText}>{item.item}</Text>
