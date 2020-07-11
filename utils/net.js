@@ -1,6 +1,6 @@
 const backend = 'http://194.67.92.163:8000/';
 
-function send(url, method, data, callback, token={}, onError=(() => {})) {
+function send(url, method, data, callback, token={}) {
     let headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -23,19 +23,23 @@ function send(url, method, data, callback, token={}, onError=(() => {})) {
     }
     fetch(backend + url, forFetch)
     .then((response) => {
+        //console.log(response.status);
+        /*
         if(response.status < 200 || response.status > 300) {
+            console.log(response.status);
             onError(response);
             return null;  
         }
+        */
         return response.text();
     })
     .then((text) => {
-        if(text !== null) {
+        //if(text !== null) {
             console.log(text);
             const json = JSON.parse(text);
             console.log(json);
             callback(json);
-        }
+        //}
     })
     .catch((error) => {
         console.log(error);

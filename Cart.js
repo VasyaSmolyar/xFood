@@ -85,10 +85,8 @@ const CartScreen = () => {
     const navigation = useNavigation();
 
     const setCart = (json) => {
-        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
-            return {item: {...item.product[0]}, count: item.num};
-        });
-        dispath(loadCart(cart));
+        //console.log(json);
+        //console.log("==========================");
         const other = json.reverse()[0];
         dispath(setPrice(other.products_cost, other.delivery_cost));
     }

@@ -59,6 +59,10 @@ function CartBar(props) {
     const add = () => {
         dispath(addItem(props.item));
         send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
+        send('api/cart/getcart', 'POST', {}, (json) => {
+            console.log(json);
+            console.log("==========================");
+        }, token);
     }
 
     const remove = () => {
@@ -136,8 +140,8 @@ export function ProductScreen({navigation}) {
     const { title } = route.params;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
+    const [sub, setSub] = useState(-1);
     const [offset, setOffset] = useState(0);
-    const [filtered, setFiltered] = useState([]);
     const [query, setQuery] = useState("");
 
     const num = 5;
@@ -159,12 +163,16 @@ export function ProductScreen({navigation}) {
         setLoaded(false);
     }
 
-    const filter = (value) => {
+    const filterQuery = (value) => {
+        setOffset(0);
         setQuery(value);
-        const list = data.filter((item) => {
-            return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
-        });
-        setFiltered(list);    
+        const title = "Все категории" ? "all" : title;
+        send('api/catalog/getbycategory', 'GET', {title: title, offset: 0, num: num, search: value}, (json) => {
+            if(json.details !== undefined) {
+                return;
+            }
+            setData(json);
+        }, token);
     }
 
     const load = (json) => {
@@ -173,34 +181,35 @@ export function ProductScreen({navigation}) {
             return;
         }
         setData([...data,...json]);
-        const list = [...data,...json].filter((item) => {
-            return item.title.toLowerCase().search(query.toLowerCase()) !== -1;
-        });
-        setFiltered(list);    
     };
 
     const addToCart = (item) => {
         dispath(addItem(item));
-        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, token);
     }
 
     useEffect(() => {
         if(!isLoaded) {
             const value = title === "Все категории" ? "all" : title;
-            send('api/catalog/getbycategory', 'GET', {title: value, offset: offset, num: num}, load, token);
+            send('api/catalog/getbycategory', 'GET', {title: value, offset: offset, num: num, search: query}, load, token);
         }
     });
 
     return (
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
-            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filter} />
+            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={
-                    (item) => (
-                    <TouchableOpacity style={styles.subButton}>
-                        <Text style={styles.subText}>{item.item}</Text>
-                    </TouchableOpacity>
-                    )
+                    (item) => {
+                        const color = sub === item.index ? [styles.subButton, {backgroundColor: '#cccccc'}] : styles.subButton; 
+                        return (
+                            <TouchableOpacity style={color} onPress={() => {
+                                setSub(sub === item.index ? -1 : item.index);
+                            }}>
+                                <Text style={styles.subText}>{item.item}</Text>
+                            </TouchableOpacity>
+                        );
+                    }
                 } horizontal={true} style={{width: '70%'}}
                 showsHorizontalScrollIndicator={false} />
                 <View style={{width: '30%', alignItems: 'center'}}>
@@ -211,7 +220,7 @@ export function ProductScreen({navigation}) {
             </View>
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
-            onEndReached={upload} keyExtractor={(item, index) => item.title} data={filtered.length % 2 === 1 ? [...filtered, {empty: true}] : filtered}  renderItem={
+            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data} renderItem={
               (item) => <Item item={item} addToCart={addToCart} />
             }/>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
