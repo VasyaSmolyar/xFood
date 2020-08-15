@@ -3,6 +3,7 @@ import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
 import { delToken } from './utils/token';
 import send from './utils/net';
 import arrow from './files/arrow.png';
@@ -47,6 +48,7 @@ export default function CabinetScreen({navigation}) {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="light" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Личный кабинет</Text>
             </View>
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'black',
         padding: 5,
-        marginTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     barText: {

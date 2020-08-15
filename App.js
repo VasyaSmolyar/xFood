@@ -42,6 +42,7 @@ function AuthScreen({navigation}) {
 
 	return (
 		<View style={styles.container}>
+			<StatusBar style="light" />
 			<ImageBackground source={background} style={styles.backContainer}>
 				<View style={styles.opac}>
 				</View>
@@ -65,6 +66,7 @@ function PhoneScreen({navigation}) {
 
 	return (
 		<View style={styles.backContainer}>
+			<StatusBar style="dark" />
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
@@ -112,6 +114,7 @@ function CodeScreen({navigation}) {
 	let err = wrong ? mes : null;
 	return (
 		<View style={styles.backContainer}>
+			<StatusBar style="dark" />
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
@@ -149,6 +152,7 @@ function RegisterScreen({navigation}) {
 
 	return (
 		<View style={styles.backContainer}>
+			<StatusBar style="dark" />
 			<View style={{height: '10%', width: '100%'}}>
 			</View>
 			<View style={{height: '30%', width: '100%', alignItems: 'center', backgroundColor: 'white', alignItems: 'center'}}>
@@ -190,7 +194,6 @@ const store = createStore(rootReducer);
 function AppFunc() {
     return (
 		<Provider store={store}>
-			<StatusBar style="light" backgroundColor="black" barStyle="light-content" />
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false}}>
 					<Stack.Screen name="Welcome" component={AuthScreen} />

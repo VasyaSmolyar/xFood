@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
 import { addItem, loadCart, removeItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
@@ -121,6 +122,7 @@ export function CatalogScreen({navigation}) {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="light" />
             <SearchBar placeholder="Поиск по категориям" value={query} onChangeText={filter} />
             <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
             keyExtractor={(item, index) => index.toString()} 
@@ -205,6 +207,7 @@ export function ProductScreen({navigation}) {
 
     return (
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
+            <StatusBar style="light" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={

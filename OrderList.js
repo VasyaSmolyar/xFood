@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import ModalOrder from './components/Order';
@@ -99,6 +100,7 @@ export default function OrderListScreen({navigation}) {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="light" />
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'black',
         padding: 5,
-        marginTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         flexDirection: 'row',
     },
     barCell: {

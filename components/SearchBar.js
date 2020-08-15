@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginBottom: 10,
-        marginTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight + 2,
         alignItems: 'center'
     },
     inputContainer: {

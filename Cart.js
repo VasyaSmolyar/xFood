@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
 import { addItem, removeItem, loadCart, removeAllItem, setPrice } from './utils/store';
 import NavigationBar from './components/NavigationBar';
@@ -97,6 +98,7 @@ const CartScreen = () => {
 
     return (
         <View style={{flex: 1}}>
+            <StatusBar style="light" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Корзина</Text>
             </View>
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         padding: 5,
         marginBottom: 10,
-        marginTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     barText: {

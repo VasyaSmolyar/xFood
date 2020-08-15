@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
@@ -75,6 +76,7 @@ export default function PaymentScreen({navigation}) {
 
     return (
         <View styles={styles.container}>
+            <StatusBar style="light" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Оформление заказа</Text>
             </View>
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
         width: '100%',
         backgroundColor: 'black',
         padding: 5,
-        marginTop: Constants.statusBarHeight,
+        paddingTop: Constants.statusBarHeight,
         alignItems: 'center'
     },
     barText: {
