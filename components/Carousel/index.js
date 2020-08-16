@@ -84,8 +84,10 @@ export const Carousel = (props) => {
           }
         })}
       </ScrollView>
-      <View style={styles.bullets}>
-        {bullets}
+      <View style={styles.bulletsContainer}>
+        <View style={styles.bullets}>
+          {bullets}
+        </View>
       </View>
     </View>
   )

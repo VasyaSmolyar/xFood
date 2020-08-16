@@ -13,12 +13,15 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
   },
-  bullets: {
+  bulletsContainer: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    display: 'flex',
-    justifyContent: 'flex-start',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    alignContent: 'center'
+  },
+  bullets: {
+    justifyContent: 'center',
     flexDirection: 'row',
     paddingHorizontal: 10,
     paddingTop: 5,
