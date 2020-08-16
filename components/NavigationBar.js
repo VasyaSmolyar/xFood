@@ -13,10 +13,10 @@ export default function SearchBar(props) {
     const navigation = props.navigation;
     return (
         <View style={styles.barContainer}>
-            <TouchableWithoutFeedback onPress={() => {navigation.navigate('Catalog')}}>
+            <TouchableWithoutFeedback onPress={() => {navigation.navigate('Main')}}>
                 <View style={styles.touch}>
-                    <Image source={shop}  style={styles.image} />
-                    <Text style={styles.text}>Главная</Text>
+                    <Image source={props.routeName === 'Main' ? yshop : shop}  style={styles.image} />
+                    <Text style={props.routeName === 'Main' ? styles.ytext : styles.text}>Главная</Text>
                 </View>
             </TouchableWithoutFeedback>
             <TouchableWithoutFeedback onPress={() => {navigation.navigate('Catalog')}}>

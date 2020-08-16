@@ -15,6 +15,7 @@ import CartScreen from './Cart';
 import PaymentScreen from './Payment';
 import CabinetScreen from './Cabinet';
 import OrderListScreen from './OrderList';
+import MainScreen from './Main';
 import background from './files/background.png';
 import logo from './files/logo.png';
 
@@ -206,6 +207,7 @@ function AppFunc() {
 					<Stack.Screen name="Payment" component={PaymentScreen} />
 					<Stack.Screen name="Cabinet" component={CabinetScreen} />
 					<Stack.Screen name="OrderList" component={OrderListScreen} />
+					<Stack.Screen name="Main" component={MainScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  
