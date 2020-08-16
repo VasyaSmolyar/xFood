@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, FlatList, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
+import { Carousel } from './components/Carousel/index';
 
 export default function MainScreen({navigation}) {
     const [query, setQuery] = useState('');
@@ -20,18 +21,22 @@ export default function MainScreen({navigation}) {
         }, token);
     }, []);
 
-    const banner = banners.length != 0 ? (
-        <View style={{width: '100%'}}>
-            <Image source={{uri: banners[bid].image}} style={{width: '90%', height: 100, resizeMode: 'contain'}} />
-        </View>
-    ) : null;
+    const banner = banners.map((banner, index) => {
+        return {
+            value: (
+            <TouchableWithoutFeedback>
+                <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain'}} />
+            </TouchableWithoutFeedback>
+            )
+        }
+    });
 
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
             <SearchBar placeholder="Поиск на xBeer" value={query} onChangeText={setQuery} />
             <View style={{width: '100%'}}>
-                {banner}
+                <Carousel style="stats" itemsPerInterval={1} items={banner} />
                 <Text style={styles.header}>Рекомендуемые</Text>
                 <Text style={styles.header}>Популярные товары</Text>
             </View>
