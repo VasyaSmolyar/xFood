@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   },
   bulletsContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 35,
     left: 0,
     width: '100%',
     alignContent: 'center'
