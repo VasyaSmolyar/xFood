@@ -60,10 +60,7 @@ function CartBar(props) {
     const add = () => {
         dispath(addItem(props.item));
         send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
-        send('api/cart/getcart', 'POST', {}, (json) => {
-            console.log(json);
-            console.log("==========================");
-        }, token);
+        send('api/cart/getcart', 'POST', {}, () => {}, token);
     }
 
     const remove = () => {
