@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableWithoutFeedback, TouchableOpacity, Image, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
+import { addItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
+import ModalItem from './components/ModalItem';
 import { Carousel } from './components/Carousel/index';
 
 function Item(props) {
@@ -37,6 +39,9 @@ export default function MainScreen({navigation}) {
     const [banners, setBanners] = useState([]);
     const [sections, setSections] = useState([]);
     const token = useSelector(state => state.token);
+    const dispath = useDispatch();
+    const [chosen, setChosen] = useState(null);
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         send('api/main/get', 'POST', {}, (json) => {
@@ -55,9 +60,25 @@ export default function MainScreen({navigation}) {
         }
     });
 
+    const choiceItem = (item) => {
+        setChosen(item);
+        setVisible(true);
+    };
+
+    const addInCart = (item) => {
+        dispath(addItem(item));
+        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        setVisible(false);
+        navigation.navigate('Products', {title: "all"});
+    }
+
+    const seacrhMethod = () => {
+        navigation.navigate('Products', {title: "all", query: query});
+    }
+
     const sectors = Object.keys(sections).map((key) => {
         const items = sections[key].map((item) => {
-            return <Item item={item} addToCart={() => {}} />
+            return <Item item={item} addToCart={() => {choiceItem(item)}}/>
         });
 
         return (
@@ -73,7 +94,8 @@ export default function MainScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
-            <SearchBar placeholder="Поиск на xBeer" value={query} onChangeText={setQuery} />
+            <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addInCart} />
+            <SearchBar placeholder="Поиск на xBeer" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
                 {sectors}
@@ -105,6 +127,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     itemText: {
+        fontFamily: 'Tahoma-Regular',
         fontSize: 14,
         marginVertical: 5
     },
@@ -116,7 +139,8 @@ const styles = StyleSheet.create({
     },
     itemPrice: {
         fontSize: 16,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'Tahoma-Regular',
     },
     itemImage: {
         width: 120,

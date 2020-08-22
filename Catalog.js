@@ -154,6 +154,9 @@ export function ProductScreen({navigation}) {
 
     useEffect(() => {
         send('api/cart/getcart', 'POST', {}, setCart, token);
+        if (route.params.query !== undefined) {
+            setQuery(route.params.query);
+        }
     }, []);
     
 
