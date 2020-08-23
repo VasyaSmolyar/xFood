@@ -136,7 +136,8 @@ export function ProductScreen({navigation}) {
     const route = useRoute();
     let { subs } = route.params;
     const dispath = useDispatch();
-    const { title } = route.params;
+    const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
+    const spec = route.params.banner !== undefined;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [sub, setSub] = useState(-1);
@@ -198,6 +199,9 @@ export function ProductScreen({navigation}) {
         if(!isLoaded) {
             const value = title === "Все категории" ? "all" : title;
             let data = {title: value, offset: offset, num: num, search: query};
+            if (spec) {
+                data.special_offer = true;
+            }
             if (sub !== -1) {
                 data.subcategory = subs[sub];
             }
