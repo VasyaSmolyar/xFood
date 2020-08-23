@@ -33,7 +33,10 @@ function AuthScreen({navigation}) {
 	useEffect(async () => {
 		const myToken = await readToken();
 		console.log(myToken);
-		send('api/cart/getcart', 'POST', {}, () => {
+		send('api/cart/getcart', 'POST', {}, (json) => {
+			if(json.default !== undefined) {
+				return;
+			}
 			dispath(setToken(myToken.login, myToken.times, myToken.token));
 			navigation.navigate('Catalog');
 		}, myToken, (response) => {

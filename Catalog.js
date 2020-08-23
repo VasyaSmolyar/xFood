@@ -7,6 +7,7 @@ import send from './utils/net'
 import { addItem, loadCart, removeItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
+import ModalItem from './components/ModalItem';
 import minus from './files/minus.png';
 import plus from './files/plus.png';
 
@@ -143,6 +144,8 @@ export function ProductScreen({navigation}) {
     const [sub, setSub] = useState(-1);
     const [offset, setOffset] = useState(0);
     const [query, setQuery] = useState("");
+    const [chosen, setChosen] = useState(null);
+    const [modal, setModal] = useState(false);
 
     const num = 5;
 
@@ -190,8 +193,14 @@ export function ProductScreen({navigation}) {
         setData([...data,...json]);
     };
 
+    const showModal = (item) => {
+        setChosen(item);
+        setModal(true);
+    }
+
     const addToCart = (item) => {
         dispath(addItem(item));
+        setModal(false);
         send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, token);
     }
 
@@ -213,6 +222,7 @@ export function ProductScreen({navigation}) {
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
             <StatusBar style="light" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
+            <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={
                     (item) => {
@@ -248,7 +258,7 @@ export function ProductScreen({navigation}) {
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
             onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data} renderItem={
-              (item) => <Item item={item} addToCart={addToCart} />
+              (item) => <Item item={item} addToCart={showModal} />
             }/>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
