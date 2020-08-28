@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -38,19 +38,21 @@ function Item(props) {
     );
 
     return (
-        <View style={styles.item}>
-            <View style={{alignItems: 'center'}}>
-                <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+        <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
+            <View style={styles.item}>
+                <View style={{alignItems: 'center'}}>
+                    <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+                </View>
+                <Text style={styles.itemPrice}>{item.item.price} ₽</Text>
+                <Text numberOfLines={2}
+                style={styles.itemText}>{item.item.title}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+                    <Text>{item.item.flag}</Text> 
+                    <Text style={styles.itemFlag}>{item.item.country}</Text>
+                </View>
+                {add}
             </View>
-            <Text style={styles.itemPrice}>{item.item.price} ₽</Text>
-            <Text numberOfLines={2}
-            style={styles.itemText}>{item.item.title}</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                <Text>{item.item.flag}</Text> 
-                <Text style={styles.itemFlag}>{item.item.country}</Text>
-            </View>
-            {add}
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -258,7 +260,7 @@ export function ProductScreen({navigation}) {
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
             onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data} renderItem={
-              (item) => <Item item={item} addToCart={showModal} />
+              (item) => <Item item={item} addToCart={addToCart} showItem={showModal} />
             }/>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>

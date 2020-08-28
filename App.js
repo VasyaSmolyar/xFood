@@ -34,7 +34,7 @@ function AuthScreen({navigation}) {
 		const myToken = await readToken();
 		console.log(myToken);
 		send('api/cart/getcart', 'POST', {}, (json) => {
-			if(json.default !== undefined) {
+			if(json.details !== undefined) {
 				return;
 			}
 			dispath(setToken(myToken.login, myToken.times, myToken.token));
@@ -199,7 +199,7 @@ function AppFunc() {
     return (
 		<Provider store={store}>
 			<NavigationContainer>
-				<Stack.Navigator screenOptions={{headerShown: false}}>
+				<Stack.Navigator screenOptions={{headerShown: false, animationEnabled: false}}>
 					<Stack.Screen name="Welcome" component={AuthScreen} />
 					<Stack.Screen name="Phone" component={PhoneScreen} />
 					<Stack.Screen name="Code" component={CodeScreen} />

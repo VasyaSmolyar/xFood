@@ -3,34 +3,71 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback, TouchableOpacity, Ima
 import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
-import { addItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
+import { addItem, loadCart, removeItem } from './utils/store';
 import { Carousel } from './components/Carousel/index';
+import minus from './files/minus.png';
+import plus from './files/plus.png';
+
+function CartBar(props) {
+    const dispath = useDispatch();
+    const token = useSelector(state => state.token);
+
+    const add = () => {
+        dispath(addItem(props.item));
+        send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
+        send('api/cart/getcart', 'POST', {}, () => {}, token);
+    }
+
+    const remove = () => {
+        dispath(removeItem(props.item));
+        send('api/cart/deletefromcart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
+    }
+
+    return (
+        <View style={styles.cartBar}>
+            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f2f3f5'}]} onPress={remove}>
+                <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
+            </TouchableOpacity>
+            <Text style={styles.cartText}>{props.value} шт.</Text>
+            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f1c40f'}]} onPress={add}>
+                <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
+            </TouchableOpacity>
+        </View>
+    );
+}
 
 function Item(props) {
+    const cart = useSelector(state => state.cart);
     const item = props.item;
     if(item.empty !== undefined) {
         return <View style={{width: '50%', height: 10}}></View>
     }
+    const inCart = cart.items.find((i) => (item.title === i.item.title));
+    const add = inCart != undefined ? <CartBar item={item} value={inCart.count}/> : (
+        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item)}>
+            <Text style={styles.phoneText}>Добавить</Text>
+        </TouchableOpacity>
+    );
 
     return (
-        <View style={styles.item}>
-            <View style={{alignItems: 'center'}}>
-                <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+        <TouchableWithoutFeedback onPress={props.showItem}>
+            <View style={styles.item}>
+                <View style={{alignItems: 'center'}}>
+                    <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+                </View>
+                <Text style={styles.itemPrice}>{item.price} ₽</Text>
+                <Text numberOfLines={2}
+                style={styles.itemText}>{item.title}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+                    <Text>{item.flag}</Text> 
+                    <Text style={styles.itemFlag}>{item.country}</Text>
+                </View>
+                {add}
             </View>
-            <Text style={styles.itemPrice}>{item.price} ₽</Text>
-            <Text numberOfLines={2}
-            style={styles.itemText}>{item.title}</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                <Text>{item.flag}</Text> 
-                <Text style={styles.itemFlag}>{item.country}</Text>
-            </View>
-            <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item)}>
-                <Text style={styles.phoneText}>Добавить</Text>
-            </TouchableOpacity>
-        </View>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -65,11 +102,21 @@ export default function MainScreen({navigation}) {
         setVisible(true);
     };
 
-    const addInCart = (item) => {
+    const setCart = (json) => {
+        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
+            return {item: {...item.product[0]}, count: item.num};
+        });
+        dispath(loadCart(cart));
+    }
+
+    useEffect(() => {
+        send('api/cart/getcart', 'POST', {}, setCart, token);
+    }, []);
+
+    const addToCart = (item) => {
         dispath(addItem(item));
-        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
         setVisible(false);
-        navigation.navigate('Products', {title: "all"});
+        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
     }
 
     const seacrhMethod = () => {
@@ -78,7 +125,7 @@ export default function MainScreen({navigation}) {
 
     const sectors = Object.keys(sections).map((key) => {
         const items = sections[key].map((item) => {
-            return <Item item={item} addToCart={() => {choiceItem(item)}}/>
+            return <Item item={item} showItem={() => {choiceItem(item)}} addToCart={addToCart} />
         });
 
         return (
@@ -94,7 +141,7 @@ export default function MainScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
-            <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addInCart} />
+            <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} />
             <SearchBar placeholder="Поиск на xBeer" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
@@ -162,5 +209,23 @@ const styles = StyleSheet.create({
     }, 
     flat: {
         flexDirection: 'row'
+    },
+    cartBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    cartImage: {
+        width: 15,
+        height: 15
+    },
+    cartButton: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5
+    },
+    cartText: {
+        fontFamily: 'Tahoma-Regular', 
+		fontSize: 16, 
     }
 });
