@@ -59,13 +59,13 @@ export default function CabinetScreen({navigation}) {
                             <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
                         </View>
                     </View>
-                    <View style={{justifyContent: "space-around"}}>
+                    <View style={{justifyContent: "space-around", marginRight: 30}}>
                         <View>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={styles.nameText}>{name}</Text>
                                 <Image source={check} resizeMode={'contain'} style={{width: 20, height: 20}}/>
                             </View>
-                        <Text style={styles.phoneText}>{phone}</Text>
+                            <Text style={styles.phoneText}>{phone}</Text>
                         </View>
                         <Text style={styles.dataText}>Изменить данные</Text>
                     </View>

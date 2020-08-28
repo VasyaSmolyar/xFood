@@ -58,7 +58,7 @@ function Item(props) {
                 <View style={{alignItems: 'center'}}>
                     <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
                 </View>
-                <Text style={styles.itemPrice}>{item.price} ₽</Text>
+                <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
                 <Text numberOfLines={2}
                 style={styles.itemText}>{item.title}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>

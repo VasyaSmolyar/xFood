@@ -48,7 +48,7 @@ const CartItem = (props) => {
                 <View></View>
                 <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.image} />
                 <View>
-                    <Text style={styles.itemPrice}>{item.price}₽</Text>
+                    <Text style={styles.itemPrice}>{item.price.toFixed(2)}₽</Text>
                     <View style={{justifyContent: 'space-between', flex: 1}} >
                         <Text style={styles.itemText}>{item.title}</Text>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
@@ -96,6 +96,10 @@ const CartScreen = () => {
         send('api/cart/getcart', 'POST', {}, setCart, token);
     }, []);
 
+    const round = (x) => {
+        return Math.ceil((Number(x))*100) / 100;
+    }
+
     return (
         <View style={{flex: 1}}>
             <StatusBar style="light" />
@@ -112,9 +116,9 @@ const CartScreen = () => {
                     <Text style={styles.textBold}>Общая стоимость</Text>
                 </View>
                 <View style={{alignItems: 'flex-end'}}>
-                    <Text style={styles.textBold}>{prices.price}₽</Text>
-                    <Text style={styles.textBold}>{prices.delivery}₽</Text>
-                    <Text style={styles.textBold}>{prices.price + prices.delivery}₽</Text>
+                    <Text style={styles.textBold}>{round(prices.price)}₽</Text>
+                    <Text style={styles.textBold}>{round(prices.delivery)}₽</Text>
+                    <Text style={styles.textBold}>{round(prices.price) + round(prices.delivery)}₽</Text>
                 </View>
             </View>
             <View style={{alignItems: "center", width: '100%', marginBottom: 20}}>
