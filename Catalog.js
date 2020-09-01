@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -13,13 +13,10 @@ import plus from './files/plus.png';
 
 function Category(props) {
     const navigation = useNavigation();
-    if(props.empty === true) {
-        return <View style={{width: '45%', height: 10}}></View>
-    }
     return (
-        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title, subs: props.subs})}>
+        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title, rid: props.rid, subs: props.subs})}>
+             <Image source={{uri: props.image}} resizeMode={'contain'} style={styles.catImage} />
             <Text style={styles.catText}>{props.title}</Text>
-            <Image source={{uri: props.image}} resizeMode={'contain'} style={styles.catImage} />
         </TouchableOpacity>
     )
 }
@@ -116,19 +113,24 @@ export function CatalogScreen({navigation}) {
 
     useEffect(() => {
         if(!isLoaded) {
-            send('api/category/get', 'GET', {}, load, token);
+            send('api/restaurants/get', 'GET', {area_name: "Дмитров"}, load, token);
+            //send('api/category/get', 'GET', {}, load, token);
         }
+    });
+    
+    const restaurants = data.map((item) => {
+        return (
+            <Category title={item.title} image={item.poster_url} subs={item.subcategories} />
+        );
     });
 
     return (
         <View style={styles.container}>
             <StatusBar style="light" />
-            <SearchBar placeholder="Поиск по категориям" value={query} onChangeText={filter} />
-            <FlatList numColumns={2} columnWrapperStyle={styles.oneRow}
-            keyExtractor={(item, index) => index.toString()} 
-            data={filtered.length % 2 === 1 ? [...filtered, {empty: true}] : filtered}
-            contentContainerStyle={styles.catList} renderItem={(item) => 
-            <Category title={item.item.title} image={item.item.poster_url} empty={item.item.empty} subs={item.item.subcategories} />}/>
+            <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
+            <ScrollView style={{width: '90%'}}>
+                {restaurants}
+            </ScrollView>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
@@ -287,11 +289,9 @@ const styles = StyleSheet.create({
 		borderWidth: 1
     },
     category: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
         padding: 10,
-        width: '45%',
+        width: '100%',
+        borderRadius: 20,
         backgroundColor: '#fff',
         marginVertical: 5
     },
@@ -321,14 +321,15 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     catImage: {
-        width: 70,
-        height: 70
+        width: '100%',
+        height: 150
     },
     catText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
-        maxWidth: 65,
-        marginLeft: 10
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 10,
+        paddingVertical: 10
     },
     catList: {
         width: '100%'
