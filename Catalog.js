@@ -83,7 +83,9 @@ export default function RestaurantScreen({navigation}) {
         <View style={styles.container}>
             <StatusBar style="dark" />
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
-            <Text style={styles.header}>Рестораны</Text>
+            <View style={{width: '100%', paddingHorizontal: 20}}>
+                <Text style={styles.header}>Рестораны</Text>
+            </View>
             <ScrollView style={{width: '90%'}}>
                 {restaurants}
             </ScrollView>
@@ -139,5 +141,12 @@ const styles = StyleSheet.create({
     },
     oneRow: {
         justifyContent: 'space-around'
+    },
+    header: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 10,
+        paddingVertical: 10
     },
 });

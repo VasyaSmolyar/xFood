@@ -146,14 +146,13 @@ export default function ProductScreen({navigation}) {
 
     useEffect(() => {
         if(!isLoaded) {
-            const value = title === "Все категории" ? "all" : title;
+            const value = title === sub === -1 ? "all" : subs[sub];
             let data = {title: value, offset: offset, num: num, search: query};
             if (spec) {
                 data.special_offer = true;
             }
-            if (sub !== -1) {
-                data.subcategory = subs[sub];
-            }
+            data.restaurant_id = route.params.id;
+            console.log(data);
             send('api/catalog/getbycategory', 'GET', data, load, token);
         }
     });
@@ -170,6 +169,7 @@ export default function ProductScreen({navigation}) {
                         return (
                             <TouchableOpacity style={color} onPress={() => {
                                 setOffset(0);
+                                /*
                                 const title = "Все категории" ? "all" : title;
                                 let data = {title: title, offset: 0, num: num, search: query};
                                 if (sub !== item.index) {
@@ -181,7 +181,9 @@ export default function ProductScreen({navigation}) {
                                     }
                                     setData(json);
                                 }, token);
+                                */
                                 setSub(sub === item.index ? -1 : item.index);
+                                setLoaded(false);
                             }}>
                                 <Text style={styles.subText}>{item.item}</Text>
                             </TouchableOpacity>
@@ -189,11 +191,6 @@ export default function ProductScreen({navigation}) {
                     }
                 } horizontal={true} style={{width: '70%'}}
                 showsHorizontalScrollIndicator={false} />
-                <View style={{width: '30%', alignItems: 'center'}}>
-                    <TouchableOpacity style={styles.subFilter}>
-                        <Text style={styles.subText}>ФИЛЬТРЫ</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow} 
@@ -222,13 +219,6 @@ const styles = StyleSheet.create({
 		height: 40, 
 		borderColor: 'gray', 
 		borderWidth: 1
-    },
-    header: {
-        fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginLeft: 10,
-        paddingVertical: 10
     },
     category: {
         width: '100%',
