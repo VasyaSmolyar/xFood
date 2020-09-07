@@ -10,13 +10,41 @@ import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
 import minus from './files/minus.png';
 import plus from './files/plus.png';
+import price from './files/price.png';
+import star from './files/star.png';
+import timer from './files/timer.png';
 
 function Category(props) {
     const navigation = useNavigation();
+    const { cat } = props;
+
+    const getTime = (time) => {
+        const label = (time % 10) > 4 ? "минут" : "минуты";
+        return time + " " + label;
+    }
+
+    const getMoney = (amount) => {
+        return "от " + amount + "₽";
+    }
+
     return (
-        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: props.title, rid: props.rid, subs: props.subs})}>
-             <Image source={{uri: props.image}} resizeMode={'contain'} style={styles.catImage} />
-            <Text style={styles.catText}>{props.title}</Text>
+        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: cat.title, id: cat.id, subs: cat.categories})}>
+            <Image source={{uri: cat.poster}} resizeMode={'cover'} style={styles.catImage} imageStyle={{ borderRadius: 20}} />
+            <Text style={styles.catText}>{cat.title}</Text>
+            <View style={{flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10}}>
+                <View style={styles.catAppend}>
+                    <Image style={styles.catIcon} source={timer} resizeMode='contain'></Image>
+                    <Text style={styles.catLabel}>{getTime(cat.middletime)}</Text>
+                </View>
+                <View style={styles.catAppend}>
+                    <Image style={styles.catIcon} source={star} resizeMode='contain'></Image>
+                    <Text style={styles.catLabel}>{cat.rating}</Text>
+                </View>
+                <View style={styles.catAppend}>
+                    <Image style={styles.catIcon} source={price} resizeMode='contain'></Image>
+                    <Text style={styles.catLabel}>{getMoney(cat.min_less_summ)}</Text>
+                </View>
+            </View>
         </TouchableOpacity>
     )
 }
@@ -91,14 +119,7 @@ export function CatalogScreen({navigation}) {
 
     const load = (json) => {
         setLoaded(true);
-        const list = json.map((item) => {
-            return {
-                key: item.id,
-                title: item.title,
-                poster_url: item.poster_url,
-                subcategories: item.subcategories
-            };
-        });
+        const list = json;
         setData(list);
         setFiltered(list);
     };
@@ -120,7 +141,7 @@ export function CatalogScreen({navigation}) {
     
     const restaurants = data.map((item) => {
         return (
-            <Category title={item.title} image={item.poster_url} subs={item.subcategories} />
+            <Category cat={item} />
         );
     });
 
@@ -270,7 +291,6 @@ export function ProductScreen({navigation}) {
 
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -289,11 +309,11 @@ const styles = StyleSheet.create({
 		borderWidth: 1
     },
     category: {
-        padding: 10,
         width: '100%',
         borderRadius: 20,
         backgroundColor: '#fff',
-        marginVertical: 5
+        marginVertical: 5,
+        paddingBottom: 10
     },
     item: {
         width: '50%',
@@ -322,7 +342,9 @@ const styles = StyleSheet.create({
     },
     catImage: {
         width: '100%',
-        height: 150
+        height: 200,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20
     },
     catText: {
         fontFamily: 'Tahoma-Regular',
@@ -333,6 +355,20 @@ const styles = StyleSheet.create({
     },
     catList: {
         width: '100%'
+    },
+    catIcon: {
+        width: 20,
+        height: 20
+    },
+    catLabel: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 14,
+        marginLeft: 10,
+    },
+    catAppend: {
+        flexDirection: 'row',
+        paddingHorizontal: 5,
+        justifyContent: 'center'
     },
     oneRow: {
         justifyContent: 'space-around'

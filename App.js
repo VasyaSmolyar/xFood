@@ -34,14 +34,12 @@ function AuthScreen({navigation}) {
 		const myToken = await readToken();
 		console.log(myToken);
 		send('api/cart/getcart', 'POST', {}, (json) => {
-			if(json.details !== undefined) {
+			if(json.detail !== undefined) {
 				return;
 			}
 			dispath(setToken(myToken.login, myToken.times, myToken.token));
 			navigation.navigate('Catalog');
-		}, myToken, (response) => {
-			console.log("error: " + response.status + "\n" + response.body);
-		});
+		}, myToken);
 	}, []);
 
 	return (
