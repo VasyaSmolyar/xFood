@@ -21,7 +21,7 @@ export default function SearchBar({...props}) {
 const styles = StyleSheet.create({
     barContainer: {
         width: '100%',
-        backgroundColor: 'black',
+        backgroundColor: '#fff',
         padding: 5,
         marginBottom: 10,
         paddingTop: Constants.statusBarHeight + 2,
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: '95%',
-        backgroundColor: 'white',
+        backgroundColor: '#f2f3f5',
         borderRadius: 8,
         flexDirection: 'row',
         alignItems: 'center',

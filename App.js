@@ -10,7 +10,8 @@ import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
 import { readToken, writeToken } from './utils/token';
 import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer } from './utils/store';
-import { CatalogScreen, ProductScreen } from './Catalog';
+import RestaurantScreen from './Catalog';
+import ProductScreen from './Product';
 import CartScreen from './Cart';
 import PaymentScreen from './Payment';
 import CabinetScreen from './Cabinet';
@@ -202,7 +203,7 @@ function AppFunc() {
 					<Stack.Screen name="Phone" component={PhoneScreen} />
 					<Stack.Screen name="Code" component={CodeScreen} />
 					<Stack.Screen name="Register" component={RegisterScreen} />
-					<Stack.Screen name="Catalog" component={CatalogScreen} />
+					<Stack.Screen name="Catalog" component={RestaurantScreen} />
 					<Stack.Screen name="Products" component={ProductScreen} />
 					<Stack.Screen name="Cart" component={CartScreen} />
 					<Stack.Screen name="Payment" component={PaymentScreen} />

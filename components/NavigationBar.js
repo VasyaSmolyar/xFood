@@ -4,10 +4,10 @@ import shop from '../files/gray4.png';
 import backet from '../files/gray3.png';
 import catalog from '../files/gray1.png';
 import male from '../files/gray2.png';
-import yshop from '../files/2_yellow.png';
-import ycatalog from '../files/4_yellow.png';
-import ybacket from '../files/3_yellow.png';
-import ymale from '../files/4_yellow.png';
+import yshop from '../files/2_orange.png';
+import ycatalog from '../files/4_orange.png';
+import ybacket from '../files/3_orange.png';
+import ymale from '../files/4_orange.png';
 
 export default function SearchBar(props) {
     const navigation = props.navigation;
@@ -45,10 +45,12 @@ const styles = StyleSheet.create({
     barContainer: {
         width: '100%',
         flexDirection: 'row',
-        backgroundColor: 'black',
+        backgroundColor: 'white',
         padding: 10,
         justifyContent: 'space-around',
-        alignItems: 'center'
+        alignItems: 'center',
+        borderTopColor: '#9d9d9d',
+        borderTopWidth: 1
     },
     touch: {
         justifyContent: 'center'
@@ -67,7 +69,7 @@ const styles = StyleSheet.create({
     ytext: {
         fontFamily: 'Tahoma-Regular',
         fontSize: 8,
-        color: '#f1c40f',
+        color: '#f08741',
         marginTop: 5,
         textAlign: 'center'
     }
