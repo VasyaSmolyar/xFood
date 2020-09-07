@@ -146,7 +146,7 @@ export default function ProductScreen({navigation}) {
 
     useEffect(() => {
         if(!isLoaded) {
-            const value = title === sub === -1 ? "all" : subs[sub];
+            const value = sub === -1 ? "all" : subs[sub];
             let data = {title: value, offset: offset, num: num, search: query};
             if (spec) {
                 data.special_offer = true;
@@ -183,6 +183,7 @@ export default function ProductScreen({navigation}) {
                                 }, token);
                                 */
                                 setSub(sub === item.index ? -1 : item.index);
+                                setData([]);
                                 setLoaded(false);
                             }}>
                                 <Text style={styles.subText}>{item.item}</Text>
