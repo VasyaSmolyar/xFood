@@ -24,7 +24,9 @@ function Category(props) {
     }
 
     return (
-        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {title: cat.title, id: cat.id, subs: cat.categories})}>
+        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {
+                title: cat.title, id: cat.id, subs: cat.categories, other: cat
+            })}>
             <Image source={{uri: cat.poster}} resizeMode={'cover'} style={styles.catImage} imageStyle={{ borderRadius: 20}} />
             <Text style={styles.catText}>{cat.title}</Text>
             <View style={{flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10}}>

@@ -10,6 +10,9 @@ import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
 import minus from './files/minus.png';
 import plus from './files/plus.png';
+import approve from './files/toolApprove.png';
+import star from './files/toolStar.png';
+
 
 function Item(props) {
     const cart = useSelector(state => state.cart);
@@ -79,6 +82,7 @@ export default function ProductScreen({navigation}) {
     const dispath = useDispatch();
     const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
     const spec = route.params.banner !== undefined;
+    const other = route.params.other;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [sub, setSub] = useState(-1);
@@ -157,11 +161,34 @@ export default function ProductScreen({navigation}) {
         }
     });
 
+    const getMoney = (amount) => {
+        return "от " + amount + "₽";
+    }
+
     return (
         <View style={[styles.container, {backgroundColor: '#fff'}]}>
             <StatusBar style="light" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
+            <View style={{width: '100%', paddingHorizontal: 20}}>
+                <Text style={styles.header}>{title}</Text>
+            </View>
+            <View style={styles.toolView}>
+                <View style={styles.tool}>
+                    <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
+                    <Text style={styles.toolText}>{other.rating}</Text>
+                </View>
+                <View style={styles.tool}>
+                    <Image style={styles.toolImage} resizeMode={'contain'} source={approve}></Image>
+                    <Text style={styles.toolText}>Проверено xFood</Text>
+                </View>
+                <View style={styles.tool}>
+                    <Text style={styles.toolText}>{other.rating}</Text>
+                </View>
+                <View style={styles.tool}>
+                    <Text style={styles.toolText}>{getMoney(other.min_less_summ)}</Text>
+                </View>
+            </View>
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={
                     (item) => {
@@ -207,7 +234,7 @@ export default function ProductScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f2f3f5',
+        backgroundColor: '#f9f5f5',
         alignItems: 'center',
         justifyContent: 'space-between',
 	},
@@ -264,7 +291,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 10,
-        paddingVertical: 10
+        paddingVertical: 5
     },
     catList: {
         width: '100%'
@@ -330,5 +357,35 @@ const styles = StyleSheet.create({
     cartText: {
         fontFamily: 'Tahoma-Regular', 
 		fontSize: 16, 
+    },
+    header: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 10,
+        paddingVertical: 10
+    },
+    toolView: {
+        flexDirection: 'row',
+        paddingBottom: 20,
+        maxWidth: '100%'
+    },
+    tool: {
+        marginTop: 10,
+        marginLeft: 20,
+        borderRadius: 25,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        padding: 10,
+        alignItems: 'center'
+    },
+    toolText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+        paddingLeft: 10 
+    },
+    toolImage: {
+        width: 30,
+        height: 30,
     }
 });
