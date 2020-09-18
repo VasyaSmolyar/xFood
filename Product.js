@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -79,13 +79,14 @@ export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
     const route = useRoute();
     let { subs } = route.params;
+    subs = ["Популярное", ...subs];
     const dispath = useDispatch();
     const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
     const spec = route.params.banner !== undefined;
     const other = route.params.other;
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
-    const [sub, setSub] = useState(-1);
+    const [sub, setSub] = useState(0);
     const [offset, setOffset] = useState(0);
     const [query, setQuery] = useState("");
     const [chosen, setChosen] = useState(null);
@@ -116,10 +117,11 @@ export default function ProductScreen({navigation}) {
     const filterQuery = (value) => {
         setOffset(0);
         setQuery(value);
-        const title = "Все категории" ? "all" : title;
+        //const title = "Все категории" ? "all" : title;
         let data = {title: value, offset: offset, num: num, search: query};
-        if (sub !== -1) {
-            data.subcategory = subs[sub];
+        data.subcategory = subs[sub];
+        if (sub == 0) {
+            data.title = "all";
         }
         send('api/catalog/getbycategory', 'GET', data, (json) => {
             if(json.details !== undefined) {
@@ -150,13 +152,12 @@ export default function ProductScreen({navigation}) {
 
     useEffect(() => {
         if(!isLoaded) {
-            const value = sub === -1 ? "all" : subs[sub];
+            const value = sub === 0 ? "all" : subs[sub];
             let data = {title: value, offset: offset, num: num, search: query};
             if (spec) {
                 data.special_offer = true;
             }
             data.restaurant_id = route.params.id;
-            console.log(data);
             send('api/catalog/getbycategory', 'GET', data, load, token);
         }
     });
@@ -165,9 +166,19 @@ export default function ProductScreen({navigation}) {
         return "от " + amount + "₽";
     }
 
+    const getDeliv = (min, max) => {
+        let price;
+        if (max == min) {
+            price = max;
+        } else {
+            price = min + "-" + max;
+        }
+        return 'Доставка ' + price + " ₽";
+    }
+
     return (
-        <View style={[styles.container, {backgroundColor: '#fff'}]}>
-            <StatusBar style="light" />
+        <View style={styles.container}>
+            <StatusBar style="dark" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <View style={{width: '100%', paddingHorizontal: 20}}>
@@ -176,14 +187,16 @@ export default function ProductScreen({navigation}) {
             <View style={styles.toolView}>
                 <View style={styles.tool}>
                     <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
+                    <View style={styles.toolSpace}></View>
                     <Text style={styles.toolText}>{other.rating}</Text>
                 </View>
                 <View style={styles.tool}>
                     <Image style={styles.toolImage} resizeMode={'contain'} source={approve}></Image>
+                    <View style={styles.toolSpace}></View>
                     <Text style={styles.toolText}>Проверено xFood</Text>
                 </View>
                 <View style={styles.tool}>
-                    <Text style={styles.toolText}>{other.rating}</Text>
+                    <Text style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</Text>
                 </View>
                 <View style={styles.tool}>
                     <Text style={styles.toolText}>{getMoney(other.min_less_summ)}</Text>
@@ -209,7 +222,7 @@ export default function ProductScreen({navigation}) {
                                     setData(json);
                                 }, token);
                                 */
-                                setSub(sub === item.index ? -1 : item.index);
+                                setSub(item.index);
                                 setData([]);
                                 setLoaded(false);
                             }}>
@@ -234,7 +247,7 @@ export default function ProductScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f9f5f5',
+        backgroundColor: "#fff",
         alignItems: 'center',
         justifyContent: 'space-between',
 	},
@@ -368,21 +381,29 @@ const styles = StyleSheet.create({
     toolView: {
         flexDirection: 'row',
         paddingBottom: 20,
-        maxWidth: '100%'
+        maxWidth: '100%',
+        flexWrap: 'wrap',
+        borderBottomColor: '#ede9e9',
+        borderBottomWidth: 1,
+        marginBottom: 20
     },
     tool: {
         marginTop: 10,
         marginLeft: 20,
         borderRadius: 25,
-        backgroundColor: '#fff',
+        backgroundColor: '#f2f3f5',
         flexDirection: 'row',
-        padding: 10,
-        alignItems: 'center'
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        alignItems: 'center',
+    },
+    toolSpace: {
+        width: 10,
+        height: 1
     },
     toolText: {
         fontFamily: 'Tahoma-Regular', 
-        fontSize: 16,
-        paddingLeft: 10 
+        fontSize: 16
     },
     toolImage: {
         width: 30,
