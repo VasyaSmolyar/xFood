@@ -27,6 +27,13 @@ function Item(props) {
         </TouchableOpacity>
     );
 
+    const flag = item.item.country !== "Русская кухня" ? (
+        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
+            <Text>{item.item.flag}</Text> 
+            <Text style={styles.itemFlag}>{item.item.country}</Text>
+        </View>
+    ) : <View style={{height: 30}}></View>;
+
     return (
         <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
             <View style={styles.item}>
@@ -36,10 +43,7 @@ function Item(props) {
                 <Text style={styles.itemPrice}>{item.item.price.toFixed(2)} ₽</Text>
                 <Text numberOfLines={2}
                 style={styles.itemText}>{item.item.title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                    <Text>{item.item.flag}</Text> 
-                    <Text style={styles.itemFlag}>{item.item.country}</Text>
-                </View>
+                {flag}
                 {add}
             </View>
         </TouchableWithoutFeedback>
