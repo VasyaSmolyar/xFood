@@ -7,6 +7,7 @@ import send from './utils/net'
 import { addItem, loadCart, removeItem } from './utils/store';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
+import ModalCart from './components/ModalCart';
 import ModalItem from './components/ModalItem';
 import minus from './files/minus.png';
 import plus from './files/plus.png';
@@ -185,6 +186,7 @@ export default function ProductScreen({navigation}) {
             <StatusBar style="dark" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
+            <ModalCart item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <View style={{width: '100%', paddingHorizontal: 20}}>
                 <Text style={styles.header}>{title}</Text>
             </View>
