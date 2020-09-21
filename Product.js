@@ -17,13 +17,15 @@ import star from './files/toolStar.png';
 
 function Item(props) {
     const cart = useSelector(state => state.cart);
-    const item = props.item;
+    const { item, addToCart } = props;
+
     if(item.item.empty !== undefined) {
         return <View style={{width: '50%', height: 10}}></View>
     }
+
     const inCart = cart.items.find((i) => (item.item.title === i.item.title));
     const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count}/> : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item.item)}>
+        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
             <Text style={styles.phoneText}>Добавить</Text>
         </TouchableOpacity>
     );
@@ -96,13 +98,17 @@ export default function ProductScreen({navigation}) {
     const [query, setQuery] = useState("");
     const [chosen, setChosen] = useState(null);
     const [modal, setModal] = useState(false);
+    const [reset, setReset] = useState(false);
 
+    const cart = useSelector(state => state.cart);
     const num = 5;
 
     const setCart = (json) => {
         const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
-            return {item: {...item.product[0]}, count: item.num};
+            return {item: {...item.product}, count: item.num};
         });
+        console.log("=====================#################++++++++++++++++++++++");
+        console.log(cart);
         dispath(loadCart(cart));
     }
 
@@ -150,9 +156,23 @@ export default function ProductScreen({navigation}) {
     }
 
     const addToCart = (item) => {
+        console.log(cart.items[0]);
+        console.log("=====================");
+        console.log(item);
+        if(cart.items.length > 0 && (cart.items[0].restaurant !== item.restaurant_id)) {
+            setChosen(item);
+            setReset(true);
+            return;
+        }
         dispath(addItem(item));
         setModal(false);
-        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, token);
+        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {},token);
+    }
+
+    const onReset = (item) => {
+        setReset(true);
+        addToCart(item);
+        send('api/cart/getcart', 'POST', {}, setCart, token);
     }
 
     useEffect(() => {
@@ -186,7 +206,7 @@ export default function ProductScreen({navigation}) {
             <StatusBar style="dark" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
-            <ModalCart item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
+            <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <View style={{width: '100%', paddingHorizontal: 20}}>
                 <Text style={styles.header}>{title}</Text>
             </View>

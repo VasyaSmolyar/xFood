@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Modal, Text, TouchableOpacity} from 'react-native';
 
 export default function ModalCart(props) {
-    const { visible } = props;
+    const { visible, item, onClose, addInCart } = props;
 
     return (
         <Modal visible={visible} transparent={true}>
@@ -10,10 +10,10 @@ export default function ModalCart(props) {
                 <View style={styles.container}>
                     <Text style={styles.text}>Нужно освободить корзину для нового заказа</Text>
                     <View style={styles.butContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={onClose}>
                             <Text style={styles.buttonText}>СТОП</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => {addInCart(item)}}>
                             <Text style={styles.buttonText}>ДАВАЙТЕ</Text>
                         </TouchableOpacity>
                     </View>
