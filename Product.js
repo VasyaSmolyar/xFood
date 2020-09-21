@@ -107,6 +107,7 @@ export default function ProductScreen({navigation}) {
         const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
             return {item: {...item.product}, count: item.num};
         });
+        //Удалить потом
         console.log("=====================#################++++++++++++++++++++++");
         console.log(cart);
         dispath(loadCart(cart));
@@ -156,23 +157,26 @@ export default function ProductScreen({navigation}) {
     }
 
     const addToCart = (item) => {
-        console.log(cart.items[0]);
-        console.log("=====================");
-        console.log(item);
-        if(cart.items.length > 0 && (cart.items[0].restaurant !== item.restaurant_id)) {
-            setChosen(item);
-            setReset(true);
-            return;
-        }
-        dispath(addItem(item));
-        setModal(false);
-        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {},token);
+        send('api/cart/check', 'POST', {resturant_id: item.restaurant_id}, (ret) => {
+            if(ret === true) {
+                setChosen(item);
+                setReset(true);
+                return;
+            }
+            dispath(addItem(item));
+            setModal(false);
+            setReset(false);
+            send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {},token);
+        }, token);
     }
 
     const onReset = (item) => {
-        setReset(true);
-        addToCart(item);
-        send('api/cart/getcart', 'POST', {}, setCart, token);
+        setModal(false);
+        setReset(false);
+        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {
+            send('api/cart/getcart', 'POST', {}, setCart, token);
+            
+        },token);
     }
 
     useEffect(() => {
