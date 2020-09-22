@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     barText: {
-        color: "#f1c40f",
+        color: "#f08741",
         fontWeight: "bold",
         fontSize: 16,
         marginVertical: 20
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     phoneButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		textAlign: 'center',
 		paddingVertical: 10,
 		marginHorizontal: 5,

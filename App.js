@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
 		marginBottom: 40
 	},
 	phoneButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		paddingVertical: 10,
 		marginHorizontal: 5,
 		borderRadius: 7,
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
 		color: 'white'
 	},
 	confirmButtom: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		alignItems: 'center',
 		paddingVertical: 10,
 		marginHorizontal: 5,

@@ -74,7 +74,7 @@ function CartBar(props) {
                 <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
             </TouchableOpacity>
             <Text style={styles.cartText}>{props.value} шт.</Text>
-            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f1c40f'}]} onPress={add}>
+            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f08741'}]} onPress={add}>
                 <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
             </TouchableOpacity>
         </View>
@@ -100,7 +100,6 @@ export default function ProductScreen({navigation}) {
     const [modal, setModal] = useState(false);
     const [reset, setReset] = useState(false);
 
-    const cart = useSelector(state => state.cart);
     const num = 5;
 
     const setCart = (json) => {
@@ -157,8 +156,9 @@ export default function ProductScreen({navigation}) {
     }
 
     const addToCart = (item) => {
+        console.log(item.restaurant_id);
         send('api/cart/check', 'POST', {resturant_id: item.restaurant_id}, (ret) => {
-            if(ret === true) {
+            if(ret[2] === false) {
                 setChosen(item);
                 setReset(true);
                 return;
@@ -166,16 +166,17 @@ export default function ProductScreen({navigation}) {
             dispath(addItem(item));
             setModal(false);
             setReset(false);
-            send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {},token);
+            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {},token);
         }, token);
     }
 
     const onReset = (item) => {
         setModal(false);
         setReset(false);
-        send('api/cart/addtocart', 'GET', {"product.id": item.id, num: 1}, () => {
+        console.log("+++++++++++++++++");
+        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
             send('api/cart/getcart', 'POST', {}, setCart, token);
-            
+            console.log("========--------");
         },token);
     }
 
@@ -357,7 +358,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around'
     },
     phoneButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		paddingVertical: 5,
 		paddingHorizontal: 10,
 		borderRadius: 5,
@@ -403,9 +404,8 @@ const styles = StyleSheet.create({
     },
     header: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginLeft: 10,
         paddingVertical: 10
     },
     toolView: {

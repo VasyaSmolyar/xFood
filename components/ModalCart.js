@@ -25,7 +25,8 @@ export default function ModalCart(props) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 25,
+        paddingHorizontal: 25,
+        paddingVertical: 20,
         backgroundColor: '#fff',
     },
     backContainer: {
@@ -43,8 +44,8 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     buttonText: {
-        color: '#f1c40f',
-        fontSize: 18,
+        color: '#f08741',
+        fontSize: 16,
         paddingLeft: 15
     }
 });

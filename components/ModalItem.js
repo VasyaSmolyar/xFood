@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular'
     },
     phoneButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		paddingVertical: 12,
 		paddingHorizontal: 10,
 		borderRadius: 10,

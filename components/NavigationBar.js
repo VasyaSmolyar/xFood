@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         padding: 10,
         justifyContent: 'space-around',
         alignItems: 'center',
-        borderTopColor: '#9d9d9d',
+        borderTopColor: '#ede9e9',
         borderTopWidth: 1
     },
     touch: {
