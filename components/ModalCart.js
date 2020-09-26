@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Modal, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Modal, Text, TouchableOpacity, Image } from 'react-native';
+import cook from '../files/cook.png'; 
 
 export default function ModalCart(props) {
     const { visible, item, onClose, addInCart } = props;
@@ -8,13 +9,15 @@ export default function ModalCart(props) {
         <Modal visible={visible} transparent={true}>
             <View style={styles.backContainer}>
                 <View style={styles.container}>
-                    <Text style={styles.text}>Нужно освободить корзину для нового заказа</Text>
+                    <Image source={cook} style={{width: 70, height: 70, marginBottom: 20}} resizeMode={'contain'} />
+                    <Text style={styles.header}>У вас в корзине товары из другого ресторана.</Text>
+                    <Text style={styles.text}>Перед добавлением других товаров корзина будет очищена</Text>
                     <View style={styles.butContainer}>
-                        <TouchableOpacity onPress={onClose}>
-                            <Text style={styles.buttonText}>СТОП</Text>
+                        <TouchableOpacity onPress={() => {addInCart(item)}} style={styles.goButton}>
+                            <Text style={styles.goButtonText}>Очистить</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {addInCart(item)}}>
-                            <Text style={styles.buttonText}>ДАВАЙТЕ</Text>
+                        <TouchableOpacity onPress={onClose} style={styles.backButton}>
+                            <Text style={styles.backButtonText}>Отмена</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -28,6 +31,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 25,
         paddingVertical: 20,
         backgroundColor: '#fff',
+        alignItems: 'center',
+        borderRadius: 15
     },
     backContainer: {
         flex: 1,
@@ -37,15 +42,43 @@ const styles = StyleSheet.create({
     },
     butContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end'
+        justifyContent: 'space-around'
     }, 
     text: {
-        fontSize: 16,
-        paddingBottom: 30
+        fontSize: 14,
+        fontFamily: 'Tahoma-Regular', 
+        paddingBottom: 30,
+        textAlign: 'center'
     },
-    buttonText: {
-        color: '#f08741',
-        fontSize: 16,
-        paddingLeft: 15
+    goButtonText: {
+        fontSize: 14,
+        color: 'white',
+        fontFamily: 'Tahoma-Regular',
+    },
+    backButtonText: {
+        fontSize: 14,
+        color: 'black',
+        fontFamily: 'Tahoma-Regular',
+    },
+    header: {
+        fontSize: 20,
+        fontFamily: 'Tahoma-Regular',
+        paddingBottom: 20,
+        textAlign: 'center'
+    },
+    goButton: {
+        backgroundColor: '#f08741',
+        borderRadius: 10,
+        alignItems: 'center',
+        paddingHorizontal: 25,
+        paddingVertical: 15,
+        marginRight: 20
+    },
+    backButton: {
+        backgroundColor: '#f3f4f6',
+        borderRadius: 10,
+        alignItems: 'center',
+        paddingHorizontal: 25,
+        paddingVertical: 15
     }
 });
