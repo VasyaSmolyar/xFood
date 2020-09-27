@@ -18,7 +18,6 @@ import star from './files/toolStar.png';
 function Item(props) {
     const cart = useSelector(state => state.cart);
     const { item, addToCart } = props;
-
     if(item.item.empty !== undefined) {
         return <View style={{width: '50%', height: 10}}></View>
     }
@@ -107,8 +106,6 @@ export default function ProductScreen({navigation}) {
             return {item: {...item.product}, count: item.num};
         });
         //Удалить потом
-        console.log("=====================#################++++++++++++++++++++++");
-        console.log(cart);
         dispath(loadCart(cart));
     }
 
@@ -156,7 +153,6 @@ export default function ProductScreen({navigation}) {
     }
 
     const addToCart = (item) => {
-        console.log(item.restaurant_id);
         send('api/cart/check', 'POST', {resturant_id: item.restaurant_id}, (ret) => {
             if(ret[2] === false) {
                 setChosen(item);
@@ -173,10 +169,8 @@ export default function ProductScreen({navigation}) {
     const onReset = (item) => {
         setModal(false);
         setReset(false);
-        console.log("+++++++++++++++++");
         send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
             send('api/cart/getcart', 'POST', {}, setCart, token);
-            console.log("========--------");
         },token);
     }
 

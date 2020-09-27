@@ -10,6 +10,13 @@ export default function ModalItem(props) {
         return <View></View>
     }
 
+    const flag = item.country !== "Русская кухня" ? (
+        <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
+            <Text>{item.flag}</Text> 
+            <Text style={styles.itemFlag}>{item.country}</Text>
+        </View>
+    ) : <View style={{height: 30}}></View>;
+
     return (
         <Modal visible={visible}>
             <View style={styles.backContainer}>
@@ -25,14 +32,11 @@ export default function ModalItem(props) {
                         </View>
                         <View style={{paddingHorizontal: 30}}>
                             <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
-                            <Text style={styles.itemCompany}>Хорошая компания</Text>
+                            <Text style={styles.itemCompany}>{item.restaurant_name}</Text>
                             <Text style={styles.itemText}>{item.title}</Text>
                             <StarRating disabled={false} maxStars={5} rating={4} containerStyle={{width: '40%', marginVertical: 5}}
                             starStyle={{color: '#f1c40f'}} starSize={20} />
-                            <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
-                                <Text>{item.flag}</Text> 
-                                <Text style={styles.itemFlag}>{item.country}</Text>
-                            </View>
+                            {flag}
                             <Text style={styles.itemDesc}>{item.description}</Text>
                         </View>
                     </ScrollView>
@@ -57,7 +61,7 @@ const styles = StyleSheet.create({
     },
     backContainer: {
         flex: 1,
-        backgroundColor: 'black',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)'
     },
     header: {
         flexDirection: 'row',

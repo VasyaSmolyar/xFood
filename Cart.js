@@ -102,7 +102,7 @@ const CartScreen = () => {
 
     return (
         <View style={{flex: 1}}>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Корзина</Text>
             </View>
@@ -134,17 +134,14 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
     barContainer: {
         width: '100%',
-        backgroundColor: 'black',
-        padding: 5,
-        marginBottom: 10,
+        paddingLeft: 30,
         paddingTop: Constants.statusBarHeight,
-        alignItems: 'center'
     },
     barText: {
-        color: "#f08741",
         fontWeight: "bold",
-        fontSize: 16,
-        marginVertical: 20
+        fontSize: 20,
+        marginTop: 20,
+        marginBottom: 15
     },
     firstLine: {
         flexDirection: 'row',
@@ -215,7 +212,8 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 18,
+        fontSize: 18,
+        color: 'white'
 	},
 });
 

@@ -48,7 +48,7 @@ export default function CabinetScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Личный кабинет</Text>
             </View>
@@ -95,16 +95,17 @@ const styles = StyleSheet.create({
     },
     barContainer: {
         width: '100%',
-        backgroundColor: 'black',
         padding: 5,
+        paddingLeft: 30,
         paddingTop: Constants.statusBarHeight,
-        alignItems: 'center'
+        borderBottomColor: '#ede9e9',
+        borderBottomWidth: 1
     },
     barText: {
-        color: "#f08741",
         fontWeight: "bold",
-        fontSize: 16,
-        marginVertical: 20
+        fontSize: 20,
+        marginTop: 20,
+        marginBottom: 15
     },
     itemContainer: {
         flexDirection: 'row',
@@ -145,5 +146,5 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         alignItems: 'center',
         justifyContent: 'center'
-    } 
+    },
 });
