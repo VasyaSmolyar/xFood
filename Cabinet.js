@@ -75,7 +75,7 @@ export default function CabinetScreen({navigation}) {
                 <MenuItem title="Помощь" page="Catalog" />
                 <MenuItem title="Сканер акцизов" page="Catalog" />
                 <Header title="Акции" />
-                <MenuItem title="Купоны" page="Catalog" />
+                <MenuItem title="Купоны" page="Coupon" />
                 <Header title="Другое" />
                 <TouchableOpacity onPress={onExit}>
                     <View style={styles.itemContainer}>

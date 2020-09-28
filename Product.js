@@ -85,6 +85,9 @@ export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
     const route = useRoute();
     let { subs } = route.params;
+    subs = subs.map((item) => {
+        return item.title;
+    });
     subs = ["Популярное", ...subs];
     const dispath = useDispatch();
     const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
