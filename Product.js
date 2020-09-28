@@ -19,7 +19,7 @@ function Item(props) {
     const cart = useSelector(state => state.cart);
     const { item, addToCart } = props;
     if(item.item.empty !== undefined) {
-        return <View style={{width: '50%', height: 10}}></View>
+        return <View style={{width: '50%', height: 30}}></View>
     }
 
     const inCart = cart.items.find((i) => (item.item.title === i.item.title));
@@ -255,14 +255,15 @@ export default function ProductScreen({navigation}) {
                             </TouchableOpacity>
                         );
                     }
-                } horizontal={true} style={{width: '70%'}}
+                } horizontal={true} style={{width: '70%', borderBottomWidth: 1, borderBottomColor: '#dddddd'}}
                 showsHorizontalScrollIndicator={false} />
             </View>
             <FlatList onEndReachedThreshold={0.1}
-            numColumns={2} columnWrapperStyle={styles.oneRow} 
-            onEndReached={upload} keyExtractor={(item, index) => item.title} data={data.length % 2 === 1 ? [...data, {empty: true}] : data} renderItem={
+            numColumns={2} columnWrapperStyle={styles.oneRow}
+            onEndReached={upload} keyExtractor={(item, index) => item.title} 
+            data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} renderItem={
               (item) => <Item item={item} addToCart={addToCart} showItem={showModal} />
-            }/>
+            }  />
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
@@ -296,8 +297,12 @@ const styles = StyleSheet.create({
     item: {
         width: '50%',
         backgroundColor: '#fff',
-        marginVertical: 10,
-        paddingHorizontal: 10
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#dddddd',
+        borderRightWidth: 1,
+        borderRightColor: '#dddddd'
     },
     itemText: {
         fontSize: 14,
