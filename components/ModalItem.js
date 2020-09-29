@@ -32,7 +32,7 @@ export default function ModalItem(props) {
                         </View>
                         <View style={{paddingHorizontal: 30}}>
                             <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
-                            <Text style={styles.itemCompany}>{item.restaurant_name}</Text>
+                            <Text style={styles.itemCompany}>{item.restaurant}</Text>
                             <Text style={styles.itemText}>{item.title}</Text>
                             <StarRating disabled={false} maxStars={5} rating={4} containerStyle={{width: '40%', marginVertical: 5}}
                             starStyle={{color: '#f1c40f'}} starSize={20} />
