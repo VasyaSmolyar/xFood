@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import send from './utils/net';
+import ModalCoupon from './components/ModalCoupon';
 import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 
-function Coupon(props) {
-    const { item } = props;
-
+function Coupon({item, onPress}) {
     return (
         <View style={styles.couponView}>
             <Text style={styles.couponTime}>Действителен до {item.date_expire}</Text>
             <Text style={styles.couponTitle}>Скидка на доставку {item.discount_amount}%</Text>
             <Text style={styles.couponDesc}>{item.description}</Text>
-            <TouchableOpacity style={styles.couponButton}>
+            <TouchableOpacity style={styles.couponButton} onPress={onPress}>
                 <Text style={styles.buttonText}>Показать акцию</Text>
             </TouchableOpacity>
         </View>
@@ -24,6 +23,8 @@ function Coupon(props) {
 export default function CouponScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [list, setList] = useState([]);
+    const [modal, setModal] = useState(false);
+    const [chosen, setChosen] = useState(null);
 
     useEffect(() => {
         send('api/coupons/getbyuser', 'POST', {}, (json) => {
@@ -31,13 +32,19 @@ export default function CouponScreen({navigation}) {
 		}, token);
     }, []);
 
+    const choose = (item) => {
+        setModal(true);
+        setChosen(item);
+    };
+
     const data = list.map((item) => {
-        return <Coupon item={item} />
+        return <Coupon item={item} onPress={() => choose(item)} />
     });
 
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
+            <ModalCoupon visible={modal} item={chosen} />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Купоны</Text>
             </View>
