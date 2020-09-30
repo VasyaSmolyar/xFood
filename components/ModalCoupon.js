@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import { View, Modal, StyleSheet, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
 import dollar from '../files/dollar.png'; 
 
-export default function ModalCoupon({item, visible}) {
+export default function ModalCoupon({item, visible, onClose}) {
     if (item === null) {
         return <View></View>;
     }
 
     return (
-        <Modal visible={visible}>
+        <Modal visible={visible} transparent={true}>
             <View style={styles.backContainer}>
                 <View style={{flex:1}}></View>
                 <View style={{flex:1}}></View>
                 <View style={styles.container}>
-                    <Image source={dollar} style={{width: 50, height: 50} }/>
-                    <Text>Купон {item.code}</Text>
-                    <Text>Скидка {item.discount_amount}% на доставку</Text>
-                    <TouchableOpacity style={styles.couponButton}>
+                    <Image source={dollar} style={{width: 70, height: 70}} resizeMode={'contain'}/>
+                    <View style={{alignItems: 'center'}}>
+                        <Text style={styles.codeText}>Купон {item.code}</Text>
+                        <Text style={styles.perText}>Скидка {item.discount_amount}% на доставку</Text>
+                    </View>
+                    <TouchableOpacity style={styles.couponButton} onPress={() => onClose(item.code)}>
                         <Text style={styles.buttonText}>Копировать код</Text>
                     </TouchableOpacity>
                 </View>
@@ -30,31 +32,34 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         padding: 20,
-        flexDirection: 'row'
     },
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
+        paddingBottom: 15,
+        paddingTop: 30,
+        borderRadius: 15
     },
     codeText: {
         fontFamily: 'Tahoma-Regular',
         color: 'black',
-        fontSize: 20
+        fontSize: 20,
+        marginBottom: 10
     },
     perText: {
         fontFamily: 'Tahoma-Regular',
         color: '#aaa',
-        fontSize: 16
+        fontSize: 15,
+        marginBottom: 10
     },
     couponButton: {
         backgroundColor: '#f08843',
         alignItems: 'center',
-        width: '100%',
+        width: '85%',
         borderRadius: 15,
-        paddingVertical: 10
+        paddingVertical: 15
     },
     buttonText: {
         fontFamily: 'Tahoma-Regular',

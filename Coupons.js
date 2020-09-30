@@ -37,6 +37,10 @@ export default function CouponScreen({navigation}) {
         setChosen(item);
     };
 
+    const load = () => {
+        setModal(false);
+    }
+
     const data = list.map((item) => {
         return <Coupon item={item} onPress={() => choose(item)} />
     });
@@ -44,7 +48,7 @@ export default function CouponScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <ModalCoupon visible={modal} item={chosen} />
+            <ModalCoupon visible={modal} item={chosen} onClose={load}/>
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Купоны</Text>
             </View>
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         borderRadius: 15,
-        paddingVertical: 10
+        paddingVertical: 15
     },
     buttonText: {
         fontFamily: 'Tahoma-Regular',
