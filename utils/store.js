@@ -79,7 +79,7 @@ export const cartReducer = (state = initialCart, action) => {
             items = state.items;
             if(items.some((item) => {
                 pos++;
-                return action.item.id === item.item.id;
+                return action.item.id === item.id;
             })) {
                 items[pos].count = items[pos].count + action.count;
             } else {
@@ -90,7 +90,7 @@ export const cartReducer = (state = initialCart, action) => {
             items = state.items;
             if(items.some((item) => {
                 pos++;
-                return action.item.id === item.item.id;
+                return action.item.id === item.id;
             })) {
                 if(items[pos].count <= action.count) {
                     items.splice(pos, 1);

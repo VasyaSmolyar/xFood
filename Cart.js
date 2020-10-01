@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
@@ -12,15 +12,16 @@ import up from './files/up.png';
 import down from './files/down.png';
 
 const CartItem = (props) => {
-    let item = props.item.item;
-    item.count = props.item.count;
+    console.log("=======ITEM======");
+    console.log(item);
+    let item = props.item.product;
+    item.count = props.item.num;
     const dispath = useDispatch();
     const token = useSelector(state => state.token);
 
     const getPrice = () => {
         send('api/cart/getcart', 'POST', {}, (json) => {
-            const other = json.reverse()[0];
-            dispath(setPrice(other.products_cost, other.delivery_cost));
+            dispath(setPrice(json.products_cost, json.delivery_cost));
         }, token);
     }
 
@@ -59,11 +60,11 @@ const CartItem = (props) => {
                 </View>
             </View>
             <View style={styles.secondLine}> 
-                <TouchableWithoutFeedback onPress={() => {removeAll(item)}}>
+                <TouchableWithoutFeedback onPress={() => removeAll(item)}>
                     <Image source={trash} style={styles.trash} resizeMode={'contain'} />
                 </TouchableWithoutFeedback>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Text style={styles.itemPrice}>{props.item.count} шт.</Text>
+                    <Text style={styles.itemPrice}>{item.count} шт.</Text>
                     <View style={{width: 25, height: 30, justifyContent: 'space-around'}}>
                         <TouchableOpacity onPress={() => add(item)}>
                             <Image source={up} style={styles.arrow} resizeMode={'contain'} />
@@ -86,10 +87,8 @@ const CartScreen = () => {
     const navigation = useNavigation();
 
     const setCart = (json) => {
-        //console.log(json);
-        //console.log("==========================");
-        const other = json.reverse()[0];
-        dispath(setPrice(other.products_cost, other.delivery_cost));
+        dispath(loadCart(json.items));
+        dispath(setPrice(json.products_cost, json.delivery_cost));
     }
 
     useEffect(() => {
@@ -100,15 +99,21 @@ const CartScreen = () => {
         return Math.ceil((Number(x))*100) / 100;
     }
 
+    const list = cart.items.map((item) => {
+        return (
+            <CartItem item={item} />
+        );
+    });
+
     return (
         <View style={{flex: 1}}>
             <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Корзина</Text>
             </View>
-            <FlatList keyExtractor={(item, index) => item.item.id.toString()} data={cart.items} extraData={cart} renderItem={(item) => 
-                <CartItem item={item.item} />} 
-            />
+            <ScrollView>
+                {list}
+            </ScrollView>
             <View style={styles.bill}>
                 <View>
                     <Text style={styles.text}>Стоимость товаров</Text>
