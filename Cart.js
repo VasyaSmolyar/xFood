@@ -12,9 +12,11 @@ import up from './files/up.png';
 import down from './files/down.png';
 
 const CartItem = (props) => {
+    let item = props.item.product;
     console.log("=======ITEM======");
     console.log(item);
-    let item = props.item.product;
+    if (item === undefined) // Костыль
+        return <View></View>;
     item.count = props.item.num;
     const dispath = useDispatch();
     const token = useSelector(state => state.token);
@@ -27,19 +29,25 @@ const CartItem = (props) => {
 
     const add = (item) => {
         dispath(addItem(item));
-        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
+            console.log("ADD ITEM ID:" + item.id);
+        }, token);
         getPrice();
     }
 
     const remove = (item) => {
         dispath(removeItem(item));
-        send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: 1}, () => {
+            console.log("REMOVE ITEM ID:" + item.id);
+        }, token);
         getPrice();
     }
 
     const removeAll = (item) => {
         dispath(removeAllItem(item));
-        send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: item.count}, () => {}, token);
+        send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: item.count}, () => {
+            console.log("ALL ITEM ID:" + item.id);
+        }, token);
         getPrice();
     }
 
