@@ -78,7 +78,7 @@ function PhoneScreen({navigation}) {
 				<View style={styles.inputWrap}>
 					<Text style={styles.inputWrapText}>Номер телефона</Text>
 					<TextInput value={'+7' + value} onChangeText={(text) => setValue(text.slice(2))} maxLength = {12} 
-					style={styles.phone} keyboardType='phone-pad' autoFocus={true} onFocus={() => {}}/>
+					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<Text style={styles.phoneText} >Отправить код</Text>
