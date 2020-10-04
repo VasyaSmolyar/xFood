@@ -22,7 +22,12 @@ function Item(props) {
         return <View style={{width: '50%', height: 30}}></View>
     }
 
-    const inCart = cart.items.find((i) => (item.item.title === i.item.title));
+    const inCart = cart.items.find((i) => {
+        if (i.item === undefined)
+            return false;
+        return item.item.title === i.item.title;
+    });
+
     const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count}/> : (
         <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
             <Text style={styles.phoneText}>Добавить</Text>
@@ -36,9 +41,21 @@ function Item(props) {
         </View>
     ) : <View style={{height: 30}}></View>;
 
+    let border = {};
+
+    if (props.index % 2 == 1) {
+        border.borderLeftWidth = 1;
+        border.borderLeftColor = '#eee';
+    }
+    
+    if (props.length - props.index > 2) {
+        border.borderBottomWidth = 1;
+        border.borderBottomColor = '#eee';
+    }
+
     return (
         <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
-            <View style={styles.item}>
+            <View style={[styles.item, border]}>
                 <View style={{alignItems: 'center'}}>
                     <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
                 </View>
@@ -103,7 +120,7 @@ export default function ProductScreen({navigation}) {
 
     const setCart = (json) => {
         const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
-            return {item: {...item.product}, count: item.num};
+            return {item: {...item.product, id: item.id}, count: item.num};
         });
         //Удалить потом
         dispath(loadCart(cart));
@@ -234,19 +251,6 @@ export default function ProductScreen({navigation}) {
                         return (
                             <TouchableOpacity style={color} onPress={() => {
                                 setOffset(0);
-                                /*
-                                const title = "Все категории" ? "all" : title;
-                                let data = {title: title, offset: 0, num: num, search: query};
-                                if (sub !== item.index) {
-                                    data.subcategory = subs[item.index];
-                                }
-                                send('api/catalog/getbycategory', 'GET', data, (json) => {
-                                    if(json.details !== undefined) {
-                                        return;
-                                    }
-                                    setData(json);
-                                }, token);
-                                */
                                 setSub(item.index);
                                 setData([]);
                                 setLoaded(false);
@@ -255,14 +259,17 @@ export default function ProductScreen({navigation}) {
                             </TouchableOpacity>
                         );
                     }
-                } horizontal={true} style={{width: '70%', borderBottomWidth: 1, borderBottomColor: '#dddddd'}}
+                } horizontal={true} style={{width: '70%'}}
                 showsHorizontalScrollIndicator={false} />
             </View>
             <FlatList onEndReachedThreshold={0.1}
             numColumns={2} columnWrapperStyle={styles.oneRow}
-            onEndReached={upload} keyExtractor={(item, index) => item.title} 
-            data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} renderItem={
-              (item) => <Item item={item} addToCart={addToCart} showItem={showModal} />
+            onEndReached={upload} keyExtractor={(item, index) => index.toString()} 
+            data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 
+            renderItem={
+              ({ item, index, sep }) => {
+                return <Item item={{item: item}} addToCart={addToCart} showItem={showModal} length={data.length} index={index} />;
+              }
             }  />
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
@@ -299,10 +306,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         paddingVertical: 10,
         paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#dddddd',
-        borderRightWidth: 1,
-        borderRightColor: '#dddddd'
     },
     itemText: {
         fontSize: 14,

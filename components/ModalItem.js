@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
-import StarRating from 'react-native-star-rating';
 import x from '../files/x.png';
 
 export default function ModalItem(props) {
@@ -34,8 +33,6 @@ export default function ModalItem(props) {
                             <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
                             <Text style={styles.itemCompany}>{item.restaurant}</Text>
                             <Text style={styles.itemText}>{item.title}</Text>
-                            <StarRating disabled={false} maxStars={5} rating={4} containerStyle={{width: '40%', marginVertical: 5}}
-                            starStyle={{color: '#f1c40f'}} starSize={20} />
                             {flag}
                             <Text style={styles.itemDesc}>{item.description}</Text>
                         </View>
