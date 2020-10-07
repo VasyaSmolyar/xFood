@@ -77,13 +77,14 @@ export const cartReducer = (state = initialCart, action) => {
     switch(action.type) {
         case ADD_ITEM:
             items = state.items;
+            const one = action.item.product !== undefined ? action.item.product : action.item;
             if(items.some((item) => {
                 pos++;
                 return action.item.id === item.id;
             })) {
                 items[pos].count = items[pos].count + action.count;
             } else {
-                items.push({item: action.item, count: action.count});
+                items.push({item: one, count: action.count});
             }
             return {...state, items: items};
         case REMOVE_ITEM:

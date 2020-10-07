@@ -3,8 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWit
 import { useSelector, useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import send from './utils/net'
-import { addItem, loadCart, removeItem } from './utils/store';
+import send from './utils/net';
+import useCart from './utils/cartHook';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 import ModalCart from './components/ModalCart';
@@ -16,19 +16,18 @@ import star from './files/toolStar.png';
 
 
 function Item(props) {
-    const cart = useSelector(state => state.cart);
-    const { item, addToCart } = props;
+    const { cart, item, addToCart, removeFromCart } = props;
     if(item.item.empty !== undefined) {
         return <View style={{width: '50%', height: 30}}></View>
     }
 
-    const inCart = cart.items.find((i) => {
+    const inCart = cart.find((i) => {
         if (i.item === undefined)
-            return false;
+            return undefined;
         return item.item.title === i.item.title;
     });
 
-    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count}/> : (
+    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
         <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
             <Text style={styles.phoneText}>Добавить</Text>
         </TouchableOpacity>
@@ -70,18 +69,21 @@ function Item(props) {
 }
 
 function CartBar(props) {
-    const dispath = useDispatch();
-    const token = useSelector(state => state.token);
+    //const token = useSelector(state => state.token);
 
     const add = () => {
-        dispath(addItem(props.item));
+        props.addToCart(props.item); 
+        /*
         send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
         send('api/cart/getcart', 'POST', {}, () => {}, token);
+        */
     }
 
     const remove = () => {
-        dispath(removeItem(props.item));
+        props.removeFromCart(props.item);
+        /*
         send('api/cart/deletefromcart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
+        */
     }
 
     return (
@@ -115,18 +117,21 @@ export default function ProductScreen({navigation}) {
     const [chosen, setChosen] = useState(null);
     const [modal, setModal] = useState(false);
     const [reset, setReset] = useState(false);
+    const {cart, addItem, removeItem} = useCart([]);
 
     const num = 5;
 
     const setCart = (json) => {
         const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
-            return {item: {...item.product, id: item.id}, count: item.num};
+            return {item: {...item.product}, count: item.num};
         });
-        //Удалить потом
+        console.log("ITEMS GET: ");
+        console.log("cart");
         dispath(loadCart(cart));
     }
 
     useEffect(() => {
+        console.log("ITEMS SET: ");
         send('api/cart/getcart', 'POST', {}, setCart, token);
         if (route.params.query !== undefined) {
             setQuery(route.params.query);
@@ -170,24 +175,25 @@ export default function ProductScreen({navigation}) {
     }
 
     const addToCart = (item) => {
-        send('api/cart/check', 'POST', {resturant_id: item.restaurant_id}, (ret) => {
+        send('api/cart/check', 'POST', {resturant_id: route.params.id}, (ret) => {
             if(ret[2] === false) {
                 setChosen(item);
                 setReset(true);
                 return;
             }
-            dispath(addItem(item));
             setModal(false);
             setReset(false);
-            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {},token);
+            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
+                addItem(item);
+            },token);
         }, token);
     }
 
     const onReset = (item) => {
         setModal(false);
-        setReset(false);
-        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
-            send('api/cart/getcart', 'POST', {}, setCart, token);
+            setReset(false);
+            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
+                addItem(item);
         },token);
     }
 
@@ -268,7 +274,8 @@ export default function ProductScreen({navigation}) {
             data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 
             renderItem={
               ({ item, index, sep }) => {
-                return <Item item={{item: item}} addToCart={addToCart} showItem={showModal} length={data.length} index={index} />;
+                return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
+                showItem={showModal} length={data.length} index={index} />;
               }
             }  />
             <NavigationBar navigation={navigation} routeName="Catalog"/>
