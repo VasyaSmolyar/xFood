@@ -128,7 +128,6 @@ export default function ProductScreen({navigation}) {
     }
 
     useEffect(() => {
-        console.log("ITEMS SET: ");
         send('api/cart/getcart', 'POST', {}, setCart, token);
         if (route.params.query !== undefined) {
             setQuery(route.params.query);
