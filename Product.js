@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
@@ -105,7 +105,6 @@ export default function ProductScreen({navigation}) {
     const route = useRoute();
     let { subs } = route.params;
     subs = ["Популярное", ...subs];
-    const dispath = useDispatch();
     const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
     const spec = route.params.banner !== undefined;
     const other = route.params.other;
@@ -117,17 +116,15 @@ export default function ProductScreen({navigation}) {
     const [chosen, setChosen] = useState(null);
     const [modal, setModal] = useState(false);
     const [reset, setReset] = useState(false);
-    const {cart, addItem, removeItem} = useCart([]);
+    const {cart, addItem, removeItem, loadCart} = useCart([], token);
 
     const num = 5;
 
     const setCart = (json) => {
-        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
+        const cart = json.items.map((item) => {
             return {item: {...item.product}, count: item.num};
         });
-        console.log("ITEMS GET: ");
-        console.log("cart");
-        dispath(loadCart(cart));
+        loadCart(cart);
     }
 
     useEffect(() => {
@@ -183,18 +180,14 @@ export default function ProductScreen({navigation}) {
             }
             setModal(false);
             setReset(false);
-            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
-                addItem(item);
-            },token);
+            addItem(item);
         }, token);
     }
 
     const onReset = (item) => {
         setModal(false);
-            setReset(false);
-            send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
-                addItem(item);
-        },token);
+        setReset(false);
+        addItem(item);
     }
 
     useEffect(() => {
