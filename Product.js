@@ -121,9 +121,7 @@ export default function ProductScreen({navigation}) {
     const num = 5;
 
     const setCart = (json) => {
-        const cart = json.items.map((item) => {
-            return {item: {...item.product}, count: item.num};
-        });
+        const cart = json.items;
         loadCart(cart);
     }
 

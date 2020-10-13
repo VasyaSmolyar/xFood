@@ -61,7 +61,7 @@ const CartItem = (props) => {
                     <View style={{justifyContent: 'space-between', flex: 1}} >
                         <Text style={styles.itemText}>{item.title}</Text>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                            <Text>{itimport { StyleSheet, Text, View, ScrollView, Image, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';em.flag}</Text> 
+                            <Text>{item.flag}</Text> 
                             <Text style={styles.itemFlag}>{item.country}</Text>
                         </View>
                     </View>
