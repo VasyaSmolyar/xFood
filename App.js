@@ -18,8 +18,7 @@ import CabinetScreen from './Cabinet';
 import CouponScreen from './Coupons';
 import OrderListScreen from './OrderList';
 import MainScreen from './Main';
-import background from './files/background.png';
-import logo from './files/logo.png';
+import Welcome from './Welcome';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -45,17 +44,7 @@ function AuthScreen({navigation}) {
 	}, []);
 
 	return (
-		<View style={styles.container}>
-			<StatusBar style="light" />
-			<ImageBackground source={background} style={styles.backContainer}>
-				<View style={styles.opac}>
-				</View>
-				<Image source={logo} style={{width: '50%', height: '15%', resizeMode: 'contain'}}/>
-				<TouchableOpacity style={styles.authButton} onPress={() => navigation.navigate('Phone')}>
-					<Text style={styles.text}>Авторизация</Text>
-				</TouchableOpacity>
-			</ImageBackground>
-		</View>
+			<Welcome navigation={navigation} />
 		);
 	}
 
