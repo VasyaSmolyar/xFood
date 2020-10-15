@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import NavigationBar from './components/NavigationBar';
+import Constants from 'expo-constants';
+import { StatusBar } from 'expo-status-bar';
 import { useSelector } from 'react-redux';
 import send from './utils/net';
 import useCart from './utils/cartHook';
@@ -8,64 +11,84 @@ import dinner from './files/dinner.png';
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
     const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
+    const [addons, setAddons] = useState([]);
 
     useEffect(() => {
-        send('api/cart/getcart', 'POST', {}, () => {
-            const cart = json.items;
+        send('api/cart/getcart', 'POST', {}, (json) => {
+            const cart = json.items.map(item => {
+                return {
+                    item: item.product,
+                    num: item.num
+                } 
+            });
             loadCart(cart);
+            setAddons(json.adviced);
         }, token);
     }, []);
 
-    const cartData = cart.map((item) => {
+    const cartData = cart.map((prod) => {
+        const item = prod.item;
         return (
-            <View>
-                <Image source={{uri: item.image_url}} />
-                <View>
-                    <Text>{item.title}</Text>
-                    <Text>{item.price} ₽</Text>
+            <View style={styles.itemContainer}>
+                <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 5}} resizeMode='contain' />
+                <View style={styles.infoContainer}>
+                    <Text style={styles.titleText} numberOfLines={1}>{item.title}</Text>
+                    <Text style={styles.priceText}>{item.price} ₽</Text>
                 </View>
-                <View>
-                    <TouchableOpacity>
-                        <Text>+</Text>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.highButton}>
+                        <Text style={styles.lowText}>+</Text>
                     </TouchableOpacity>
-                    <Text>1</Text>
-                    <TouchableOpacity>
-                        <Text>-</Text>
+                        <Text style={styles.lowNum}>{prod.num}</Text>
+                    <TouchableOpacity style={styles.lowButton}>
+                        <Text style={styles.lowText}>-</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         );
     });
 
+    const addData = addons.map((item) => {
+        return ( 
+            <View>
+
+            </View>
+        );
+    })
+
     return (
         <View style={styles.container}>
-            <View>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.header}>Корзина</Text>
-                    <Text style={styles.secondHeader}>Макдональдс</Text>
-                </View>
-                <View style={styles.deviceContainer}>
-                    <View style={styles.leftContainer}>
-                        <Image source={dinner} style={{width: 50, height: 50}} resizeMode='contain' />
-                        <Text stytle={styles.titleText}>Приборы</Text>
+            <StatusBar style="dark" />
+            <View style={{paddingHorizontal: 25}}>
+                <View>
+                    <View style={styles.headerContainer}>
+                        <Text style={styles.header}>Корзина</Text>
+                        <Text style={styles.secondHeader}>Макдональдс</Text>
                     </View>
-                    <View style={styles.rightContainer}>
-                        <TouchableOpacity style={styles.lowButton}>
-                            <Text style={styles.lowText}>+</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.lowNum}>1</Text>
+                    <View style={styles.deviceContainer}>
+                        <View style={styles.leftContainer}>
+                            <Image source={dinner} style={{width: 40, height: 40, marginRight: 30}} resizeMode='contain' />
+                            <Text style={styles.titleText}>Приборы</Text>
+                        </View>
+                        <View style={styles.rightContainer}>
+                            <TouchableOpacity style={styles.lowButton}>
+                                <Text style={styles.lowText}>+</Text>
+                            </TouchableOpacity>
+                            <Text style={styles.lowNum}>1</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View>
-                <Text>К заказу</Text>
+                <View>
+                    <Text style={styles.priceText}>К заказу</Text>
+                    <ScrollView horizontal={true}>
+                        {addData}
+                    </ScrollView>
+                </View>
                 <ScrollView>
-
+                    {cartData}
                 </ScrollView>
             </View>
-            <ScrollView>
-                {cartData}
-            </ScrollView>
+            <NavigationBar navigation={navigation} routeName="Cart"/>
         </View>
     )
 };
@@ -73,10 +96,8 @@ export default function CartScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
-        alignItems: 'center',
+        backgroundColor: "#f2f2f2",
         justifyContent: 'space-between',
-        paddingHorizontal: 20
     },
     headerContainer: {
         width: '100%', 
@@ -86,7 +107,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginLeft: 10,
-        paddingVertical: 10
+        marginTop: Constants.statusBarHeight,
+        paddingBottom: 10
     },
     secondHeader: {
         color: '#989898',
@@ -116,17 +138,44 @@ const styles = StyleSheet.create({
         paddingRight: 20
     },
     lowButton: {
-        padding: 20,
+        paddingVertical: 3,
+        paddingHorizontal: 15,
         backgroundColor: '#d6dbe0',
-        borderRadius: 15
+        borderRadius: 10,
+        alignItems: 'center'
+    },
+    highButton: {
+        paddingVertical: 3,
+        paddingHorizontal: 15,
+        backgroundColor: '#f18640',
+        borderRadius: 10
     },
     lowText: {
         fontWeight: 'bold',
-        fontSize: 26,
+        fontSize: 24,
+        color: 'white'
     },
     lowNum: {
-        fontSize: 27,
+        fontSize: 20,
         fontFamily: 'Tahoma-Regular',
-        marginLeft: 15
+        marginHorizontal: 18
+    },
+    itemContainer: {
+        padding: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    infoContainer: {
+        width: '30%'
+    },
+    priceText: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });

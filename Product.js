@@ -27,7 +27,7 @@ function Item(props) {
         return item.item.title === i.item.title;
     });
 
-    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.count} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
+    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.num} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
         <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
             <Text style={styles.phoneText}>Добавить</Text>
         </TouchableOpacity>
@@ -121,7 +121,12 @@ export default function ProductScreen({navigation}) {
     const num = 5;
 
     const setCart = (json) => {
-        const cart = json.items;
+        const cart = json.items.map(item => {
+            return {
+                item: item.product,
+                num: item.num
+            } 
+        });
         loadCart(cart);
     }
 

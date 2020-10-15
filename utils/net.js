@@ -1,4 +1,4 @@
-const backend = 'http://194.67.92.163:5000/';
+const backend = 'http://xfood.store/';
 
 function send(url, method, data, callback, token={}) {
     let headers = {

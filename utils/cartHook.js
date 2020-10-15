@@ -5,6 +5,8 @@ export default function useCart(initialState, token) {
     const [cart, setCart] = useState(initialState);
     
     const addItem = (item) => {
+        console.log("CART");
+        console.log(cart);
         const items = cart.slice(0);
         const pos = items.reduce((res, i) => {
             if(i.item.id === item.id)

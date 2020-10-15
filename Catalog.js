@@ -56,7 +56,7 @@ export default function RestaurantScreen({navigation}) {
 
     const load = (json) => {
         setLoaded(true);
-        const list = json;
+        const list = json.resturants;
         setData(list);
         setFiltered(list);
     };
