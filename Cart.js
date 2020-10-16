@@ -16,7 +16,7 @@ export default function CartScreen({navigation}) {
     const [addons, setAddons] = useState([]);
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
-    const [cartCode, setCode] = useState(code);
+    const [cartCode, setCartCode] = useState(code.code);
 
     const update = (text) => {
         send('api/cart/getcart', 'POST', {coupon: text}, (json) => {
@@ -28,12 +28,13 @@ export default function CartScreen({navigation}) {
             });
             loadCart(cart);
             setAddons(json.adviced);
+            setWares(json.tablewares);
             setOther(json);
         }, token);
     }
 
     useEffect(() => {
-        update(code);
+        update(code.code);
     }, []);
 
     const cartData = cart.map((prod) => {
@@ -104,8 +105,8 @@ export default function CartScreen({navigation}) {
     ) : null;
 
     const newCode = (text) => {
+        setCartCode(text);
         update(text);
-        setCode(text);
     }
 
     return (
@@ -144,7 +145,7 @@ export default function CartScreen({navigation}) {
                 </View>
                 <View style={styles.horContainer}>
                     <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
-                    <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onTextInput={newCode} />
+                    <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(text) => newCode(text)} />
                 </View>
             </View>
             <View style={[styles.horContainer, {marginHorizontal: 20}]}>
