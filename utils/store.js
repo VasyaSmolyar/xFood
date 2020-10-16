@@ -4,6 +4,7 @@ const REMOVE_ITEM = "REMOVE_ITEM";
 const LOAD_CART = "LOAD_CART";
 const SET_PRICE = "SET_PRICE"; 
 const SET_USER = "SET_USER";
+const SET_CODE = "SET_CODE";
 
 export const setToken = (login, times, token) => {
     return {type: SET_TOKEN, login: login, times: times, token: token}
@@ -29,6 +30,10 @@ export const setPrice = (price, delivery) => {
     return {type: SET_PRICE, price: price, delivery: delivery };
 }
 
+export const setCode = (code) => {
+    return {type: SET_CODE, code: code};
+}
+
 export const setUser = (user, phone) => {
     return {type: SET_USER, user: user, phone: phone };
 }
@@ -51,6 +56,19 @@ const initialPrice = {
 const initialUser = {
     user: '',
     phone: ''
+}
+
+const initialCode = {
+    code: ''
+}
+
+export const codeReducer = (state = initialCode, action) => {
+    switch(action.type) {
+        case SET_CODE:
+            return {...state, code: action.code}
+        default:
+            return state;
+    }
 }
 
 export const priceReducer = (state = initialPrice, action) => {

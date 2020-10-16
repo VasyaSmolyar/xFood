@@ -4,7 +4,8 @@ import Constants from 'expo-constants';
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import send from './utils/net';
 import ModalCoupon from './components/ModalCoupon';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCode } from './utils/store';
 import { StatusBar } from 'expo-status-bar';
 
 function Coupon({item, onPress}) {
@@ -22,6 +23,8 @@ function Coupon({item, onPress}) {
 
 export default function CouponScreen({navigation}) {
     const token = useSelector(state => state.token);
+    const dispath = useDispatch();
+
     const [list, setList] = useState([]);
     const [modal, setModal] = useState(false);
     const [chosen, setChosen] = useState(null);
@@ -37,8 +40,9 @@ export default function CouponScreen({navigation}) {
         setChosen(item);
     };
 
-    const load = () => {
+    const load = (text) => {
         setModal(false);
+        dispath(setCode(text));
     }
 
     const data = list.map((item) => {

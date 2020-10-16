@@ -11,11 +11,15 @@ import pack from './files/package.png';
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
+    const code = useSelector(state => state.code);
     const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
     const [addons, setAddons] = useState([]);
+    const [wares, setWares] = useState(1);
+    const [other, setOther] = useState({});
+    const [cartCode, setCode] = useState(code);
 
-    useEffect(() => {
-        send('api/cart/getcart', 'POST', {}, (json) => {
+    const update = (text) => {
+        send('api/cart/getcart', 'POST', {coupon: text}, (json) => {
             const cart = json.items.map(item => {
                 return {
                     item: item.product,
@@ -24,7 +28,12 @@ export default function CartScreen({navigation}) {
             });
             loadCart(cart);
             setAddons(json.adviced);
+            setOther(json);
         }, token);
+    }
+
+    useEffect(() => {
+        update(code);
     }, []);
 
     const cartData = cart.map((prod) => {
@@ -61,7 +70,7 @@ export default function CartScreen({navigation}) {
                 <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
                 <View>
                     <Text style={styles.titleText}>{item.title}</Text>
-                    <Text style={styles.priceText}>{item.price} ₽</Text>
+                    <Text style={styles.priceSecond}>{item.price} ₽</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -75,6 +84,29 @@ export default function CartScreen({navigation}) {
             </ScrollView>
         </View>
     ) : null;
+
+    const wareAdd = () => {
+        send('api/tablewares/add', 'POST', {}, () => {
+            setWares(wares + 1);
+        }, token);
+    }
+
+    const wareRem = () => {
+        send('api/tablewares/remove', 'POST', {}, () => {
+            setWares(wares - 1);
+        }, token);
+    }
+
+    const remButton = wares > 1 ? (
+        <TouchableOpacity style={styles.lowButton} onPress={wareRem}>
+            <Text style={styles.lowText}>-</Text>
+        </TouchableOpacity>
+    ) : null;
+
+    const newCode = (text) => {
+        update(text);
+        setCode(text);
+    }
 
     return (
         <View style={styles.container}>
@@ -91,10 +123,11 @@ export default function CartScreen({navigation}) {
                             <Text style={styles.titleText}>Приборы</Text>
                         </View>
                         <View style={styles.rightContainer}>
-                            <TouchableOpacity style={styles.lowButton}>
+                            <TouchableOpacity style={styles.lowButton} onPress={wareAdd}>
                                 <Text style={styles.lowText}>+</Text>
                             </TouchableOpacity>
-                            <Text style={styles.lowNum}>1</Text>
+                            <Text style={styles.lowNum}>{wares}</Text>
+                            {remButton}
                         </View>
                     </View>
                 </View>
@@ -106,17 +139,17 @@ export default function CartScreen({navigation}) {
                     <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
                     <View style={styles.infoContainer}>
                         <Text style={styles.titleText}>Доставка</Text>
-                        <Text style={styles.priceText}>89 ₽</Text>
+                        <Text style={styles.priceText}>{other.delivery_cost} ₽</Text>
                     </View>
                 </View>
                 <View style={styles.horContainer}>
                     <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
-                    <TextInput style={styles.codeInput} placeholder="Код купона" />
+                    <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onTextInput={newCode} />
                 </View>
             </View>
             <View style={[styles.horContainer, {marginHorizontal: 20}]}>
-                <Text style={styles.titleText}>Общая стоимость: 666 ₽</Text>
-                <TouchableOpacity style={styles.phoneButton}>
+                <Text style={styles.titleText}>Общая стоимость: {other.summ} ₽</Text>
+                <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
                     <Text style={styles.phoneText}>Оформить заказ</Text>
                 </TouchableOpacity>
             </View>
@@ -225,6 +258,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    priceSecond: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 16,
+        color: '#989898',
     },
     buttonContainer: {
         flexDirection: 'row',

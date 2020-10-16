@@ -17,8 +17,8 @@ export default function Welcome({navigation}) {
                 </View>
                 <View style={styles.second}>
                     <View style={{padding: 25}}>
-                        <View style={{paddingRight: 50}}>
-                            <Text style={styles.labelText}>Быстро и недорого доставляем еду из кафе</Text>
+                        <View style={{paddingRight: 30}}>
+                            <Text style={[styles.labelText, {fontSize: 22}]}>Быстро и недорого доставляем еду из кафе</Text>
                         </View>
                         <View style={styles.labelContainer}>
                             <View style={styles.label}>
