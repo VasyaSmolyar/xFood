@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import send from './utils/net';
 import useCart from './utils/cartHook';
 import dinner from './files/dinner.png';
+import pack from './files/package.png';
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -50,8 +51,12 @@ export default function CartScreen({navigation}) {
 
     const addData = addons.map((item) => {
         return ( 
-            <View>
-
+            <View style={styles.addContainer}>
+                <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
+                <View>
+                    <Text style={styles.titleText}>{item.title}</Text>
+                    <Text style={styles.priceText}>{item.price} ₽</Text>
+                </View>
             </View>
         );
     })
@@ -79,14 +84,31 @@ export default function CartScreen({navigation}) {
                     </View>
                 </View>
                 <View>
-                    <Text style={styles.priceText}>К заказу</Text>
-                    <ScrollView horizontal={true}>
+                    <Text style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</Text>
+                    <ScrollView horizontal={true} style={styles.horContainer}>
                         {addData}
                     </ScrollView>
                 </View>
-                <ScrollView>
+                <ScrollView style={styles.listContainer}>
                     {cartData}
                 </ScrollView>
+                <View style={[styles.horContainer, {flexDirection: 'row'}]}>
+                    <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.titleText}>Доставка</Text>
+                        <Text style={styles.priceText}>89 ₽</Text>
+                    </View>
+                </View>
+                <View style={styles.horContainer}>
+                    <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
+                    <TextInput style={styles.codeInput} placeholder="Код купона" />
+                </View>
+            </View>
+            <View style={[styles.horContainer, {marginHorizontal: 20}]}>
+                <Text style={styles.titleText}>Общая стоимость: 666 ₽</Text>
+                <TouchableOpacity style={styles.phoneButton}>
+                    <Text style={styles.phoneText}>Оформить заказ</Text>
+                </TouchableOpacity>
             </View>
             <NavigationBar navigation={navigation} routeName="Cart"/>
         </View>
@@ -100,7 +122,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     headerContainer: {
-        width: '100%', 
+        width: '100%',
+        borderBottomColor: '#e5e4e4',
+        borderBottomWidth: 1 
     },
     header: {
         fontFamily: 'Tahoma-Regular',
@@ -113,9 +137,9 @@ const styles = StyleSheet.create({
     secondHeader: {
         color: '#989898',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
+        fontSize: 16,
         marginLeft: 10,
-        paddingBottom: 5
+        paddingBottom: 10
     },
     titleText: {
         fontFamily: 'Tahoma-Regular',
@@ -125,12 +149,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 20
+        paddingVertical: 20,
+        borderBottomColor: '#e5e4e4',
+        borderBottomWidth: 1 
     },
     leftContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 20
+        paddingLeft: 10
     },
     rightContainer: {
         flexDirection: 'row',
@@ -151,7 +177,6 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     lowText: {
-        fontWeight: 'bold',
         fontSize: 24,
         color: 'white'
     },
@@ -160,8 +185,25 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
         marginHorizontal: 18
     },
+    horContainer: {
+        paddingHorizontal: 5,
+        paddingVertical: 20,
+        borderBottomColor: '#e5e4e4',
+        borderBottomWidth: 1 
+    },
+    addContainer: {
+        backgroundColor: '#fff',
+        marginRight: 15,
+        flexDirection: 'row',
+        padding: 15
+    },
+    listContainer: {
+        borderBottomColor: '#e5e4e4',
+        borderBottomWidth: 1 
+    },
     itemContainer: {
-        padding: 25,
+        paddingVertical: 25,
+        paddingLeft: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -177,5 +219,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
-    }
+    },
+    codeInput: {
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        backgroundColor: '#e5e6e7',
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 16,
+        width: '70%',
+        borderRadius: 10
+    },
+    phoneButton: {
+		backgroundColor: '#f08741',
+        paddingVertical: 15,
+        marginTop: 15,
+		borderRadius: 7,
+		width: '100%',
+		alignItems: 'center'
+	},
+	phoneText: {
+		fontFamily: 'Tahoma-Regular', 
+        fontSize: 16, 
+        fontWeight: 'bold',
+		color: 'white'
+	},
 });
