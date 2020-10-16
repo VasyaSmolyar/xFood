@@ -5,8 +5,6 @@ export default function useCart(initialState, token) {
     const [cart, setCart] = useState(initialState);
     
     const addItem = (item) => {
-        console.log("CART");
-        console.log(cart);
         const items = cart.slice(0);
         const pos = items.reduce((res, i) => {
             if(i.item.id === item.id)
@@ -15,12 +13,13 @@ export default function useCart(initialState, token) {
         }, -1);
         send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {
             if(pos !== -1) {
-                items[pos].count = items[pos].count + 1;
+                items[pos].num = items[pos].num + 1;
             } else {
-                items.push({item: item, count: 1});
+                items.push({item: item, num: 1});
             }
             setCart(items);
         }, token);
+        return items;
     };
 
     const removeItem = (item) => {
@@ -32,14 +31,15 @@ export default function useCart(initialState, token) {
         }, -1);
         if(pos !== -1) {
             send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: 1}, () => {
-                if(items[pos].count === 1) {
+                if(items[pos].num === 1) {
                     items.splice(pos, 1);
                 } else {
-                    items[pos].count = items[pos].count - 1;
+                    items[pos].num = items[pos].num - 1;
                 }
                 setCart(items);
             }, token);
         }
+        return items;
     };
 
     const removeAll = (item) => {
@@ -55,6 +55,7 @@ export default function useCart(initialState, token) {
                 setCart(items);
             }, token);
         }
+        return items;
     }
 
     const loadCart = (items) => {

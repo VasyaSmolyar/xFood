@@ -37,11 +37,11 @@ export default function CartScreen({navigation}) {
                     <Text style={styles.priceText}>{item.price} ₽</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.highButton}>
+                    <TouchableOpacity style={styles.highButton} onPress={() => addItem(item)}>
                         <Text style={styles.lowText}>+</Text>
                     </TouchableOpacity>
                         <Text style={styles.lowNum}>{prod.num}</Text>
-                    <TouchableOpacity style={styles.lowButton}>
+                    <TouchableOpacity style={styles.lowButton} onPress={() => removeItem(item)}>
                         <Text style={styles.lowText}>-</Text>
                     </TouchableOpacity>
                 </View>
@@ -49,17 +49,32 @@ export default function CartScreen({navigation}) {
         );
     });
 
-    const addData = addons.map((item) => {
+    const included = addons.filter((item) => {
+        return !cart.find((i) => {
+            return item.title === i.item.title;
+        });
+    });
+
+    const addData = included.map((item) => {
         return ( 
-            <View style={styles.addContainer}>
+            <TouchableOpacity style={styles.addContainer} onPress={() => addItem(item)}>
                 <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
                 <View>
                     <Text style={styles.titleText}>{item.title}</Text>
                     <Text style={styles.priceText}>{item.price} ₽</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
         );
     })
+
+    const block = included.length > 0 ? (
+        <View>
+            <Text style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</Text>
+            <ScrollView horizontal={true} style={styles.horContainer}>
+                {addData}
+            </ScrollView>
+        </View>
+    ) : null;
 
     return (
         <View style={styles.container}>
@@ -83,12 +98,7 @@ export default function CartScreen({navigation}) {
                         </View>
                     </View>
                 </View>
-                <View>
-                    <Text style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</Text>
-                    <ScrollView horizontal={true} style={styles.horContainer}>
-                        {addData}
-                    </ScrollView>
-                </View>
+                {block}
                 <ScrollView style={styles.listContainer}>
                     {cartData}
                 </ScrollView>
@@ -195,7 +205,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         marginRight: 15,
         flexDirection: 'row',
-        padding: 15
+        padding: 15,
+        borderRadius: 10
     },
     listContainer: {
         borderBottomColor: '#e5e4e4',
