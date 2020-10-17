@@ -86,11 +86,8 @@ function CodeScreen({navigation}) {
 
 	const navigate = json => {
 		const valid = json.isValid === "true";
-		const exist = isExisting === "true";
 		if(!valid) {
 			setWrong(true);
-		} else if(!exist) {
-			navigation.navigate('Register', {code: value, phone: "+7" + phone});
 		} else {
 			writeToken(json);
 			dispath(setToken(json.login, json.times, json.token));

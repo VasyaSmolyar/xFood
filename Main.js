@@ -3,73 +3,12 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback, TouchableOpacity, Ima
 import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
+import useCart from './utils/cartHook';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
-import { addItem, loadCart, removeItem } from './utils/store';
 import { Carousel } from './components/Carousel/index';
-import minus from './files/minus.png';
-import plus from './files/plus.png';
-
-function CartBar(props) {
-    const dispath = useDispatch();
-    const token = useSelector(state => state.token);
-
-    const add = () => {
-        dispath(addItem(props.item));
-        send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
-        send('api/cart/getcart', 'POST', {}, () => {}, token);
-    }
-
-    const remove = () => {
-        dispath(removeItem(props.item));
-        send('api/cart/deletefromcart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
-    }
-
-    return (
-        <View style={styles.cartBar}>
-            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f2f3f5'}]} onPress={remove}>
-                <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
-            </TouchableOpacity>
-            <Text style={styles.cartText}>{props.value} шт.</Text>
-            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f1c40f'}]} onPress={add}>
-                <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
-            </TouchableOpacity>
-        </View>
-    );
-}
-
-function Item(props) {
-    const cart = useSelector(state => state.cart);
-    const item = props.item;
-    if(item.empty !== undefined) {
-        return <View style={{width: '50%', height: 10}}></View>
-    }
-    const inCart = cart.items.find((i) => (item.title === i.item.title));
-    const add = inCart != undefined ? <CartBar item={item} value={inCart.count}/> : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => props.addToCart(item)}>
-            <Text style={styles.phoneText}>Добавить</Text>
-        </TouchableOpacity>
-    );
-
-    return (
-        <TouchableWithoutFeedback onPress={props.showItem}>
-            <View style={styles.item}>
-                <View style={{alignItems: 'center'}}>
-                    <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
-                </View>
-                <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
-                <Text numberOfLines={2}
-                style={styles.itemText}>{item.title}</Text>
-                <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                    <Text>{item.flag}</Text> 
-                    <Text style={styles.itemFlag}>{item.country}</Text>
-                </View>
-                {add}
-            </View>
-        </TouchableWithoutFeedback>
-    );
-}
+import Item from './components/Item';
 
 export default function MainScreen({navigation}) {
     const [query, setQuery] = useState('');
@@ -79,6 +18,7 @@ export default function MainScreen({navigation}) {
     const dispath = useDispatch();
     const [chosen, setChosen] = useState(null);
     const [visible, setVisible] = useState(false);
+    const {cart, addItem, removeItem, loadCart} = useCart([], token);
 
     useEffect(() => {
         send('api/main/get', 'POST', {}, (json) => {
@@ -103,10 +43,13 @@ export default function MainScreen({navigation}) {
     };
 
     const setCart = (json) => {
-        const cart = json.filter((item) => (item.id !== undefined)).map((item) => {
-            return {item: {...item.product[0]}, count: item.num};
+        const cart = json.items.map(item => {
+            return {
+                item: item.product,
+                num: item.num
+            } 
         });
-        dispath(loadCart(cart));
+        loadCart(cart);
     }
 
     useEffect(() => {
@@ -124,8 +67,9 @@ export default function MainScreen({navigation}) {
     }
 
     const sectors = Object.keys(sections).map((key) => {
-        const items = sections[key].map((item) => {
-            return <Item item={item} showItem={() => {choiceItem(item)}} addToCart={addToCart} />
+        const items = sections[key].map((item, index) => {
+            return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
+            showItem={choiceItem} length={sections.length} index={index} />;
         });
 
         return (

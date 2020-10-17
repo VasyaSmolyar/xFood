@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image } from 'react-native';
 import { useSelector } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -9,96 +9,9 @@ import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 import ModalCart from './components/ModalCart';
 import ModalItem from './components/ModalItem';
-import minus from './files/minus.png';
-import plus from './files/plus.png';
+import Item from './components/Item';
 import approve from './files/toolApprove.png';
 import star from './files/toolStar.png';
-
-
-function Item(props) {
-    const { cart, item, addToCart, removeFromCart } = props;
-    if(item.item.empty !== undefined) {
-        return <View style={{width: '50%', height: 30}}></View>
-    }
-
-    const inCart = cart.find((i) => {
-        if (i.item === undefined)
-            return undefined;
-        return item.item.title === i.item.title;
-    });
-
-    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.num} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
-            <Text style={styles.phoneText}>Добавить</Text>
-        </TouchableOpacity>
-    );
-
-    const flag = item.item.country !== "Русская кухня" ? (
-        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-            <Text>{item.item.flag}</Text> 
-            <Text style={styles.itemFlag}>{item.item.country}</Text>
-        </View>
-    ) : <View style={{height: 30}}></View>;
-
-    let border = {};
-
-    if (props.index % 2 == 1) {
-        border.borderLeftWidth = 1;
-        border.borderLeftColor = '#eee';
-    }
-    
-    if (props.length - props.index > 2) {
-        border.borderBottomWidth = 1;
-        border.borderBottomColor = '#eee';
-    }
-
-    return (
-        <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
-            <View style={[styles.item, border]}>
-                <View style={{alignItems: 'center'}}>
-                    <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
-                </View>
-                <Text style={styles.itemPrice}>{item.item.price.toFixed(2)} ₽</Text>
-                <Text numberOfLines={2}
-                style={styles.itemText}>{item.item.title}</Text>
-                {flag}
-                {add}
-            </View>
-        </TouchableWithoutFeedback>
-    );
-}
-
-function CartBar(props) {
-    //const token = useSelector(state => state.token);
-
-    const add = () => {
-        props.addToCart(props.item); 
-        /*
-        send('api/cart/addtocart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
-        send('api/cart/getcart', 'POST', {}, () => {}, token);
-        */
-    }
-
-    const remove = () => {
-        props.removeFromCart(props.item);
-        /*
-        send('api/cart/deletefromcart', 'POST', {"product.id": props.item.id, num: 1}, () => {}, token);
-        */
-    }
-
-    return (
-        <View style={styles.cartBar}>
-            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f2f3f5'}]} onPress={remove}>
-                <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
-            </TouchableOpacity>
-            <Text style={styles.cartText}>{props.value} шт.</Text>
-            <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f08741'}]} onPress={add}>
-                <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
-            </TouchableOpacity>
-        </View>
-    );
-    
-}
 
 export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
