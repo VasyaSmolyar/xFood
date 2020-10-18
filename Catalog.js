@@ -20,7 +20,7 @@ function Category(props) {
     }
 
     const getMoney = (amount) => {
-        return "от " + amount + "₽";
+        return "от " + amount + " ₽";
     }
 
     return (
@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     catIcon: {
-        width: 20,
-        height: 20
+        width: 17,
+        height: 17
     },
     catLabel: {
         fontFamily: 'Tahoma-Regular',
@@ -140,7 +140,8 @@ const styles = StyleSheet.create({
     catAppend: {
         flexDirection: 'row',
         paddingHorizontal: 5,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     oneRow: {
         justifyContent: 'space-around'

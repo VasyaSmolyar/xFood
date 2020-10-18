@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
@@ -30,8 +30,9 @@ export default function MainScreen({navigation}) {
     const banner = banners.map((banner) => {
         return {
             value: (
-            <TouchableWithoutFeedback pressRetentionOffset={5} onPress={() => {navigation.navigate('Products', {title: "all", banner: banner.code})}}>
-                <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain'}} />
+            <TouchableWithoutFeedback pressRetentionOffset={5}
+            onPress={() => {navigation.navigate('Products', {title: "all", banner: banner.code})}}>
+                <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain', borderRadius: 20}} />
             </TouchableWithoutFeedback>
             )
         }
@@ -84,9 +85,9 @@ export default function MainScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} />
-            <SearchBar placeholder="Поиск на xBeer" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
+            <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
                 {sectors}
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 23,
         fontFamily: 'Tahoma-Regular',
         padding: 15,
         paddingLeft: 10,

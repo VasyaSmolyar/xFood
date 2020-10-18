@@ -26,9 +26,6 @@
     },
     "android": {
       "package": "com.xgamegen.xbeer"
-    },
-    "androidNavigationBar": {
-      "visible": "sticky-immersive"
     }
   }
 }

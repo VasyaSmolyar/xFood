@@ -41,7 +41,7 @@ export default function CartScreen({navigation}) {
         const item = prod.item;
         return (
             <View style={styles.itemContainer}>
-                <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 5}} resizeMode='contain' />
+                <Image source={{uri: item.image_url}} style={{width: 60, height: 60, marginRight: 5}} resizeMode='contain' />
                 <View style={styles.infoContainer}>
                     <Text style={styles.titleText} numberOfLines={1}>{item.title}</Text>
                     <Text style={styles.priceText}>{item.price} ₽</Text>
@@ -71,7 +71,7 @@ export default function CartScreen({navigation}) {
                 <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
                 <View>
                     <Text style={styles.titleText}>{item.title}</Text>
-                    <Text style={styles.priceSecond}>{item.price} ₽</Text>
+                    <Text style={styles.priceSecond}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
                 </View>
             </TouchableOpacity>
         );
@@ -102,7 +102,11 @@ export default function CartScreen({navigation}) {
         <TouchableOpacity style={styles.lowButton} onPress={wareRem}>
             <Text style={styles.lowText}>-</Text>
         </TouchableOpacity>
-    ) : null;
+    ) : (
+        <View style={[styles.lowButton, {opacity: 0}]}>
+            <Text style={styles.lowText}>-</Text>
+        </View>
+    );
 
     const newCode = (text) => {
         setCartCode(text);
@@ -112,15 +116,15 @@ export default function CartScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <View style={{paddingHorizontal: 25}}>
-                <View>
+            <View style={{height: '100%'}}>
+                <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.header}>Корзина</Text>
                         <Text style={styles.secondHeader}>Макдональдс</Text>
                     </View>
                     <View style={styles.deviceContainer}>
                         <View style={styles.leftContainer}>
-                            <Image source={dinner} style={{width: 40, height: 40, marginRight: 30}} resizeMode='contain' />
+                            <Image source={dinner} style={{width: 30, height: 30, marginRight: 30}} resizeMode='contain' />
                             <Text style={styles.titleText}>Приборы</Text>
                         </View>
                         <View style={styles.rightContainer}>
@@ -131,30 +135,32 @@ export default function CartScreen({navigation}) {
                             {remButton}
                         </View>
                     </View>
-                </View>
                 {block}
-                <ScrollView style={styles.listContainer}>
+                </View>
+                <ScrollView style={styles.listContainer} contentContainerStyle={{justifyContent: 'center'}}>
                     {cartData}
                 </ScrollView>
-                <View style={[styles.horContainer, {flexDirection: 'row'}]}>
-                    <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
-                    <View style={styles.infoContainer}>
-                        <Text style={styles.titleText}>Доставка</Text>
-                        <Text style={styles.priceText}>{other.delivery_cost} ₽</Text>
+                <View style={{paddingHorizontal: 25}}>
+                    <View style={[styles.horContainer, {flexDirection: 'row'}]}>
+                        <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.titleText}>Доставка</Text>
+                            <Text style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
+                        </View>
+                    </View>
+                    <View style={styles.horContainer}>
+                        <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
+                        <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(text) => newCode(text)} />
+                    </View>
+                    <View style={{paddingVertical: 20}}>
+                        <Text style={styles.titleText}>Общая стоимость: {other.delivery_cost ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
+                        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
+                            <Text style={styles.phoneText}>Оформить заказ</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.horContainer}>
-                    <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
-                    <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(text) => newCode(text)} />
-                </View>
+                <NavigationBar navigation={navigation} routeName="Cart"/>
             </View>
-            <View style={[styles.horContainer, {marginHorizontal: 20}]}>
-                <Text style={styles.titleText}>Общая стоимость: {other.summ} ₽</Text>
-                <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
-                    <Text style={styles.phoneText}>Оформить заказ</Text>
-                </TouchableOpacity>
-            </View>
-            <NavigationBar navigation={navigation} routeName="Cart"/>
         </View>
     )
 };
@@ -200,12 +206,12 @@ const styles = StyleSheet.create({
     leftContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingLeft: 10
+        paddingLeft: 10,
+        width: '30%'
     },
     rightContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingRight: 20
     },
     lowButton: {
         paddingVertical: 3,
@@ -244,11 +250,11 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         borderBottomColor: '#e5e4e4',
-        borderBottomWidth: 1 
+        borderBottomWidth: 1,
+        paddingHorizontal: 25
     },
     itemContainer: {
         paddingVertical: 25,
-        paddingLeft: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
