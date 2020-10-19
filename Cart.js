@@ -8,11 +8,12 @@ import send from './utils/net';
 import useCart from './utils/cartHook';
 import dinner from './files/dinner.png';
 import pack from './files/package.png';
+import pocket from './files/pocket.png';
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
     const code = useSelector(state => state.code);
-    const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
+    const {cart, addItem, removeItem, loadCart} = useCart([], token);
     const [addons, setAddons] = useState([]);
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
@@ -36,6 +37,24 @@ export default function CartScreen({navigation}) {
     useEffect(() => {
         update(code.code);
     }, []);
+
+    if(cart.length === 0) {
+        return (
+            <View style={styles.container}>
+                <StatusBar style="dark" />
+                <View style={{paddingHorizontal: 25}}>
+                    <View style={[styles.headerContainer, {borderBottomWidth: 0}]}>
+                        <Text style={styles.header}>Корзина</Text>
+                    </View>
+                </View>
+                <View style={styles.emptyContainer}>
+                    <Image source={pocket} style={{width: 80, height: 80}} resizeMode='contain' />
+                    <Text style={styles.emptyText}>Корзина пуста</Text>
+                </View>
+                <NavigationBar navigation={navigation} routeName="Cart"/>
+            </View>
+        )
+    }
 
     const cartData = cart.map((prod) => {
         const item = prod.item;
@@ -170,6 +189,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f2f2f2",
         justifyContent: 'space-between',
+        paddingTop: 20
     },
     headerContainer: {
         width: '100%',
@@ -298,5 +318,17 @@ const styles = StyleSheet.create({
         fontSize: 16, 
         fontWeight: 'bold',
 		color: 'white'
-	},
+    },
+    emptyContainer: {
+        flex: 1,
+        backgroundColor: "#f2f2f2",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyText: {
+        color: '#898b8e',
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 20,
+        paddingTop: 30
+    }
 });

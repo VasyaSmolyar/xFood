@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-between',
+        paddingTop: 20
     },
     header: {
         fontWeight: "bold",

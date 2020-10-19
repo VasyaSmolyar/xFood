@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#fff",
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
 	},
 	authButton: {
 		alignItems: "center",
