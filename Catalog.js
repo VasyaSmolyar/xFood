@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     catIcon: {
-        width: 17,
-        height: 17
+        width: 15,
+        height: 15
     },
     catLabel: {
         fontFamily: 'Tahoma-Regular',

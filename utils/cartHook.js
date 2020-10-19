@@ -4,7 +4,7 @@ import send from './net';
 export default function useCart(initialState, token) {
     const [cart, setCart] = useState(initialState);
     
-    const addItem = (item) => {
+    const addItem = (item, onSuccess = undefined) => {
         const items = cart.slice(0);
         const pos = items.reduce((res, i) => {
             if(i.item.id === item.id)
@@ -18,11 +18,14 @@ export default function useCart(initialState, token) {
                 items.push({item: item, num: 1});
             }
             setCart(items);
+            if(onSuccess !== undefined) {
+                onSuccess();
+            }
         }, token);
         return items;
     };
 
-    const removeItem = (item) => {
+    const removeItem = (item, onSuccess = undefined) => {
         const items = cart.slice(0);
         const pos = items.reduce((res, i) => {
             if(i.item.id === item.id)
@@ -37,12 +40,15 @@ export default function useCart(initialState, token) {
                     items[pos].num = items[pos].num - 1;
                 }
                 setCart(items);
+                if(onSuccess !== undefined) {
+                    onSuccess();
+                }
             }, token);
         }
         return items;
     };
 
-    const removeAll = (item) => {
+    const removeAll = (item, onSuccess = undefined) => {
         const items = cart.slice(0);
         const pos = items.reduce((res, i) => {
             if(i.item.id === item.id)

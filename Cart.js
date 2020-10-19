@@ -38,6 +38,22 @@ export default function CartScreen({navigation}) {
         update(code.code);
     }, []);
 
+    const addToCart = (item) => {
+        addItem(item, () => {
+            send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                setOther(json);
+            }, token);
+        });
+    }
+
+    const removeToCart = (item) => {
+        removeItem(item, () => {
+            send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                setOther(json);
+            }, token);
+        });
+    }
+
     if(cart.length === 0) {
         return (
             <View style={styles.container}>
@@ -66,11 +82,11 @@ export default function CartScreen({navigation}) {
                     <Text style={styles.priceText}>{item.price} ₽</Text>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.highButton} onPress={() => addItem(item)}>
+                    <TouchableOpacity style={styles.highButton} onPress={() => addToCart(item)}>
                         <Text style={styles.lowText}>+</Text>
                     </TouchableOpacity>
                         <Text style={styles.lowNum}>{prod.num}</Text>
-                    <TouchableOpacity style={styles.lowButton} onPress={() => removeItem(item)}>
+                    <TouchableOpacity style={styles.lowButton} onPress={() => removeToCart(item)}>
                         <Text style={styles.lowText}>-</Text>
                     </TouchableOpacity>
                 </View>
@@ -86,7 +102,7 @@ export default function CartScreen({navigation}) {
 
     const addData = included.map((item) => {
         return ( 
-            <TouchableOpacity style={styles.addContainer} onPress={() => addItem(item)}>
+            <TouchableOpacity style={styles.addContainer} onPress={() => addToCart(item)}>
                 <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
                 <View>
                     <Text style={styles.titleText}>{item.title}</Text>
@@ -157,9 +173,9 @@ export default function CartScreen({navigation}) {
                 {block}
                 </View>
                 <ScrollView style={styles.listContainer} contentContainerStyle={{justifyContent: 'center'}}>
-                    {cartData}
-                </ScrollView>
-                <View style={{paddingHorizontal: 25}}>
+                    <View style={{ borderBottomColor: '#e5e4e4', borderBottomWidth: 1 }}>
+                        {cartData}
+                    </View>
                     <View style={[styles.horContainer, {flexDirection: 'row'}]}>
                         <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
                         <View style={styles.infoContainer}>
@@ -167,10 +183,12 @@ export default function CartScreen({navigation}) {
                             <Text style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
                         </View>
                     </View>
-                    <View style={styles.horContainer}>
+                    <View style={[styles.horContainer, {borderBottomWidth: 0}]}>
                         <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
                         <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(text) => newCode(text)} />
                     </View>
+                </ScrollView>
+                <View style={{paddingHorizontal: 25}}>
                     <View style={{paddingVertical: 20}}>
                         <Text style={styles.titleText}>Общая стоимость: {other.delivery_cost ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
                         <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
@@ -234,17 +252,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     lowButton: {
-        paddingVertical: 3,
-        paddingHorizontal: 15,
+        height: 40,
+        width: 40,
+        justifyContent: 'center',
         backgroundColor: '#d6dbe0',
         borderRadius: 10,
         alignItems: 'center'
     },
     highButton: {
-        paddingVertical: 3,
-        paddingHorizontal: 15,
+        height: 40,
+        width: 40,
+        justifyContent: 'center',
         backgroundColor: '#f18640',
-        borderRadius: 10
+        borderRadius: 10,
+        alignItems: 'center'
     },
     lowText: {
         fontSize: 24,
