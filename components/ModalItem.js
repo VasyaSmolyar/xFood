@@ -2,6 +2,17 @@ import React from 'react';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import x from '../files/x.png';
 
+function Index({name, value, free}) {
+    const add = free === undefined ? " г" : "";
+
+    return (
+        <View style={styles.indexContainer}>
+            <Text style={styles.indexName}>{value !== null ? value + add : "-"}</Text>
+            <Text style={styles.indexValue}>{name}</Text>
+        </View>
+    )
+}
+
 export default function ModalItem(props) {
     const { visible, item, onClose, addInCart } = props;
 
@@ -9,12 +20,14 @@ export default function ModalItem(props) {
         return <View></View>
     }
 
+    /*
     const flag = item.country !== "Русская кухня" ? (
         <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
             <Text>{item.flag}</Text> 
             <Text style={styles.itemFlag}>{item.country}</Text>
         </View>
     ) : <View style={{height: 30}}></View>;
+    */
 
     return (
         <Modal visible={visible}>
@@ -29,18 +42,34 @@ export default function ModalItem(props) {
                         <View style={{alignItems: 'center'}}>
                             <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
                         </View>
-                        <View style={{paddingHorizontal: 30}}>
-                            <Text style={styles.itemPrice}>{item.price.toFixed(2)} ₽</Text>
+                        <View style={{paddingHorizontal: 35}}>
                             <Text style={styles.itemCompany}>{item.restaurant}</Text>
-                            <Text style={styles.itemText}>{item.title}</Text>
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.itemText}>{item.title}</Text>
+                                <View style={styles.priceContainer}>
+                                    <Text style={styles.itemPrice}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
+                                </View>
+                            </View>
+                            {/*
                             {flag}
+                            */}
                             <Text style={styles.itemDesc}>{item.description}</Text>
+                            <View style={styles.flatContainer}>
+                                <Index name="вес" value={item.weight} />
+                                <Index name="ккал" value={item.nutritional_value} free={true} />
+                                <Index name="сахар" value={item.sugar} />
+                                <Index name="белки" value={item.proteins} />
+                                <Index name="жиры" value={item.fats} />
+                                <Index name="углеводы" value={item.carbohydrates} />
+                                <Index name="клетчатка" value={item.cellulose} />
+                            </View>
+                            <Text style={styles.itemInner}>Состав: {item.structure}</Text>
                         </View>
                     </ScrollView>
                     <View style={styles.phoneWidth}>
-                    <TouchableOpacity style={styles.phoneButton} onPress={() => {addInCart(item)}}>
-                        <Text style={styles.phoneText}>Добавить в корзину</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.phoneButton} onPress={() => {addInCart(item)}}>
+                            <Text style={styles.phoneText}>Добавить в корзину</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -66,15 +95,27 @@ const styles = StyleSheet.create({
         paddingVertical: 25,
         paddingHorizontal: 25
     },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginBottom: 25
+    },
+    priceContainer: {
+        paddingHorizontal: 17,
+        paddingVertical: 5,
+        backgroundColor: '#000',
+        justifyContent: 'center',
+        borderRadius: 20
+    },
     itemImage: {
         width: 200,
         height: 200,
-        marginBottom: 5,
+        marginBottom: 15,
     },
     itemPrice: {
         fontSize: 20,
-        fontWeight: 'bold',
-        paddingBottom: 5
+        color: '#fff'
     },
     itemCompany: {
         fontSize: 18,
@@ -83,7 +124,7 @@ const styles = StyleSheet.create({
     itemText: {
         fontSize: 20,
         marginVertical: 5,
-        fontWeight: 'bold',
+        width: '60%',
         fontFamily: 'Tahoma-Regular'
     },
     itemFlag: {
@@ -93,8 +134,23 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     itemDesc: {
-        fontSize: 16,
-        fontWeight: "400",
+        fontSize: 15,
+        color: '#666',
+        fontFamily: 'Tahoma-Regular'
+    },
+    flatContainer: {
+        borderTopColor: '#f3f1f1',
+        borderTopWidth: 1,
+        borderBottomColor: '#f3f1f1',
+        borderBottomWidth: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 20,
+        paddingVertical: 5
+    },
+    itemInner: {
+        color: '#979797',
+        fontSize: 15,
         fontFamily: 'Tahoma-Regular'
     },
     phoneButton: {
@@ -116,5 +172,18 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         paddingVertical: 20
+    },
+    indexContainer: {
+        paddingVertical: 5,
+        paddingHorizontal: 5,
+        alignItems: 'center'
+    },
+    indexName: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 18,
+    },
+    indexValue: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 11,
     }
 });

@@ -159,7 +159,7 @@ export default function CartScreen({navigation}) {
                     </View>
                     <View style={styles.deviceContainer}>
                         <View style={styles.leftContainer}>
-                            <Image source={dinner} style={{width: 30, height: 30, marginRight: 30}} resizeMode='contain' />
+                            <Image source={dinner} style={{width: 30, height: 30, marginRight: 53}} resizeMode='contain' />
                             <Text style={styles.titleText}>Приборы</Text>
                         </View>
                         <View style={styles.rightContainer}>
