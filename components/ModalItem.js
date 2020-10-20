@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         marginBottom: 15,
+        borderRadius: 20
     },
     itemPrice: {
         fontSize: 20,

@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         marginBottom: 5,
+        borderRadius: 20
     },
     catImage: {
         width: '100%',
