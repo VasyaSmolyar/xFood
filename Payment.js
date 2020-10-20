@@ -8,6 +8,7 @@ import ModalMap from './components/ModalMap';
 import send from './utils/net';
 import arrow from './files/blackArrow.png';
 import path from './files/path.png';
+import payCash from './files/payCash.png';
 
 export default function PaymentScreen({navigation}) {
     const user = useSelector(state => state.user);
@@ -137,18 +138,15 @@ export default function PaymentScreen({navigation}) {
                     </View>
                 </View>
                 <View style={styles.blockConatiner}>
-                    <Text style={styles.header}>Оплата</Text>
-                    <View style={{alignItems: 'center', width: '100%', marginTop: 30}}>
-                        <View>
-                            <Text>Способы оплаты</Text>
-                            <TouchableOpacity>
-                                <Text>Изменить</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View>
-                            <Image />
-                            <Text></Text>
-                        </View>
+                    <View style={styles.methodLine}>
+                        <Text style={styles.header}>Способ оплаты</Text>
+                        <TouchableOpacity style={styles.methodButton}>
+                            <Text style={styles.textButton}>Изменить</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.methodFull}>
+                        <Image source={payCash}  style={{width: 25, height: 25}} resizeMode='contain' />
+                        <Text style={styles.methodText}>Наличными при получении</Text>
                     </View>
                 </View>
                 <View style={[styles.blockConatiner, {borderBottomWidth: 0}]}>
@@ -208,7 +206,6 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontFamily: 'Tahoma-Regular',
-        paddingLeft: 10,
         paddingTop: 22,
         paddingBottom: 8
     },
@@ -216,7 +213,6 @@ const styles = StyleSheet.create({
 		padding: 5,
 		backgroundColor: "#f2f3f5",
         marginBottom: 20,
-        marginHorizontal: 10,
 		borderRadius: 7,
 		width: '45%',
 	},
@@ -269,5 +265,34 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    methodLine: {
+       flexDirection: 'row',
+       justifyContent: 'space-between',
+       alignItems: 'center',
+       marginBottom: 20
+    },
+    methodButton: {
+        backgroundColor: '#f08741',
+        paddingHorizontal: 15,
+        paddingVertical: 5,
+        borderRadius: 5,
+        marginTop: 22,
+        marginBottom: 8
+    },
+    textButton: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 14,
+        color: '#fff'
+    },
+    methodFull: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 25
+    },
+    methodText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 15,
+        marginLeft: 15
     }
 });
