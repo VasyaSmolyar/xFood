@@ -44,7 +44,7 @@ export default function Item(props) {
         <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
             <View style={[styles.item, border]}>
                 <View style={{alignItems: 'center'}}>
-                    <Image source={{uri: item.item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
+                    <Image source={{uri: item.item.image_url}} resizeMode='cover' style={styles.itemImage} />
                 </View>
                 <Text style={styles.itemPrice}>{item.item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
                 <Text numberOfLines={2}

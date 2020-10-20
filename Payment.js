@@ -5,19 +5,44 @@ import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
+import ModalPay from './components/ModalPay';
 import send from './utils/net';
 import arrow from './files/blackArrow.png';
 import path from './files/path.png';
-import payCash from './files/payCash.png';
+import price from './files/payCash.png';
+// ----------------------------------
+import gpay from './files/gpay.png';
+import apay from './files/apay.webp';
+import cardHand from './files/cardHand.png';
+import cardOnline from './files/cardOnline.png';
+
+const unzip = (slug) => {
+    if(slug === 'cash') {
+        return ['Наличные при получении', price, 'cash'];
+    }
+    if(slug === 'transfer') {
+        return ['Оплата картой при получении', cardHand, 'transfer'];
+    }
+    if(slug === 'transfer_online') {
+        return ['Оплата картой онлайн', cardOnline, 'transfer_online'];
+    }
+    if(slug === 'online') {
+        return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
+    }
+    return ['', null, ''];
+}
 
 export default function PaymentScreen({navigation}) {
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
+
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone);
+
     const [modal, setModal] = useState(false);
     const [map, setMap] = useState(false);
     const [coords, setCoords] = useState(null);
+
     const [region, setRegion] = useState("");
     const [street, setStreet] = useState("");
     const [streetName, setStreetName] = useState("");
@@ -28,6 +53,11 @@ export default function PaymentScreen({navigation}) {
     const [stage, setStage] = useState("");
     const [doorphone, setDoorphone] = useState("");
     const [comment, setComment] = useState("");
+
+    const [payModal, setPayModal] = useState(false);
+    const [payList, setPayList] = useState([]);
+
+    const [title, src, retSlug] = unzip(payType);
 
     const choiceRegion = (name) => {
         setRegion(name);
@@ -76,6 +106,28 @@ export default function PaymentScreen({navigation}) {
         }, token);
     }
 
+    const onSelect = (val) => {
+        setPayModal(false);
+        setPayType(val);
+    };
+
+    const onSelectStart = () => {
+        if(payList.length > 0)
+            setPayModal(true);
+    }
+
+    useEffect(() => {
+        send('api/cart/getcart', 'POST', {}, (json) => {
+            const pays = json.pay_types;
+            if (pays)
+                if(json.pay_types.some((item) => item === 'online')) {
+                    setPayList([...pays, 'transfer_online']);
+                } else {
+                    setPayList(pays);
+                }
+        }, token);
+    },[]);
+
     return (
         <View styles={styles.container}>
             <StatusBar style="dark" />
@@ -92,6 +144,7 @@ export default function PaymentScreen({navigation}) {
             <ScrollView style={{backgroundColor: 'white'}}>
                 <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} onExit={() => setModal(false)} />
                 <ModalMap visible={map} close={() => setMap(false)} locate={choiceLocate} />
+                <ModalPay visible={payModal} onClose={(val) => onSelect(val)} pay_types={payList} />
                 <View style={styles.blockConatiner}> 
                     <Text style={styles.header}>Доставка</Text>
                     <View style={styles.geoContainer}>
@@ -140,13 +193,13 @@ export default function PaymentScreen({navigation}) {
                 <View style={styles.blockConatiner}>
                     <View style={styles.methodLine}>
                         <Text style={styles.header}>Способ оплаты</Text>
-                        <TouchableOpacity style={styles.methodButton}>
+                        <TouchableOpacity style={styles.methodButton} onPress={onSelectStart}>
                             <Text style={styles.textButton}>Изменить</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.methodFull}>
-                        <Image source={payCash}  style={{width: 25, height: 25}} resizeMode='contain' />
-                        <Text style={styles.methodText}>Наличными при получении</Text>
+                        <Image source={src}  style={{width: 25, height: 25}} resizeMode='contain' />
+                        <Text style={styles.methodText}>{title}</Text>
                     </View>
                 </View>
                 <View style={[styles.blockConatiner, {borderBottomWidth: 0}]}>
