@@ -54,7 +54,7 @@ export default function ModalItem(props) {
                             {flag}
                             */}
                             <Text style={styles.itemDesc}>{item.description}</Text>
-                            <View style={styles.flatContainer}>
+                            <ScrollView horizontal={true} style={styles.flatContainer}>
                                 <Index name="вес" value={item.weight} />
                                 <Index name="ккал" value={item.nutritional_value} free={true} />
                                 <Index name="сахар" value={item.sugar} />
@@ -62,7 +62,7 @@ export default function ModalItem(props) {
                                 <Index name="жиры" value={item.fats} />
                                 <Index name="углеводы" value={item.carbohydrates} />
                                 <Index name="клетчатка" value={item.cellulose} />
-                            </View>
+                            </ScrollView>
                             <Text style={styles.itemInner}>Состав: {item.structure}</Text>
                         </View>
                     </ScrollView>
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 25
+        marginBottom: 40
     },
     priceContainer: {
         paddingHorizontal: 17,
@@ -143,9 +143,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomColor: '#f3f1f1',
         borderBottomWidth: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginVertical: 20,
+        marginVertical: 30,
         paddingVertical: 5
     },
     itemInner: {
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
     },
     indexContainer: {
         paddingVertical: 5,
-        paddingHorizontal: 5,
+        paddingHorizontal: 12,
         alignItems: 'center'
     },
     indexName: {
