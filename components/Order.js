@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
         paddingVertical: 20,
         borderBottomWidth: 2,
         borderBottomColor: "#f4f4f4",
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
+        alignItems: 'center'
     },
     headerCell: {
         flex: 1,
@@ -202,6 +203,11 @@ const styles = StyleSheet.create({
     productTitle: {
         fontFamily: 'Tahoma-Regular', 
         fontSize: 16,
+    },
+    productText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+        paddingBottom: 15
     },
     priceContainer: {
         paddingHorizontal: 17,
