@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import send from './utils/net';
+import { useSelector } from 'react-redux';
 import oback from './files/oback.png';
 import slogo from './files/slogo.png';
 import write from './files/write.png';
@@ -17,23 +19,29 @@ function Message({item}) {
 }
 
 export default function ChatScreen({navigation}) {
+    const token = useSelector(state => state.token);
+    const [ mesList, setMesList ] = useState([]);
+    const [ value, setValue ] = useState('');
 
-    const mesList = [
-        {
-            text: `Здравствуйте! Сегодня 08.09.2020 мой 
-            заказ 00029987 был доставлен с 
-            опозданием в 30 минут. И ещё в ресторане 
-            забыли положить соус.`,
-            author: 'USER'
-        },
-        {
-            text: `Здравствуйте! Сегодня 08.09.2020 мой 
-            заказ 00029987 был доставлен с 
-            опозданием в 30 минут. И ещё в ресторане 
-            забыли положить соус.`,
-            author: 'SUPPORT'
-        }
-    ];
+    const getRefresh = () => {
+        send('api/messages/get', 'POST', {offset: 0, num: 10}, (json) => {
+            setMesList(json.sort((a, b) => {
+                return Date.parse(a.time) - Date.parse(b.time);
+            }));
+        }, token);
+    }
+
+    useEffect(() => {
+        getRefresh();
+        setInterval(getRefresh, 1000);
+    }, []);
+
+    const onSend = () => {
+        setValue('');
+        send('api/message/send', 'POST', {text: value}, () => {
+            getRefresh();
+        }, token);
+    }
 
     const data = mesList.map((item) => {
         return <Message item={item} />
@@ -60,8 +68,9 @@ export default function ChatScreen({navigation}) {
                 {data}
             </ScrollView>
             <View style={styles.bottomContainer}>
-                <TextInput style={styles.mesText} placeholder='Сообщение...' multiline={true} />
-                <TouchableOpacity>
+                <TextInput style={styles.mesText} placeholder='Сообщение...' multiline={true} 
+                value={value} onChangeText={(text) => setValue(text)} />
+                <TouchableOpacity onPress={onSend}>
                     <Image source={write} style={{width: 40, height: 40}} resizeMode='contain' />
                 </TouchableOpacity>
             </View>
@@ -113,19 +122,19 @@ const styles = StyleSheet.create({
     },    
     userContainer: {
         marginVertical: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         backgroundColor: '#f8c5a3',
         alignSelf: 'flex-end',
         width: '80%'
     },
     supportContainer: {
         marginVertical: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         backgroundColor: '#ecedf1',
         width: '80%'
     },
     innerText: {
-        fontSize: 14,
+        fontSize: 13,
         fontFamily: 'Tahoma-Regular',
         paddingHorizontal: 15,
         paddingVertical: 10
