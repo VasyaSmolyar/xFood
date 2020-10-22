@@ -91,13 +91,14 @@ export default function PaymentScreen({navigation}) {
 
     const makeOrder = () => {
         let data = coords;
-        data.pay_type = payType;
+        data.pay_type = retSlug;
         data.street = getValue(streetName);
         data.house = getValue(house);
         data.apartment = getValue(apartament);
         data.corpus = getValue(corpus);
         data.stage = getValue(stage);
         data.doorphone = getValue(doorphone);
+        data.comment = comment;
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {

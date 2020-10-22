@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     close: {
         fontFamily: 'Tahoma-Regular', 
         fontSize: 16,
-        color: '#f1c40f'
+        color: '#f08741'
     },
     boxContainer: {
         flex: 1,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
     },
     phoneButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		textAlign: 'center',
 		paddingVertical: 10,
 		marginHorizontal: 5,

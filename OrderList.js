@@ -7,14 +7,14 @@ import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import ModalOrder from './components/Order';
 import repeat from './files/repeat.png';
-import back from './files/back.png';
+import arrow from './files/blackArrow.png';
 
-function OrderItem({item}) {
+function OrderItem({item, num}) {
     return (
         <View style={styles.productString}>
             <View style={{flexDirection: 'row'}}>
                 <Text style={styles.productText} numberOfLines={1}>{item.title}</Text>
-                <Text style={styles.productNum}>x{item.num}</Text>
+                <Text style={styles.productNum}>x{num}</Text>
             </View>
             <Text style={styles.productPrice}>{item.price} ₽</Text>
         </View>
@@ -43,9 +43,9 @@ function Order({item, onChoice}) {
         return '0000000000000'.substr(size) + num;
     }
 
-    const data = item.products.map((item, id) => {
+    const data = item.products.map((line, id) => {
         return (
-            <OrderItem key={id} item={item} />
+            <OrderItem key={id} item={line.product} num={line.num} />
         )
     });
     
@@ -100,11 +100,11 @@ export default function OrderListScreen({navigation}) {
 
     return (
         <View style={styles.container}>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={back} style={{width: 80, height: 35}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: 50, height: 25}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
@@ -129,21 +129,22 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     barContainer: {
-        width: '100%',
-        backgroundColor: 'black',
+        backgroundColor: '#fff',
         padding: 5,
+        paddingLeft: 25,
         paddingTop: Constants.statusBarHeight,
         flexDirection: 'row',
+        borderBottomColor: '#f2f3f5',
+        borderBottomWidth: 3
     },
     barCell: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginRight: 30
     },
     barText: {
-        color: "#f1c40f",
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: 20,
         marginVertical: 20
     },
     orderContainer: {
@@ -196,7 +197,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         width: '80%',
         alignItems: "center",
-        backgroundColor: '#f1c40f',
+        backgroundColor: '#f08741',
         paddingVertical: 10,
         justifyContent: "center"
     },
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
         width: '15%',
         paddingVertical: 10,
         alignItems: "center",
-        backgroundColor: '#f1c40f',
+        backgroundColor: '#f08741',
     },
     buttonText: {
         fontFamily: 'Tahoma-Regular',

@@ -1,64 +1,75 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import cancel from '../files/xorder.png';
-import time from '../files/time.png';
-import moto from '../files/moto.png';
-import money from '../files/money.png';
+import sec from '../files/sec.png';
+import tele from '../files/tele.png';
+import chat from '../files/chat.png';
 
-function Product({item}) {
+const caseStage = (slug) => {
+    if(slug === 'DONE') {
+        return 'Выполнен';
+    }
+    if(slug === 'PERFORMING') {
+        return 'Курьер в пути';
+    }
+    /*
+    if(slug === 'FINDING') {
+        return 'Поиск курьера';
+    }
+    */
+    if(slug === 'CANCELED') {
+        return 'Отменён';
+    }
+    if(slug === 'WAITCOUR') {
+        return 'Ожидание подтверждения курьера';
+    }
+    return 'Поиск курьера';
+}
+
+function OrderItem({item, num}) {
     return (
-        <View style={styles.firstLine}>
-            <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.image} />
-            <View>
-                <Text style={styles.itemPrice}>{item.price}₽</Text>
-                <View style={{justifyContent: 'space-between', flex: 1}} >
-                    <Text style={styles.itemText}>{item.title}</Text>
-                    <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-                        <Text>{item.flag}</Text> 
-                        <Text style={styles.itemFlag}>{item.country}</Text>
-                    </View>
+        <View style={styles.productItem}>
+            <Image source={{uri: item.image_url}} style={{ width: 100, height: 100 }} resizeMode='center' />
+            <View style={{marginLeft: 15}}>
+                <Text style={styles.productText} numberOfLines={1}>{num} x {item.title}</Text>
+                <View style={styles.priceContainer}>
+                    <Text style={styles.priceText}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
                 </View>
             </View>
         </View>
     );
 }
 
-function Key({title, pic, value}) {
-    const img = pic !== null ? <Image source={pic} style={{width: 20, height: 20}} resizeMode='contain' /> : null;
-
-    if(value === undefined || value === null) {
-        return null;
+export default function ModalOrder({item, visible, onExit}) {
+    if(item === null) {
+        return <Modal visible={false}></Modal>
     }
 
-    return (
-        <View style={{paddingHorizontal: 20}}>
-            <View style={{flexDirection: 'row', marginBottom: 10, alignItems: 'center'}}>
-                {img}
-                <Text style={styles.keyText}>{title}</Text>
-            </View>
-            <Text style={styles.valueText}>{value}</Text>
-        </View>
-    );
-}
-
-export default function ModalOrder({item, visible, onExit}) {
     const pad = (num) => {
         const size = String(num).length;
         return '0000000000000'.substr(size) + num;
     }
 
-    if(item === null) {
-        return <Modal visible={false}></Modal>
-    }
+    let times = new Date(item.date);
+    times.setTime(times.valueOf() + (item.before_delivery * 60 * 1000));
 
-    const data = item.products.map((product, id) => {
-        return <Product key={id} item={product} />
+    const data = item.products.map((line, id) => {
+        return (
+            <OrderItem key={id} item={line.product} num={line.num} />
+        )
     });
 
-    const button = item.status.trim().toLowerCase() === "в пути" ? (
-        <View style={{alignItems: 'center'}}>
-            <TouchableOpacity style={styles.orderButton}>
-                <Text style={styles.buttonText}>Связаться с курьером</Text>
+    const stage = item.status !== 'DONE' && item.status !== 'CANCELED' ? (
+        <View style={styles.infoContainer}>
+            <View style={styles.statusContainer}>
+                <Image source={sec} style={{width: 20, height: 20}} resizeMode='contain'/>
+                <Text style={styles.statusText}>{caseStage(item.status)}</Text>
+            </View>
+            <Text style={styles.timeHours}>{times.getHours()}:{times.getMinutes()}</Text>
+            <Text style={styles.timeText}>Примерное время доставки</Text>
+            <TouchableOpacity style={styles.phoneButton}>
+                <Image source={tele} style={{width: 30, height: 30}} resizeMode='contain'/>
+                <Text style={styles.phoneText}>Связаться с курьером</Text>
             </TouchableOpacity>
         </View>
     ) : null;
@@ -78,45 +89,35 @@ export default function ModalOrder({item, visible, onExit}) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <View style={{marginBottom: 30, marginTop: 10}}>
-                        <Key title="Дата и время оформления заказа" value={item.date} pic={time} />
-                        <Key title="Способ оплаты" value={item.pay_type} pic={money} />
-                        <Key title="Адрес доставки" value={item.adress} pic={moto} />
-                        <Key title="Осталось ждать примерно" value={item.before_delivery} pic={null} />
-                    </View>
-                    {button}
-                    <Text style={[styles.header, {marginTop: 30, paddingHorizontal: 20}]}>Заказанные товары</Text>
-                    <ScrollView>
-                        {data}
+                    <ScrollView style={{backgroundColor: '#fff'}}>
+                        {stage}
+                        <View style={styles.productContainer}>
+                            <Text style={styles.restaurant}>{item.products[0].product.restaurant.title}</Text>
+                            {data}
+                        </View>
+                        <View style={[styles.productContainer, {borderBottomWidth: 0}]}>
+                            <Text style={[styles.restaurant, {marginBottom: 10}]}>Помощь</Text>
+                            <Text style={styles.answerText}>Ответим в течение 20 минут</Text>
+                            <TouchableOpacity style={styles.phoneButton}>
+                                <Image source={chat} style={{width: 30, height: 30}} resizeMode='contain'/>
+                                <Text style={styles.phoneText}>Перейти в чат</Text>
+                            </TouchableOpacity>
+                        </View>
                     </ScrollView>
                 </View>
             </View>
         </Modal>
     );
-}           
+}
 
 const styles = StyleSheet.create({
     modalContainer: {
-        backgroundColor: 'black',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%'
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        paddingVertical: 20,
-        borderBottomWidth: 2,
-        borderBottomColor: "#f4f4f4" 
-    },
-    headerCell: {
-        flex: 1,
-        alignItems: 'center'
-    },
-    header: {
-        fontFamily: 'Tahoma-Regular', 
-        fontWeight: 'bold',
-        fontSize: 16
+        width: '100%',
+        paddingTop: 50
     },
     boxContainer: {
         flex: 1,
@@ -125,59 +126,98 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         backgroundColor: '#fff',
     },
-    keyText: {
-        fontSize: 14,
-        fontFamily: 'Tahoma-Regular', 
-        color: '#b6b6b7',
-        marginLeft: 10
+    headerContainer: {
+        flexDirection: 'row',
+        paddingVertical: 20,
+        borderBottomWidth: 2,
+        borderBottomColor: "#f4f4f4",
+        backgroundColor: '#fff'
     },
-    valueText: {
-        fontSize: 16,
-        fontFamily: 'Tahoma-Regular',
-        marginBottom: 15 
-    },
-    orderButton: {
-        borderRadius: 5,
-        width: '80%',
-        alignItems: "center",
-        backgroundColor: '#f1c40f',
-        paddingVertical: 10,
-        justifyContent: "center"
-    },
-    buttonText: {
-        fontFamily: 'Tahoma-Regular',
-        fontWeight: 'bold',
-        fontSize: 14,
-        color: 'white'
+    headerCell: {
+        flex: 1,
+        alignItems: 'center'
     },
     header: {
-        fontFamily: 'Tahoma-Regular',
+        fontFamily: 'Tahoma-Regular', 
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 18
     },
-    image: {
-        width: 120,
-        height: 120,
+    infoContainer: {
+        alignItems: 'center',
+        borderBottomColor: '#f4f2f2',
+        borderBottomWidth: 1,
+        paddingVertical: 20,
+        paddingHorizontal: 25
     },
-    firstLine: {
+    statusContainer: {
         flexDirection: 'row',
-        backgroundColor: "#fff",
-        paddingVertical: 10
+        justifyContent: 'center',
+        paddingBottom: 30
     },
-    itemText: {
-        fontSize: 14,
-        marginVertical: 5,
-        maxWidth: '80%'
-    },
-    itemFlag: {
-        color: '#97999d',
-        fontSize: 12,
-        fontFamily: 'Tahoma-Regular',
-        marginLeft: 5
-    },
-    itemPrice: {
+    statusText: {
+        fontFamily: 'Tahoma-Regular', 
         fontSize: 16,
-        fontWeight: 'bold',
-        paddingRight: 10
+        marginLeft: 15
     },
+    timeHours: {
+        fontFamily: 'Tahoma-Regular',
+        fontWeight: 'bold', 
+        fontSize: 24,
+        paddingBottom: 15
+    },
+    timeText: {
+        color: '#7f7f7f',
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+        paddingBottom: 20
+    },
+    phoneButton: {
+        backgroundColor: '#f2f3f5',
+        borderRadius: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        paddingVertical: 15
+    },
+    phoneText: {
+        color: '#505050',
+        fontFamily: 'Tahoma-Regular',
+        fontWeight: 'bold',  
+        fontSize: 15,
+        marginLeft: 15
+    },
+    productContainer: {
+        paddingVertical: 20,
+        paddingHorizontal: 25
+    },
+    restaurant: {
+        fontWeight: "bold",
+        fontSize: 20,
+        marginBottom: 20
+    },
+    productItem: {
+        flexDirection: 'row'
+    },
+    productTitle: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+    },
+    priceContainer: {
+        paddingHorizontal: 17,
+        paddingVertical: 5,
+        backgroundColor: '#000',
+        justifyContent: 'center',
+        borderRadius: 20
+    },
+    priceText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 16,
+        color: '#fff'
+    },
+    answerText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 14,
+        paddingBottom: 20,
+    }
 });

@@ -59,7 +59,7 @@ export default function ModalList(props) {
             return '';
         }
         const loc = location[0];
-        const arr = [loc.region, loc.city, loc.street, loc.name];
+        const arr = [loc.street, loc.name];
         return arr.join(', ');
     }
 
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     geoButton: {
-		backgroundColor: '#f1c40f',
+		backgroundColor: '#f08741',
 		paddingVertical: 10,
 		marginHorizontal: 5,
 		borderRadius: 7,
