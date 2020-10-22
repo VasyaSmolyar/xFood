@@ -59,7 +59,7 @@ export default function CabinetScreen({navigation}) {
                             <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
                         </View>
                     </View>
-                    <View style={{justifyContent: "space-around", marginRight: 30}}>
+                    <View style={{width: '80%', alignItems: 'center', justifyContent: 'space-around'}}>
                         <View>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={styles.nameText}>{name}</Text>
@@ -73,10 +73,10 @@ export default function CabinetScreen({navigation}) {
                 <Header title="Основные" />
                 <MenuItem title="Мои заказы" page="OrderList" />
                 <MenuItem title="Помощь" page="Catalog" />
-                <MenuItem title="Сканер акцизов" page="Catalog" />
                 <Header title="Акции" />
                 <MenuItem title="Купоны" page="Coupon" />
                 <Header title="Другое" />
+                <MenuItem title="О приложении" page="About" />
                 <TouchableOpacity onPress={onExit}>
                     <View style={styles.itemContainer}>
                         <Text style={[styles.itemText, {color: '#ed3823'}]}>Выйти из аккаунта</Text>
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     dataText: {
         fontSize: 16,
         fontFamily: 'Tahoma-Regular',
-        color: '#ead500'
+        color: '#f08741',
     },
     imageBox: {
         backgroundColor: '#201f1b',

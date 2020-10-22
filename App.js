@@ -18,6 +18,7 @@ import CabinetScreen from './Cabinet';
 import CouponScreen from './Coupons';
 import OrderListScreen from './OrderList';
 import MainScreen from './Main';
+import AboutScreen from './AboutScreen';
 import Welcome from './Welcome';
 
 const Stack = createStackNavigator();
@@ -199,6 +200,7 @@ function AppFunc() {
 					<Stack.Screen name="OrderList" component={OrderListScreen} />
 					<Stack.Screen name="Main" component={MainScreen} />
 					<Stack.Screen name="Coupon" component={CouponScreen} />
+					<Stack.Screen name="About" component={AboutScreen} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  

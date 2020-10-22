@@ -30,7 +30,7 @@ function OrderItem({item, num}) {
     return (
         <View style={styles.productItem}>
             <Image source={{uri: item.image_url}} style={{ width: 100, height: 100 }} resizeMode='center' />
-            <View style={{marginLeft: 15}}>
+            <View style={{marginLeft: 15, justifyContent: 'flex-start'}}>
                 <Text style={styles.productText} numberOfLines={1}>{num} x {item.title}</Text>
                 <View style={styles.priceContainer}>
                     <Text style={styles.priceText}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
+        overflow: 'hidden',
         backgroundColor: '#fff',
     },
     headerContainer: {
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     timeHours: {
         fontFamily: 'Tahoma-Regular',
         fontWeight: 'bold', 
-        fontSize: 24,
+        fontSize: 30,
         paddingBottom: 15
     },
     timeText: {

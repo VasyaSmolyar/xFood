@@ -7,7 +7,7 @@ import male from '../files/gray2.png';
 import yshop from '../files/2_orange.png';
 import ycatalog from '../files/4_orange.png';
 import ybacket from '../files/3_orange.png';
-import ymale from '../files/4_orange.png';
+import ymale from '../files/1_orange.png';
 
 export default function SearchBar(props) {
     const navigation = props.navigation;

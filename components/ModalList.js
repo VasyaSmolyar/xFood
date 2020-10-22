@@ -52,11 +52,10 @@ export default function ModalList(props) {
                     <FlatList keyExtractor={(item, index) => index.toString()} data={places} extraData={choice} renderItem={(item) => {
                         const checked = item.item.id === choice ? <Image source={checkbox} style={styles.fillBox} /> : null;
                         return (
-                            <View style={styles.choiceContainer}>
-                                <TouchableOpacity style={styles.choiceBox}
-                                onPress={() => onChoice(item.item)}>{checked}</TouchableOpacity>
+                            <TouchableOpacity style={styles.choiceContainer} onPress={() => onChoice(item.item)}>
+                                <View style={styles.choiceBox}>{checked}</View>
                                 <Text style={styles.boxText}>{item.item.area_name}</Text>
-                            </View>
+                            </TouchableOpacity>
                         );
                     }} />
                     {button}
@@ -68,7 +67,7 @@ export default function ModalList(props) {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        backgroundColor: 'black',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
@@ -100,6 +99,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         backgroundColor: '#fff',
+        overflow: 'hidden',
     },
     choiceContainer: {
         padding: 10,
