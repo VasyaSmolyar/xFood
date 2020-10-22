@@ -40,7 +40,7 @@ function OrderItem({item, num}) {
     );
 }
 
-export default function ModalOrder({item, visible, onExit}) {
+export default function ModalOrder({item, visible, onExit, onChat}) {
     if(item === null) {
         return <Modal visible={false}></Modal>
     }
@@ -98,7 +98,7 @@ export default function ModalOrder({item, visible, onExit}) {
                         <View style={[styles.productContainer, {borderBottomWidth: 0}]}>
                             <Text style={[styles.restaurant, {marginBottom: 10}]}>Помощь</Text>
                             <Text style={styles.answerText}>Ответим в течение 20 минут</Text>
-                            <TouchableOpacity style={styles.phoneButton}>
+                            <TouchableOpacity style={styles.phoneButton} onPress={onChat}>
                                 <Image source={chat} style={{width: 30, height: 30}} resizeMode='contain'/>
                                 <Text style={styles.phoneText}>Перейти в чат</Text>
                             </TouchableOpacity>

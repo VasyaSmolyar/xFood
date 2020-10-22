@@ -98,6 +98,11 @@ export default function OrderListScreen({navigation}) {
         )
     });
 
+    const toChat = () => {
+        setCurrent(null);
+        navigation.navigate("Chat")
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
@@ -113,7 +118,7 @@ export default function OrderListScreen({navigation}) {
                 <View style={styles.barCell}>
                 </View>
             </View>
-            <ModalOrder visible={current !== null} item={current} onExit={() => setCurrent(null)} />
+            <ModalOrder visible={current !== null} item={current} onExit={() => setCurrent(null)} onChat={toChat} />
             <ScrollView>
                 {data}
             </ScrollView>
