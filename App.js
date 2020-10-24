@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ImageBackground, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import ScalableText from 'react-native-text';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
 import * as Font from 'expo-font';
@@ -65,14 +66,14 @@ function PhoneScreen({navigation}) {
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
-				<Text style={styles.header} >Регистрация или вход</Text>
+				<ScalableText style={styles.header} >Регистрация или вход</ScalableText>
 				<View style={styles.inputWrap}>
-					<Text style={styles.inputWrapText}>Номер телефона</Text>
-					<TextInput value={'+7' + value} onChangeText={(text) => setValue(text.slice(2))} maxLength = {12} 
+					<ScalableText  style={styles.inputWrapText}>Номер телефона</ScalableText>
+					<TextInput value={'+7' + value} onChangeText={(scalabletext) => setValue(scalabletext.slice(2))} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
-					<Text style={styles.phoneText} >Отправить код</Text>
+					<ScalableText style={styles.phoneText} >Отправить код</ScalableText >
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -102,7 +103,7 @@ function CodeScreen({navigation}) {
 		send('api/user/verify', 'POST', {phone: "+7" + phone, code: value}, navigate);
 	};
 
-	const mes = <Text style={styles.error}>Неверный код</Text>;
+	const mes = <ScalableText style={styles.error}>Неверный код</ScalableText>;
 	let err = wrong ? mes : null;
 	return (
 		<View style={styles.backContainer}>
@@ -110,11 +111,11 @@ function CodeScreen({navigation}) {
 			<View style={{flex: 1, backgroundColor: 'white'}}>
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
-			<Text style={styles.header}>Ввод кода</Text>
-				<TextInput value={value} onChangeText={(text) => setValue(text)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
+			<ScalableText style={styles.header}>Ввод кода</ScalableText>
+				<TextInput value={value} onChangeText={(scalabletext) => setValue(scalabletext)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
 				{err}
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
-					<Text style={styles.phoneText}>Отправить код</Text>
+					<ScalableText style={styles.phoneText}>Отправить код</ScalableText>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -148,22 +149,22 @@ function RegisterScreen({navigation}) {
 			<View style={{height: '10%', width: '100%'}}>
 			</View>
 			<View style={{height: '30%', width: '100%', alignItems: 'center', backgroundColor: 'white', alignItems: 'center'}}>
-				<Text style={styles.header}>Регистрация или вход</Text>
-				<Text style={{marginHorizontal: 15, textAlign: "center", fontFamily: 'Tahoma-Regular'}}>Минздрав предупреждает: употребление алкогольной продукции несовершеннолетними вредит здоровью</Text>
+				<ScalableText style={styles.header}>Регистрация или вход</ScalableText>
+				<ScalableText style={{marginHorizontal: 15, textAlign: "center", fontFamily: 'Tahoma-Regular'}}>Минздрав предупреждает: употребление алкогольной продукции несовершеннолетними вредит здоровью</ScalableText>
 			</View>
 			<View style={{height: '15%', width: '100%'}}>
 			</View>
 			<View style={{height: '30%', width: '100%',alignItems: 'center', backgroundColor: 'white', alignItems: 'center'}}>
 				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#08a652'}]} onPress={() => press()}>
-					<Text style={styles.phoneText}>Войти по Сбербанк ID</Text>
+					<ScalableText style={styles.phoneText}>Войти по Сбербанк ID</ScalableText>
 				</TouchableOpacity>
 				<View style={styles.orContainer}>
 					<View style={styles.orView}></View>
-					<Text style={styles.orText}>или</Text>
+					<ScalableText style={styles.orText}>или</ScalableText>
 					<View style={styles.orView}></View>
 				</View>
 				<TouchableOpacity style={[styles.confirmButtom, {backgroundColor: '#0063ad'}]} onPress={() => press()}>
-					<Text style={styles.phoneText}>Войти через ЕСИА</Text>
+					<ScalableText style={styles.phoneText}>Войти через ЕСИА</ScalableText>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -171,7 +172,7 @@ function RegisterScreen({navigation}) {
 }
 
 let customFonts = {
-	'Tahoma-Regular': require('./assets/fonts/tahoma.ttf'),
+	'Tahoma-Regular': require('./assets/fonts/SFProDisplay-Regular.eot'),
 };
 
 const rootReducer = combineReducers({
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#f2f3f5', 
 		fontSize: 25,
 	},
-	text: {
+	scalabletext: {
 		fontFamily: 'Tahoma-Regular',
 		fontSize: 20
 	},
@@ -286,7 +287,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 18, 
+		fontSize: 20, 
 		color: 'white'
 	},
 	confirmButtom: {

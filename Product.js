@@ -12,6 +12,9 @@ import ModalItem from './components/ModalItem';
 import Item from './components/Item';
 import approve from './files/toolApprove.png';
 import star from './files/toolStar.png';
+import { ScaledSheet,  scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import ScalableText from 'react-native-text';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -134,28 +137,29 @@ export default function ProductScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
+            <SearchBar placeholder="Поиск по категории" value={query} onChangeScalableText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <View style={{width: '100%', paddingHorizontal: 20}}>
-                <Text style={styles.header}>{title}</Text>
+                <ScalableText style={styles.header}>{title}</ScalableText>
             </View>
+            <ScrollView>
             <View style={styles.toolView}>
                 <View style={styles.tool}>
                     <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
                     <View style={styles.toolSpace}></View>
-                    <Text style={styles.toolText}>{other.rating}</Text>
+                    <ScalableText style={styles.toolText}>{other.rating}</ScalableText>
                 </View>
                 <View style={styles.tool}>
                     <Image style={styles.toolImage} resizeMode={'contain'} source={approve}></Image>
                     <View style={styles.toolSpace}></View>
-                    <Text style={styles.toolText}>Проверено xFood</Text>
+                    <ScalableText style={styles.toolText}>Проверено xFood</ScalableText>
                 </View>
                 <View style={styles.tool}>
-                    <Text style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</Text>
+                    <ScalableText style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</ScalableText>
                 </View>
                 <View style={styles.tool}>
-                    <Text style={styles.toolText}>{getMoney(other.min_less_summ)}</Text>
+                    <ScalableText style={styles.toolText}>{getMoney(other.min_less_summ)}</ScalableText>
                 </View>
             </View>
             <View style={{flexDirection: 'row', width: '100%'}}>
@@ -169,7 +173,7 @@ export default function ProductScreen({navigation}) {
                                 setData([]);
                                 setLoaded(false);
                             }}>
-                                <Text style={styles.subText}>{item.item}</Text>
+                                <ScalableText style={styles.subScalableText}>{item.item}</ScalableText>
                             </TouchableOpacity>
                         );
                     }
@@ -186,13 +190,14 @@ export default function ProductScreen({navigation}) {
                 showItem={showModal} length={data.length} index={index} />;
               }
             }  />
+            </ScrollView>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
     );
 
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
@@ -237,8 +242,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     itemImage: {
-        width: 120,
-        height: 120,
+        width: '120s',
+        height: '120vs',
         marginBottom: 5,
     },
     catImage: {
@@ -258,8 +263,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     catIcon: {
-        width: 20,
-        height: 20
+        width: scale(20),
+        height: verticalScale(20)
     },
     catLabel: {
         fontFamily: 'Tahoma-Regular',
@@ -315,7 +320,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 5
     },
-    cartText: {
+    cartScalableText: {
         fontFamily: 'Tahoma-Regular', 
 		fontSize: 16, 
     },
@@ -335,13 +340,13 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     tool: {
-        marginTop: 10,
-        marginLeft: 20,
+        marginTop: moderateScale(10),
+        marginLeft: moderateScale(20),
         borderRadius: 25,
         backgroundColor: '#f2f3f5',
         flexDirection: 'row',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingVertical: moderateScale(10),
+        paddingHorizontal: moderateScale(20),
         alignItems: 'center',
     },
     toolSpace: {
@@ -353,7 +358,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     toolImage: {
-        width: 30,
-        height: 30,
+        width: scale(25),
+        height: verticalScale(25)
     }
 });

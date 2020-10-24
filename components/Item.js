@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback } from 'react-native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import minus from '../files/minus.png';
 import plus from '../files/plus.png';
 
@@ -43,7 +44,7 @@ export default function Item(props) {
     return (
         <TouchableWithoutFeedback onPress={() => props.showItem(item.item)}>
             <View style={[styles.item, border]}>
-                <View style={{alignItems: 'center'}}>
+                <View>
                     <Image source={{uri: item.item.image_url}} resizeMode='cover' style={styles.itemImage} />
                 </View>
                 <Text style={styles.itemPrice}>{item.item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
@@ -133,10 +134,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     itemImage: {
-        width: 120,
-        height: 120,
-        marginBottom: 5,
-        borderRadius: 20
+        width: scale(120),
+        height: verticalScale(120),
+        marginBottom: moderateScale(10),
+        borderRadius: 10
     },
     catImage: {
         width: '100%',
