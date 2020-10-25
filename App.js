@@ -73,7 +73,7 @@ function PhoneScreen({navigation}) {
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
-					<ScalableText style={styles.phoneText} >Отправить код</ScalableText >
+					<ScalableText style={styles.phoneText}>Отправить код</ScalableText >
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 20, 
+		fontSize: 16, 
 		color: 'white'
 	},
 	confirmButtom: {

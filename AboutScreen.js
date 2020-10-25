@@ -18,7 +18,7 @@ export default function AboutScreen({navigation}) {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
-                    <ScalableText style={styles.barText}>Оформление заказа</ScalableText>
+                    <ScalableText style={styles.barText}>О приложении</ScalableText>
                 </View>
             </View>
             <View style={styles.aboutContainer}>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     },
     barText: {
         fontWeight: "bold",
-        fontSize: 20,
+        fontSize: 18,
         marginVertical: 20
     },
     aboutContainer: {
