@@ -38,10 +38,7 @@ export default function ModalStatus() {
                 return  ['PERFORMING', 'FINDING', 'WAITCOUR'].indexOf(order.status) !== 1;
             });
             if(orders.length !== 0) {
-                const res = orders.sort((a, b) => {
-                    return Date.parse(a.date) - Date.parse(b.date);
-                })[0];
-                setOrder(res);
+                setOrder(orders[0]);
             }
         }, token);
     }, []);

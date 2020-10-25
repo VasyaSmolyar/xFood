@@ -135,6 +135,27 @@ export default function ProductScreen({navigation}) {
         return 'Доставка ' + price + " ₽";
     }
 
+    const about = other !== undefined ? (
+        <View style={styles.toolView}>
+            <View style={styles.tool}>
+                <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
+                <View style={styles.toolSpace}></View>
+                <ScalableText style={styles.toolText}>{other.rating}</ScalableText>
+            </View>
+            <View style={styles.tool}>
+                <Image style={styles.toolImage} resizeMode={'contain'} source={approve}></Image>
+                <View style={styles.toolSpace}></View>
+                <ScalableText style={styles.toolText}>Проверено xFood</ScalableText>
+            </View>
+            <View style={styles.tool}>
+                <ScalableText style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</ScalableText>
+            </View>
+            <View style={styles.tool}>
+                <ScalableText style={styles.toolText}>{getMoney(other.min_less_summ)}</ScalableText>
+            </View>
+        </View>
+    ) : null;
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
@@ -146,24 +167,7 @@ export default function ProductScreen({navigation}) {
                 <ScalableText style={styles.header}>{title}</ScalableText>
             </View>
             <ScrollView>
-            <View style={styles.toolView}>
-                <View style={styles.tool}>
-                    <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
-                    <View style={styles.toolSpace}></View>
-                    <ScalableText style={styles.toolText}>{other.rating}</ScalableText>
-                </View>
-                <View style={styles.tool}>
-                    <Image style={styles.toolImage} resizeMode={'contain'} source={approve}></Image>
-                    <View style={styles.toolSpace}></View>
-                    <ScalableText style={styles.toolText}>Проверено xFood</ScalableText>
-                </View>
-                <View style={styles.tool}>
-                    <ScalableText style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</ScalableText>
-                </View>
-                <View style={styles.tool}>
-                    <ScalableText style={styles.toolText}>{getMoney(other.min_less_summ)}</ScalableText>
-                </View>
-            </View>
+            {about}
             <View style={{flexDirection: 'row', width: '100%'}}>
                 <FlatList data={subs} renderItem={
                     (item) => {

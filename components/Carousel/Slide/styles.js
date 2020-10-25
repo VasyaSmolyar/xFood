@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
     alignContent: 'center',
     justifyContent: 'center',
     height: 200,
+    borderRadius: 20
   },
   slideText: {
     width: '100%',

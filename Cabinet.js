@@ -53,13 +53,13 @@ export default function CabinetScreen({navigation}) {
                 <Text style={styles.barText}>Личный кабинет</Text>
             </View>
             <ScrollView>
-                <View style={styles.itemContainer}>
+                <View style={{flexDirection: 'row', padding: 20}}>
                     <View style={styles.imageBox}>
                         <View style={{overflow: "hidden"}}>
                             <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
                         </View>
                     </View>
-                    <View style={{width: '80%', alignItems: 'center', justifyContent: 'space-around'}}>
+                    <View style={{paddingLeft: 30,alignItems: 'center', justifyContent: 'space-around'}}>
                         <View>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={styles.nameText}>{name}</Text>
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Tahoma-Regular',
         color: '#f08741',
+        marginLeft: -21
     },
     imageBox: {
         backgroundColor: '#201f1b',

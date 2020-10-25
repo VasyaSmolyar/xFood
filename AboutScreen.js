@@ -14,7 +14,7 @@ export default function AboutScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={arrow} style={{width: s(50), height: vs(25)}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>

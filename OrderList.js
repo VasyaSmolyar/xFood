@@ -87,14 +87,13 @@ export default function OrderListScreen({navigation}) {
     const [orders, setOrders] = useState([]);
     const [current, setCurrent] = useState(null);
     const route = useRoute();
-    const { order } = route.params;
 
     useEffect(() => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
             setOrders(json);
         }, token);
-        if(order) {
-            setCurrent(order);
+        if(route.params !== undefined && route.params.order !== undefined) {
+            setCurrent(route.params.order);
         }
     }, []);
 

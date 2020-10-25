@@ -11,6 +11,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     justifyContent: 'center',
+    borderRadius: 20,
+    overflow: 'hidden'
   },
   statText: {
     width: '100%',

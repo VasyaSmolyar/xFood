@@ -36,7 +36,7 @@ export default function ModalItem(props) {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <TouchableOpacity onPress={onClose}>
-                            <Image source={x} style={{width: v(30), height: vs(30)}} resizeMode={'contain'} />
+                            <Image source={x} style={{width: s(30), height: vs(30)}} resizeMode={'contain'} />
                         </TouchableOpacity>
                     </View>
                     <ScrollView>

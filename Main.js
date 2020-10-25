@@ -29,9 +29,9 @@ export default function MainScreen({navigation}) {
     const banner = banners.map((banner) => {
         return {
             value: (
-            <TouchableWithoutFeedback pressRetentionOffset={5}
-            onPress={() => {navigation.navigate('Products', {title: "all", banner: banner.code})}}>
-                <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain', borderRadius: 20}} />
+            <TouchableWithoutFeedback style={{borderRadius: 20, overflow: 'hidden'}} pressRetentionOffset={5}
+            onPress={() => {navigation.navigate('Products', {title: "all", banner: banner.code, subs: [] })}}>
+                <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain', borderRadius: 20, overflow: 'hidden'}} />
             </TouchableWithoutFeedback>
             )
         }
@@ -73,7 +73,7 @@ export default function MainScreen({navigation}) {
         });
 
         return (
-            <View key={key}>
+            <View key={key} >
                 <Text style={styles.header}>{key}</Text>
                 <View style={styles.flat}>
                 {items}
@@ -89,7 +89,9 @@ export default function MainScreen({navigation}) {
             <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
-                {sectors}
+                <View style={{marginTop: -25}}>
+                    {sectors}
+                </View>
             </ScrollView>
             <NavigationBar navigation={navigation} routeName="Main"/>
         </View>
@@ -110,12 +112,12 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
         padding: 15,
         paddingLeft: 10,
-        marginTop: 10
+        marginTop: 5
     },
     item: {
         width: '50%',
         backgroundColor: '#fff',
-        marginVertical: 10,
+        marginBottom: 10,
         paddingHorizontal: 10
     },
     itemText: {

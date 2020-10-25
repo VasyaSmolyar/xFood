@@ -6,7 +6,8 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   container: {
-    width: '100%'
+    width: '100%',
+    borderRadius: 20,
   },
   scrollView: {
     display: 'flex',

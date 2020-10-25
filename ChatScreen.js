@@ -26,7 +26,7 @@ export default function ChatScreen({navigation}) {
     const [ value, setValue ] = useState('');
 
     const getRefresh = () => {
-        send('api/messages/get', 'POST', {offset: 0, num: 10}, (json) => {
+        send('api/messages/get', 'POST', {offset: 0, num: 20}, (json) => {
             setMesList(json.sort((a, b) => {
                 return Date.parse(a.time) - Date.parse(b.time);
             }));
@@ -35,14 +35,15 @@ export default function ChatScreen({navigation}) {
 
     useEffect(() => {
         getRefresh();
-        setInterval(getRefresh, 1000);
+        let timer = setInterval(getRefresh, 1000);
+        return () => clearInterval(timer);
     }, []);
 
     const onSend = () => {
-        setValue('');
-        send('api/message/send', 'POST', {scalabletext: value}, () => {
+        send('api/message/send', 'POST', {text: value}, () => {
             getRefresh();
         }, token);
+        setValue('');
     }
 
     const data = mesList.map((item) => {
@@ -55,7 +56,7 @@ export default function ChatScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={oback} style={{width: s(40), height: vs(20)}} resizeMode='contain' />
+                        <Image source={oback} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>

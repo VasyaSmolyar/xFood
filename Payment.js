@@ -136,7 +136,7 @@ export default function PaymentScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={arrow} style={{width: s(50), height: vs(25)}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     },
     phone: {
 		backgroundColor: '#f2f3f5', 
-		fontSize: 20,
+		fontSize: 18,
     },
     geoContainer: {
         flexDirection: 'row',
@@ -343,7 +343,6 @@ const styles = StyleSheet.create({
     methodFull: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 25
     },
     methodText: {
         fontFamily: 'Tahoma-Regular', 
