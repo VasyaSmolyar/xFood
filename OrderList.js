@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { useRoute } from '@react-navigation/native';
 import ModalOrder from './components/Order';
 import repeat from './files/repeat.png';
 import arrow from './files/blackArrow.png';
@@ -85,11 +86,16 @@ export default function OrderListScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [orders, setOrders] = useState([]);
     const [current, setCurrent] = useState(null);
+    const route = useRoute();
+    const { order } = route.params;
 
     useEffect(() => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
             setOrders(json);
         }, token);
+        if(order) {
+            setCurrent(order);
+        }
     }, []);
 
     const data = orders.map((item, id) => {

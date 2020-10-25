@@ -52,9 +52,6 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
         return '0000000000000'.substr(size) + num;
     }
 
-    let times = new Date(item.date);
-    times.setTime(times.valueOf() + (item.before_delivery * 60 * 1000));
-
     const data = item.products.map((line, id) => {
         return (
             <OrderItem key={id} item={line.product} num={line.num} />
@@ -67,7 +64,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
                 <Image source={sec} style={{width: 20, height: 20}} resizeMode='contain'/>
                 <Text style={styles.statusText}>{caseStage(item.status)}</Text>
             </View>
-            <Text style={styles.timeHours}>{times.getHours()}:{times.getMinutes()}</Text>
+            <Text style={styles.timeHours}>{item.delivery_time}</Text>
             <Text style={styles.timeText}>Примерное время доставки</Text>
             <TouchableOpacity style={styles.phoneButton}>
                 <Image source={tele} style={{width: 30, height: 30}} resizeMode='contain'/>

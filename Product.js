@@ -15,6 +15,7 @@ import star from './files/toolStar.png';
 import { ScaledSheet,  scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
 import { ScrollView } from 'react-native-gesture-handler';
+import ModalStatus from './components/ModalStatus';
 
 export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -140,6 +141,7 @@ export default function ProductScreen({navigation}) {
             <SearchBar placeholder="Поиск по категории" value={query} onChangeScalableText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
+            <ModalStatus />
             <View style={{width: '100%', paddingHorizontal: 20}}>
                 <ScalableText style={styles.header}>{title}</ScalableText>
             </View>

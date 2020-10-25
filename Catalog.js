@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
 import NavigationBar from './components/NavigationBar';
+import ModalStatus from './components/ModalStatus';
 import SearchBar from './components/SearchBar';
 import price from './files/price.png';
 import star from './files/star.png';
@@ -84,6 +85,7 @@ export default function RestaurantScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
+            <ModalStatus />            
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
             <View style={{width: '100%', paddingHorizontal: 13}}>
                 <Text style={styles.header}>Рестораны</Text>

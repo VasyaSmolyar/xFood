@@ -196,8 +196,8 @@ export default function CartScreen({navigation}) {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <NavigationBar navigation={navigation} routeName="Cart"/>
             </ScrollView>
+            <NavigationBar navigation={navigation} routeName="Cart"/>
         </View>
     )
 };
