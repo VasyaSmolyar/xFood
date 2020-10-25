@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
 import useCart from './utils/cartHook';
@@ -15,7 +15,6 @@ export default function MainScreen({navigation}) {
     const [banners, setBanners] = useState([]);
     const [sections, setSections] = useState([]);
     const token = useSelector(state => state.token);
-    const dispath = useDispatch();
     const [chosen, setChosen] = useState(null);
     const [visible, setVisible] = useState(false);
     const {cart, addItem, removeItem, loadCart} = useCart([], token);
@@ -58,7 +57,7 @@ export default function MainScreen({navigation}) {
     }, []);
 
     const addToCart = (item) => {
-        dispath(addItem(item));
+        addItem(item);
         setVisible(false);
         send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
     }

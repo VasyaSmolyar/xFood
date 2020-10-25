@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Image, TouchableWithoutFeedback } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import minus from '../files/minus.png';
 import plus from '../files/plus.png';
+import ScalableText from 'react-native-text';
 
 export default function Item(props) {
     const { cart, item, addToCart, removeFromCart } = props;
@@ -18,14 +19,14 @@ export default function Item(props) {
 
     const add = inCart != undefined ? <CartBar item={item.item} value={inCart.num} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
         <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
-            <Text style={styles.phoneText}>Добавить</Text>
+            <ScalableText style={styles.phoneText}>Добавить</ScalableText>
         </TouchableOpacity>
     );
 
     const flag = item.item.country !== "Русская кухня" ? (
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>
-            <Text>{item.item.flag}</Text> 
-            <Text style={styles.itemFlag}>{item.item.country}</Text>
+            <ScalableText>{item.item.flag}</ScalableText> 
+            <ScalableText style={styles.itemFlag}>{item.item.country}</ScalableText>
         </View>
     ) : <View style={{height: 30}}></View>;
 
@@ -47,9 +48,9 @@ export default function Item(props) {
                 <View>
                     <Image source={{uri: item.item.image_url}} resizeMode='cover' style={styles.itemImage} />
                 </View>
-                <Text style={styles.itemPrice}>{item.item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
-                <Text numberOfLines={2}
-                style={styles.itemText}>{item.item.title}</Text>
+                <ScalableText style={styles.itemPrice}>{item.item.price.toFixed(2).replace(/\.00$/,'')} ₽</ScalableText>
+                <ScalableText numberOfLines={2}
+                style={styles.itemText}>{item.item.title}</ScalableText>
                 {flag}
                 {add}
             </View>
@@ -80,7 +81,7 @@ function CartBar(props) {
             <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f2f3f5'}]} onPress={remove}>
                 <Image source={minus} style={styles.cartImage} resizeMode={'contain'} />
             </TouchableOpacity>
-            <Text style={styles.cartText}>{props.value} шт.</Text>
+            <ScalableText style={styles.cartText}>{props.value} шт.</ScalableText>
             <TouchableOpacity style={[styles.cartButton, {backgroundColor: '#f08741'}]} onPress={add}>
                 <Image source={plus} style={styles.cartImage} resizeMode={'contain'} />
             </TouchableOpacity>
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
     },
     catImage: {
         width: '100%',
-        height: 200,
+        height: scale(200),
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20
     },

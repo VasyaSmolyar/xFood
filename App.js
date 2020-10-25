@@ -172,7 +172,7 @@ function RegisterScreen({navigation}) {
 }
 
 let customFonts = {
-	'Tahoma-Regular': require('./assets/fonts/SFProDisplay-Regular.eot'),
+	'Tahoma-Regular': require('./assets/fonts/SFProDisplay-Regular.ttf'),
 };
 
 const rootReducer = combineReducers({

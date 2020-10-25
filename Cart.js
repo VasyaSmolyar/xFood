@@ -113,7 +113,7 @@ export default function CartScreen({navigation}) {
     })
 
     const block = included.length > 0 ? (
-        <View>
+        <View style={{paddingHorizontal: 25}}>
             <Text style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</Text>
             <ScrollView horizontal={true} style={styles.horContainer}>
                 {addData}
@@ -151,13 +151,14 @@ export default function CartScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <View style={{height: '100%'}}>
-                <View style={{paddingHorizontal: 25}}>
+            <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
                         <Text style={styles.header}>Корзина</Text>
                         <Text style={styles.secondHeader}>Макдональдс</Text>
                     </View>
-                    <View style={styles.deviceContainer}>
+                </View>
+            <ScrollView style={{height: '100%'}}>
+                <View style={styles.deviceContainer}>
                         <View style={styles.leftContainer}>
                             <Image source={dinner} style={{width: 30, height: 30, marginRight: 53}} resizeMode='contain' />
                             <Text style={styles.titleText}>Приборы</Text>
@@ -169,9 +170,8 @@ export default function CartScreen({navigation}) {
                             <Text style={styles.lowNum}>{wares}</Text>
                             {remButton}
                         </View>
-                    </View>
-                {block}
                 </View>
+                {block}
                 <ScrollView style={styles.listContainer} contentContainerStyle={{justifyContent: 'center'}}>
                     <View style={{ borderBottomColor: '#e5e4e4', borderBottomWidth: 1 }}>
                         {cartData}
@@ -197,7 +197,7 @@ export default function CartScreen({navigation}) {
                     </View>
                 </View>
                 <NavigationBar navigation={navigation} routeName="Cart"/>
-            </View>
+            </ScrollView>
         </View>
     )
 };
@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 20,
+        paddingHorizontal: 25,
         borderBottomColor: '#e5e4e4',
         borderBottomWidth: 1 
     },

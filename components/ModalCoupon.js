@@ -13,7 +13,7 @@ export default function ModalCoupon({item, visible, onClose}) {
                 <View style={{flex:1}}></View>
                 <View style={{flex:1}}></View>
                 <View style={styles.container}>
-                    <Image source={dollar} style={{width: 70, height: 70}} resizeMode={'contain'}/>
+                    <Image source={dollar} style={{width: 70, height: 70, marginBottom: 15}} resizeMode={'contain'}/>
                     <View style={{alignItems: 'center'}}>
                         <Text style={styles.codeText}>Купон {item.code}</Text>
                         <Text style={styles.perText}>Скидка {item.discount_amount}% на доставку</Text>

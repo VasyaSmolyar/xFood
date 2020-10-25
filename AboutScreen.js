@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import arrow from './files/blackArrow.png';
 import xFood from './files/xFood.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
+import ScalableText from 'react-native-text';
 
 export default function AboutScreen({navigation}) {
     return (
@@ -12,21 +14,21 @@ export default function AboutScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={arrow} style={{width: 50, height: 25}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: s(50), height: vs(25)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
-                    <Text style={styles.barText}>Оформление заказа</Text>
+                    <ScalableText style={styles.barText}>Оформление заказа</ScalableText>
                 </View>
             </View>
             <View style={styles.aboutContainer}>
-                <Image source={xFood} style={{width: 300, height: 100, marginBottom: 10}} resizeMode='contain' />
-                <Text style={styles.textAbout}>Агрегатор доставки еды из ресторанов</Text>
-                <Text style={styles.textAbout}>Версия приложения: 0.1</Text>
-                <Text style={styles.textLow}>В приложении использованы материалы ресурса icons8.ru</Text>
+                <Image source={xFood} style={{width: s(300), height: vs(100), marginBottom: 10}} resizeMode='contain' />
+                <ScalableText style={styles.textAbout}>Агрегатор доставки еды из ресторанов</ScalableText>
+                <ScalableText style={styles.textAbout}>Версия приложения: 0.1</ScalableText>
+                <ScalableText style={styles.textLow}>В приложении использованы материалы ресурса icons8.ru</ScalableText>
             </View>
             <View style={styles.aboutContainer}>
-                <Text style={styles.textAbout}>© 2020 ИП Смоляр Василий Сергеевич</Text>
+                <ScalableText style={styles.textAbout}>© 2020 ИП Смоляр Василий Сергеевич</ScalableText>
             </View>
         </View>
     );

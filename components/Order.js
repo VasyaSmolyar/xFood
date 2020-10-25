@@ -4,6 +4,8 @@ import cancel from '../files/xorder.png';
 import sec from '../files/sec.png';
 import tele from '../files/tele.png';
 import chat from '../files/chat.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
+
 
 const caseStage = (slug) => {
     if(slug === 'DONE') {
@@ -29,7 +31,7 @@ const caseStage = (slug) => {
 function OrderItem({item, num}) {
     return (
         <View style={styles.productItem}>
-            <Image source={{uri: item.image_url}} style={{ width: 100, height: 100 }} resizeMode='center' />
+            <Image source={{uri: item.image_url}} style={{ width: s(100), height: vs(100) }} resizeMode='center' />
             <View style={{marginLeft: 15, justifyContent: 'flex-start'}}>
                 <Text style={styles.productText} numberOfLines={1}>{num} x {item.title}</Text>
                 <View style={styles.priceContainer}>
@@ -85,7 +87,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
                         </View>
                         <View style={styles.headerCell}>
                             <TouchableOpacity onPress={onExit}>
-                                <Image source={cancel} style={{width: 20, height: 20}} resizeMode='contain' />
+                                <Image source={cancel} style={{width: s(20), height: vs(20)}} resizeMode='contain' />
                             </TouchableOpacity>
                         </View>
                     </View>

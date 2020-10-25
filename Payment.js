@@ -15,6 +15,7 @@ import gpay from './files/gpay.png';
 import apay from './files/apay.webp';
 import cardHand from './files/cardHand.png';
 import cardOnline from './files/cardOnline.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 const unzip = (slug) => {
     if(slug === 'cash') {
@@ -135,7 +136,7 @@ export default function PaymentScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={arrow} style={{width: 50, height: 25}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: s(50), height: vs(25)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>

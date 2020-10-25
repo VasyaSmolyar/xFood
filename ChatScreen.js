@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
 import oback from './files/oback.png';
 import slogo from './files/slogo.png';
 import write from './files/write.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
+import ScalableText from 'react-native-text';
 
 function Message({item}) {
     const style = item.author === 'USER' ? styles.userContainer : styles.supportContainer;
     
     return (
         <View style={style}>
-            <Text style={styles.innerText}>{item.text}</Text>
+            <ScalableText style={styles.innerText}>{item.text}</ScalableText>
         </View>
     )
 }
@@ -38,7 +40,7 @@ export default function ChatScreen({navigation}) {
 
     const onSend = () => {
         setValue('');
-        send('api/message/send', 'POST', {text: value}, () => {
+        send('api/message/send', 'POST', {scalabletext: value}, () => {
             getRefresh();
         }, token);
     }
@@ -53,14 +55,14 @@ export default function ChatScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={oback} style={{width: 50, height: 25}} resizeMode='contain' />
+                        <Image source={oback} style={{width: s(40), height: vs(20)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
-                    <Image source={slogo} style={{width: 50, height: 50, marginRight: 20}} resizeMode='contain' />
+                    <Image source={slogo} style={{width: s(40), height: vs(40), marginRight: ms(20)}} resizeMode='contain' />
                     <View style={{justifyContent: 'space-around'}}>
-                        <Text style={styles.barText}>Поддержка xFood</Text>
-                        <Text style={styles.barSmall}>В сети</Text>
+                        <ScalableText style={styles.barText}>Поддержка xFood</ScalableText>
+                        <ScalableText style={styles.barSmall}>В сети</ScalableText>
                     </View>
                 </View>
             </View>
@@ -69,9 +71,9 @@ export default function ChatScreen({navigation}) {
             </ScrollView>
             <View style={styles.bottomContainer}>
                 <TextInput style={styles.mesText} placeholder='Сообщение...' multiline={true} 
-                value={value} onChangeText={(text) => setValue(text)} />
+                value={value} onChangeText={(scalabletext) => setValue(scalabletext)} />
                 <TouchableOpacity onPress={onSend}>
-                    <Image source={write} style={{width: 40, height: 40}} resizeMode='contain' />
+                    <Image source={write} style={{width: s(40), height: vs(40)}} resizeMode='contain' />
                 </TouchableOpacity>
             </View>
         </View>
@@ -102,11 +104,11 @@ const styles = StyleSheet.create({
     },
     barText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
+        fontSize: 16,
     },
     barSmall: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         color: '#b6b6b6',
     },
     mesText: {

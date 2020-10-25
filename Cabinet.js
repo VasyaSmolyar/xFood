@@ -72,7 +72,7 @@ export default function CabinetScreen({navigation}) {
                 </View>
                 <Header title="Основные" />
                 <MenuItem title="Мои заказы" page="OrderList" />
-                <MenuItem title="Помощь" page="Catalog" />
+                <MenuItem title="Помощь" page="Chat" />
                 <Header title="Акции" />
                 <MenuItem title="Купоны" page="Coupon" />
                 <Header title="Другое" />

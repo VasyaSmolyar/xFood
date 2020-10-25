@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import x from '../files/x.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 function Index({name, value, free}) {
     const add = free === undefined ? " г" : "";
@@ -35,7 +36,7 @@ export default function ModalItem(props) {
                 <View style={styles.container}>
                     <View style={styles.header}>
                         <TouchableOpacity onPress={onClose}>
-                            <Image source={x} style={{width: 30, height: 30}} resizeMode={'contain'} />
+                            <Image source={x} style={{width: v(30), height: vs(30)}} resizeMode={'contain'} />
                         </TouchableOpacity>
                     </View>
                     <ScrollView>
@@ -109,8 +110,8 @@ const styles = StyleSheet.create({
         borderRadius: 20
     },
     itemImage: {
-        width: 200,
-        height: 200,
+        width: s(200),
+        height: vs(200),
         marginBottom: 15,
         borderRadius: 20
     },
