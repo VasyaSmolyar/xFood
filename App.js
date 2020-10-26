@@ -22,6 +22,7 @@ import MainScreen from './Main';
 import AboutScreen from './AboutScreen';
 import ChatScreen from './ChatScreen';
 import Welcome from './Welcome';
+import RegisterScreen from './Register';
 
 const Stack = createStackNavigator();
 const sample = {
@@ -97,8 +98,22 @@ function CodeScreen({navigation}) {
 		} else {
 			writeToken(json);
 			dispath(setToken(json.login, json.times, json.token));
-			dispath(setUser(sample.first_name, phone));
-			navigation.navigate('Catalog');
+			//dispath(setUser(sample.first_name, phone));
+			console.log("JSON:");
+			console.log(isExisting);
+			if(isExisting === "true") {
+				readToken().then((myToken) => {
+					send('api/user/get', 'POST', {}, (json) => {
+						if(json.detail !== undefined) {
+							return;
+						}
+						dispath(setUser(json.first_name, json.phone));
+						navigation.navigate('Catalog');
+					}, myToken);
+				});
+			} else {
+				navigation.navigate('Register', {code: value, phone: "+7" + phone});
+			}
 		}
 	};
 
@@ -126,6 +141,7 @@ function CodeScreen({navigation}) {
 	);
 }
 
+/*
 function RegisterScreen({navigation}) {
 	const route = useRoute();
 	let { phone, code } = route.params; 
@@ -174,6 +190,7 @@ function RegisterScreen({navigation}) {
 		</View>
 	);
 }
+*/
 
 let customFonts = {
 	'Tahoma-Regular': require('./assets/fonts/SFProDisplay-Regular.ttf'),
