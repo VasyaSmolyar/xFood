@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
 import back from './files/blackArrow.png';
@@ -40,6 +40,7 @@ export default function ChatScreen({navigation}) {
     }, []);
 
     const onSend = () => {
+        Keyboard.dismiss();
         send('api/message/send', 'POST', {text: value}, () => {
             getRefresh();
         }, token);

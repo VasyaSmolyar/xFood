@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer, useRoute} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput } from 'react-native';
 import ScalableText from 'react-native-text';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
@@ -103,6 +103,7 @@ function CodeScreen({navigation}) {
 	};
 
 	const press = () => {
+		Keyboard.dismiss();
 		send('api/user/verify', 'POST', {phone: "+7" + phone, code: value}, navigate);
 	};
 

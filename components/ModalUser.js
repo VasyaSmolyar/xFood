@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity, Modal, TextInput} from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Modal, TextInput, Keyboard} from 'react-native';
 import cancel from '../files/xorder.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import { useSelector, useDispatch } from 'react-redux';
@@ -18,6 +18,7 @@ export default function ModalUser({visible, onExit}) {
     const [email, setEmail] = useState("");
 
     const onUpdate = () => {
+        Keyboard.dismiss();
         let data = {
             first_name: name
         };

@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
+        fontSize: 16,
     },
     deviceContainer: {
         flexDirection: 'row',
@@ -304,11 +304,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     infoContainer: {
-        width: '35%'
+        width: '30%'
     },
     priceText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: 'bold'
     },
     priceSecond: {
