@@ -8,27 +8,6 @@ import { s, vs, ms, mvs } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
 
 
-const caseStage = (slug) => {
-    if(slug === 'DONE') {
-        return 'Выполнен';
-    }
-    if(slug === 'PERFORMING') {
-        return 'Курьер в пути';
-    }
-    /*
-    if(slug === 'FINDING') {
-        return 'Поиск курьера';
-    }
-    */
-    if(slug === 'CANCELED') {
-        return 'Отменён';
-    }
-    if(slug === 'WAITCOUR') {
-        return 'Ожидание подтверждения курьера';
-    }
-    return 'Поиск курьера';
-}
-
 function OrderItem({item, num}) {
     return (
         <View style={styles.productItem}>
@@ -63,7 +42,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
         <View style={styles.infoContainer}>
             <View style={styles.statusContainer}>
                 <Image source={sec} style={{width: 20, height: 20}} resizeMode='contain'/>
-                <Text style={styles.statusText}>{caseStage(item.status)}</Text>
+                <Text style={styles.statusText}>{item.status_ru}</Text>
             </View>
             <Text style={styles.timeHours}>{item.delivery_time}</Text>
             <Text style={styles.timeText}>Примерное время доставки</Text>

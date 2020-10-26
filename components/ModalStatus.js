@@ -6,26 +6,6 @@ import ScalableText from 'react-native-text';
 import { useNavigation } from '@react-navigation/native';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
-const caseStage = (slug) => {
-    if(slug === 'DONE') {
-        return 'Выполнен';
-    }
-    if(slug === 'PERFORMING') {
-        return 'Курьер в пути';
-    }
-    /*
-    if(slug === 'FINDING') {
-        return 'Поиск курьера';
-    }
-    */
-    if(slug === 'CANCELED') {
-        return 'Отменён';
-    }
-    if(slug === 'WAITCOUR') {
-        return 'Ожидание подтверждения курьера';
-    }
-    return 'Поиск курьера';
-}
 
 export default function ModalStatus() {
     const [order, setOrder] = useState(null);
@@ -50,7 +30,7 @@ export default function ModalStatus() {
     return (
         <View style={styles.backContainer}>
             <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('OrderList', {order: order})}>
-                <ScalableText style={styles.statusText}>{caseStage(order.status_ru)}</ScalableText>
+                <ScalableText style={styles.statusText}>{order.status_ru}</ScalableText>
                 <ScalableText style={styles.timeText}>{order.delivery_time !== null ? 'Доставим в ' + order.delivery_time : ' '}</ScalableText>
             </TouchableOpacity>
         </View>
