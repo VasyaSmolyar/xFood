@@ -4,6 +4,7 @@ import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
+import ModalUser from './components/ModalUser';
 import { delToken } from './utils/token';
 import send from './utils/net';
 import arrow from './files/arrow.png';
@@ -22,15 +23,25 @@ export default function CabinetScreen({navigation}) {
     const [name, setName] = useState("Иван Иванов");
     const [phone, setPhone] = useState("+7(977)517-48-22");
     const [icon, setIcon] = useState(man);
+    const [modal, setModal] = useState(false);
     const token = useSelector(state => state.token);
 
-    useEffect(() => {
+    const setUser = () => {
         send('api/user/get', 'POST', {}, (json) => {
-            setName(json.first_name + ' ' + json.last_name);
+            setName(json.first_name);
             setPhone(json.phone);
             setIcon(man);
 		}, token);
+    }
+
+    useEffect(() => {
+        setUser();
     }, []);
+
+    const onFinal = () => {
+        setUser();
+        setModal(false);
+    }
 
     const MenuItem = (props) => {
         return (
@@ -49,6 +60,7 @@ export default function CabinetScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
+            <ModalUser visible={modal} onExit={onFinal} />
             <View style={styles.barContainer}>
                 <Text style={styles.barText}>Личный кабинет</Text>
             </View>
@@ -67,7 +79,9 @@ export default function CabinetScreen({navigation}) {
                             </View>
                             <Text style={styles.phoneText}>{phone}</Text>
                         </View>
-                        <Text style={styles.dataText}>Изменить данные</Text>
+                        <TouchableOpacity onPress={() => setModal(true)}>
+                            <Text style={styles.dataText}>Изменить данные</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <Header title="Основные" />
@@ -139,7 +153,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: 'Tahoma-Regular',
         color: '#f08741',
-        marginLeft: -21
     },
     imageBox: {
         backgroundColor: '#201f1b',

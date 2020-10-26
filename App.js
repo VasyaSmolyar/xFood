@@ -37,12 +37,15 @@ function AuthScreen({navigation}) {
 	useEffect(async () => {
 		const myToken = await readToken();
 		console.log(myToken);
-		send('api/order/get', 'POST', {}, (json) => {
+		send('api/user/get', 'POST', {}, (json) => {
 			if(json.detail !== undefined) {
 				return;
 			}
-			dispath(setToken(myToken.login, myToken.times, myToken.token));
-			navigation.navigate('Catalog');
+			dispath(setUser(json.first_name, json.phone));
+			send('api/user/reauth', 'POST', {}, (res) => {
+				dispath(setToken(res.login, res.times, res.token));
+				navigation.navigate('Catalog');
+			}, myToken);
 		}, myToken);
 	}, []);
 
@@ -94,7 +97,7 @@ function CodeScreen({navigation}) {
 		} else {
 			writeToken(json);
 			dispath(setToken(json.login, json.times, json.token));
-			dispath(setUser(sample.first_name + ' ' + sample.last_name, phone));
+			dispath(setUser(sample.first_name, phone));
 			navigation.navigate('Catalog');
 		}
 	};

@@ -58,7 +58,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
         )
     });
 
-    const stage = item.status !== 'DONE' && item.status !== 'CANCELED' ? (
+    const stage = item.delivery_time !== null ? (
         <View style={styles.infoContainer}>
             <View style={styles.statusContainer}>
                 <Image source={sec} style={{width: 20, height: 20}} resizeMode='contain'/>
@@ -91,7 +91,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
                     <ScrollView style={{backgroundColor: '#fff'}}>
                         {stage}
                         <View style={styles.productContainer}>
-                            <Text style={styles.restaurant}>{item.products[0].product.restaurant.title}</Text>
+                            <Text style={styles.restaurant}>{item.products[0].product.restaurant}</Text>
                             {data}
                         </View>
                         <View style={[styles.productContainer, {borderBottomWidth: 0}]}>

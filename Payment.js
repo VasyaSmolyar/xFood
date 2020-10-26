@@ -38,7 +38,7 @@ export default function PaymentScreen({navigation}) {
     const token = useSelector(state => state.token);
 
     const [login, setLogin] = useState(user.user);
-    const [phone, setPhone] = useState(user.phone);
+    const [phone, setPhone] = useState(user.phone.slice(2));
 
     const [modal, setModal] = useState(false);
     const [map, setMap] = useState(false);
