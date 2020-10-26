@@ -22,13 +22,14 @@ export default function RegisterScreen({navigation}) {
 	data.password = code;
 	data.code = code;
 
-	const navigate = () => {
+	const navigate = (json) => {
+        dispath(setToken(json.login, json.times, json.token));
 		dispath(setUser(name, phone));
 		navigation.navigate('Catalog');
 	};
 
-	const press = () => {
-        if(name !== "") {
+	const press = (text) => {
+        if(text !== "") {
             data.first_name = name;
         }
         Keyboard.dismiss();
@@ -37,7 +38,8 @@ export default function RegisterScreen({navigation}) {
     };
     
     const onExit = () => {
-        navigation.navigate('Catalog');
+        press('');
+        //navigation.navigate('Catalog');
     }
 
     return (
@@ -64,7 +66,7 @@ export default function RegisterScreen({navigation}) {
                         </View>
                     </View>
                     <View style={{paddingHorizontal: 25}}>
-                    <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={press}>
+                    <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={() => press(name)}>
                         <View style={styles.buttonContainer}>
                             <Text style={styles.geoText}>Сохранить изменения</Text>
                         </View>

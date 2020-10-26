@@ -97,11 +97,9 @@ function CodeScreen({navigation}) {
 			setWrong(true);
 		} else {
 			writeToken(json);
-			dispath(setToken(json.login, json.times, json.token));
 			//dispath(setUser(sample.first_name, phone));
-			console.log("JSON:");
-			console.log(isExisting);
 			if(isExisting === "true") {
+				dispath(setToken(json.login, json.times, json.token));
 				readToken().then((myToken) => {
 					send('api/user/get', 'POST', {}, (json) => {
 						if(json.detail !== undefined) {
