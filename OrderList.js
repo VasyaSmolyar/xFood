@@ -9,6 +9,7 @@ import { useRoute } from '@react-navigation/native';
 import ModalOrder from './components/Order';
 import repeat from './files/repeat.png';
 import arrow from './files/blackArrow.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 function OrderItem({item, num}) {
     return (
@@ -63,7 +64,7 @@ function Order({item, onChoice}) {
                 </View>
                 <View>
                     <View style={[styles.orderStatus, {backgroundColor: getColor(item.status)}]}>
-                        <Text style={styles.statusText}>{item.status}</Text>
+                        <Text style={styles.statusText}>{item.status_ru}</Text>
                     </View>
                 </View>
             </View>
@@ -114,7 +115,7 @@ export default function OrderListScreen({navigation}) {
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={arrow} style={{width: 50, height: 25}} resizeMode='contain' />
+                        <Image source={arrow} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>

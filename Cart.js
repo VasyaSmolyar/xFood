@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, ScrollView, Image, TouchableOpacity, TextInput } from 'react-native';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
@@ -9,6 +9,8 @@ import useCart from './utils/cartHook';
 import dinner from './files/dinner.png';
 import pack from './files/package.png';
 import pocket from './files/pocket.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
+import ScalableText from 'react-native-text';
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -19,8 +21,8 @@ export default function CartScreen({navigation}) {
     const [other, setOther] = useState({});
     const [cartCode, setCartCode] = useState(code.code);
 
-    const update = (text) => {
-        send('api/cart/getcart', 'POST', {coupon: text}, (json) => {
+    const update = (scalabletext) => {
+        send('api/cart/getcart', 'POST', {coupon: scalabletext}, (json) => {
             const cart = json.items.map(item => {
                 return {
                     item: item.product,
@@ -60,12 +62,12 @@ export default function CartScreen({navigation}) {
                 <StatusBar style="dark" />
                 <View style={{paddingHorizontal: 25}}>
                     <View style={[styles.headerContainer, {borderBottomWidth: 0}]}>
-                        <Text style={styles.header}>Корзина</Text>
+                        <ScalableText style={styles.header}>Корзина</ScalableText>
                     </View>
                 </View>
                 <View style={styles.emptyContainer}>
                     <Image source={pocket} style={{width: 80, height: 80}} resizeMode='contain' />
-                    <Text style={styles.emptyText}>Корзина пуста</Text>
+                    <ScalableText style={styles.emptyText}>Корзина пуста</ScalableText>
                 </View>
                 <NavigationBar navigation={navigation} routeName="Cart"/>
             </View>
@@ -76,18 +78,18 @@ export default function CartScreen({navigation}) {
         const item = prod.item;
         return (
             <View style={styles.itemContainer}>
-                <Image source={{uri: item.image_url}} style={{width: 60, height: 60, marginRight: 5}} resizeMode='contain' />
+                <Image source={{uri: item.image_url}} style={{width: 60, height: 60, marginRight: 5, borderRadius: 20}} resizeMode='contain' />
                 <View style={styles.infoContainer}>
-                    <Text style={styles.titleText} numberOfLines={1}>{item.title}</Text>
-                    <Text style={styles.priceText}>{item.price} ₽</Text>
+                    <ScalableText style={styles.titleText} numberOfLines={1}>{item.title}</ScalableText>
+                    <ScalableText style={styles.priceText}>{item.price} ₽</ScalableText>
                 </View>
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity style={styles.highButton} onPress={() => addToCart(item)}>
-                        <Text style={styles.lowText}>+</Text>
+                        <ScalableText style={styles.lowText}>+</ScalableText>
                     </TouchableOpacity>
-                        <Text style={styles.lowNum}>{prod.num}</Text>
+                        <ScalableText style={styles.lowNum}>{prod.num}</ScalableText>
                     <TouchableOpacity style={styles.lowButton} onPress={() => removeToCart(item)}>
-                        <Text style={styles.lowText}>-</Text>
+                        <ScalableText style={styles.lowText}>-</ScalableText>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -103,10 +105,10 @@ export default function CartScreen({navigation}) {
     const addData = included.map((item) => {
         return ( 
             <TouchableOpacity style={styles.addContainer} onPress={() => addToCart(item)}>
-                <Image source={{uri: item.image_url}} style={{width: 40, height: 40, marginRight: 10}} resizeMode='contain' />
+                <Image source={{uri: item.image_url}} style={{width: s(35), height: s(35), marginRight: ms(10), borderRadius: 20}} resizeMode='center' />
                 <View>
-                    <Text style={styles.titleText}>{item.title}</Text>
-                    <Text style={styles.priceSecond}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
+                    <ScalableText style={styles.titleText}>{item.title}</ScalableText>
+                    <ScalableText style={styles.priceSecond}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</ScalableText>
                 </View>
             </TouchableOpacity>
         );
@@ -114,7 +116,7 @@ export default function CartScreen({navigation}) {
 
     const block = included.length > 0 ? (
         <View style={{paddingHorizontal: 25}}>
-            <Text style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</Text>
+            <ScalableText style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</ScalableText>
             <ScrollView horizontal={true} style={styles.horContainer}>
                 {addData}
             </ScrollView>
@@ -135,17 +137,17 @@ export default function CartScreen({navigation}) {
 
     const remButton = wares > 1 ? (
         <TouchableOpacity style={styles.lowButton} onPress={wareRem}>
-            <Text style={styles.lowText}>-</Text>
+            <ScalableText style={styles.lowText}>-</ScalableText>
         </TouchableOpacity>
     ) : (
         <View style={[styles.lowButton, {opacity: 0}]}>
-            <Text style={styles.lowText}>-</Text>
+            <ScalableText style={styles.lowText}>-</ScalableText>
         </View>
     );
 
-    const newCode = (text) => {
-        setCartCode(text);
-        update(text);
+    const newCode = (scalabletext) => {
+        setCartCode(scalabletext);
+        update(scalabletext);
     }
 
     return (
@@ -153,21 +155,21 @@ export default function CartScreen({navigation}) {
             <StatusBar style="dark" />
             <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
-                        <Text style={styles.header}>Корзина</Text>
-                        <Text style={styles.secondHeader}>Макдональдс</Text>
+                        <ScalableText style={styles.header}>Корзина</ScalableText>
+                        <ScalableText style={styles.secondHeader}>Макдональдс</ScalableText>
                     </View>
                 </View>
             <ScrollView style={{height: '100%'}}>
-                <View style={styles.deviceContainer}>
-                        <View style={styles.leftContainer}>
-                            <Image source={dinner} style={{width: 30, height: 30, marginRight: 53}} resizeMode='contain' />
-                            <Text style={styles.titleText}>Приборы</Text>
+                <View style={[styles.itemContainer, {paddingHorizontal: 25}]}>
+                    <Image source={dinner} style={{width: s(25), height: s(25), marginHorizontal: ms(15)}} resizeMode='contain' />
+                        <View style={styles.infoContainer}>
+                            <ScalableText style={styles.titleText}>Приборы</ScalableText>
                         </View>
-                        <View style={styles.rightContainer}>
+                        <View style={styles.buttonContainer}>
                             <TouchableOpacity style={styles.lowButton} onPress={wareAdd}>
-                                <Text style={styles.lowText}>+</Text>
+                                <ScalableText style={styles.lowText}>+</ScalableText>
                             </TouchableOpacity>
-                            <Text style={styles.lowNum}>{wares}</Text>
+                            <ScalableText style={styles.lowNum}>{wares}</ScalableText>
                             {remButton}
                         </View>
                 </View>
@@ -177,22 +179,22 @@ export default function CartScreen({navigation}) {
                         {cartData}
                     </View>
                     <View style={[styles.horContainer, {flexDirection: 'row'}]}>
-                        <Image source={pack} style={{width: 40, height: 40, marginRight: 20}} resizeMode='contain' />
+                        <Image source={pack} style={{width: s(35), height: s(35), marginRight: ms(20)}} resizeMode='contain' />
                         <View style={styles.infoContainer}>
-                            <Text style={styles.titleText}>Доставка</Text>
-                            <Text style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
+                            <ScalableText style={styles.titleText}>Доставка</ScalableText>
+                            <ScalableText style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
                         </View>
                     </View>
                     <View style={[styles.horContainer, {borderBottomWidth: 0}]}>
-                        <Text style={[styles.priceText, {fontSize: 18, marginBottom: 10}]}>Скидки и купоны</Text>
-                        <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(text) => newCode(text)} />
+                        <ScalableText style={[styles.priceText, {fontSize: 16, marginBottom: 10}]}>Скидки и купоны</ScalableText>
+                        <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(scalabletext) => newCode(scalabletext)} />
                     </View>
                 </ScrollView>
                 <View style={{paddingHorizontal: 25}}>
                     <View style={{paddingVertical: 20}}>
-                        <Text style={styles.titleText}>Общая стоимость: {other.delivery_cost ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</Text>
+                        <ScalableText style={styles.titleText}>Общая стоимость: {other.delivery_cost ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
                         <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
-                            <Text style={styles.phoneText}>Оформить заказ</Text>
+                            <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -216,7 +218,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 10,
         marginTop: Constants.statusBarHeight,
@@ -225,13 +227,13 @@ const styles = StyleSheet.create({
     secondHeader: {
         color: '#989898',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         marginLeft: 10,
         paddingBottom: 10
     },
     titleText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
     },
     deviceContainer: {
         flexDirection: 'row',
@@ -253,29 +255,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     lowButton: {
-        height: 40,
-        width: 40,
+        height: s(35),
+        width: s(35),
         justifyContent: 'center',
         backgroundColor: '#d6dbe0',
         borderRadius: 10,
         alignItems: 'center'
     },
     highButton: {
-        height: 40,
-        width: 40,
+        height: s(35),
+        width: s(35),
         justifyContent: 'center',
         backgroundColor: '#f18640',
         borderRadius: 10,
         alignItems: 'center'
     },
     lowText: {
-        fontSize: 24,
+        fontSize: 22,
         color: 'white'
     },
     lowNum: {
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: 'Tahoma-Regular',
-        marginHorizontal: 18
+        marginHorizontal: ms(15)
     },
     horContainer: {
         paddingHorizontal: 5,
@@ -299,18 +301,19 @@ const styles = StyleSheet.create({
         paddingVertical: 25,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center'
     },
     infoContainer: {
-        width: '30%'
+        width: '35%'
     },
     priceText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold'
     },
     priceSecond: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         color: '#989898',
     },
     buttonContainer: {
@@ -323,7 +326,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: '#e5e6e7',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 14,
         width: '70%',
         borderRadius: 10
     },
@@ -337,7 +340,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-        fontSize: 16, 
+        fontSize: 14, 
         fontWeight: 'bold',
 		color: 'white'
     },
@@ -350,7 +353,7 @@ const styles = StyleSheet.create({
     emptyText: {
         color: '#898b8e',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 20,
+        fontSize: 18,
         paddingTop: 30
     }
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Modal, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
+import Constants from 'expo-constants';
 import x from '../files/x.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
@@ -88,7 +89,8 @@ const styles = StyleSheet.create({
     },
     backContainer: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)'
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingTop: Constants.statusBarHeight
     },
     header: {
         flexDirection: 'row',

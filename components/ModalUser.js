@@ -34,30 +34,32 @@ export default function ModalUser({visible, onExit}) {
         <Modal transparent={true} visible={visible} animationType="slide">
             <View style={styles.modalContainer}>
                 <View style={styles.boxContainer}>
-                    <View style={styles.headerContainer}>
-                        <View style={styles.headerCell}></View>
-                        <View style={[styles.headerCell, {flex: 3}]}>
-                            <Text style={styles.header}>Изменение данных</Text>
+                    <View>
+                        <View style={styles.headerContainer}>
+                            <View style={styles.headerCell}></View>
+                            <View style={[styles.headerCell, {flex: 3}]}>
+                                <Text style={styles.header}>Изменение данных</Text>
+                            </View>
+                            <View style={styles.headerCell}>
+                                <TouchableOpacity onPress={onExit}>
+                                    <Image source={cancel} style={{width: s(20), height: vs(20)}} resizeMode='contain' />
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <View style={styles.headerCell}>
-                            <TouchableOpacity onPress={onExit}>
-                                <Image source={cancel} style={{width: s(20), height: vs(20)}} resizeMode='contain' />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View style={{backgroundColor: '#fff', paddingHorizontal: 25}}>
-                        <View style={styles.geoWrap}>
-                            <Text style={styles.inputWrapText}>Имя</Text>
-                            <TextInput value={name} style={styles.phone} onChangeText={(text) => setName(text)} />
-                        </View>
-                        <View style={styles.geoWrap}>
-                            <Text style={styles.inputWrapText}>Номер телефона</Text>
-                            <TextInput value={'+7' + phone} onChangeText={() => {}} maxLength = {12} 
-                            style={styles.phone} keyboardType='phone-pad' />
-                        </View>
-                        <View style={styles.geoWrap}>
-                            <Text style={styles.inputWrapText}>Электронная почта</Text>
-                            <TextInput value={email} style={styles.phone} onChangeText={(text) => setEmail(text)} />
+                        <View style={{backgroundColor: '#fff', paddingHorizontal: 25}}>
+                            <View style={styles.geoWrap}>
+                                <Text style={styles.inputWrapText}>Имя</Text>
+                                <TextInput value={name} style={styles.phone} onChangeText={(text) => setName(text)} />
+                            </View>
+                            <View style={styles.geoWrap}>
+                                <Text style={styles.inputWrapText}>Номер телефона</Text>
+                                <TextInput value={'+7' + phone} onChangeText={() => {}} maxLength = {12} 
+                                style={styles.phone} keyboardType='phone-pad' />
+                            </View>
+                            <View style={styles.geoWrap}>
+                                <Text style={styles.inputWrapText}>Электронная почта</Text>
+                                <TextInput value={email} style={styles.phone} onChangeText={(text) => setEmail(text)} />
+                            </View>
                         </View>
                     </View>
                     <View style={{paddingHorizontal: 25}}>
@@ -78,7 +80,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-between',
         width: '100%',
         paddingTop: 50
     },
@@ -89,6 +90,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         overflow: 'hidden',
         backgroundColor: '#fff',
+        justifyContent: 'space-between',
     },
     headerContainer: {
         flexDirection: 'row',
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#f2f3f5",
         marginTop: 10,
         borderRadius: 7,
-        marginBottom: 20
+        marginBottom: 10
     },
     inputWrap: {
 		padding: 5,
@@ -132,7 +134,8 @@ const styles = StyleSheet.create({
     },
     geoButton: {
 		backgroundColor: '#f08741',
-		paddingVertical: 20,
+        paddingVertical: 20,
+        marginBottom: 15,
 		marginHorizontal: 5,
 		borderRadius: 15,
 		width: '100%',

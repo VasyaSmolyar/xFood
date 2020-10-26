@@ -5,6 +5,7 @@ import sec from '../files/sec.png';
 import tele from '../files/tele.png';
 import chat from '../files/chat.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+import ScalableText from 'react-native-text';
 
 
 const caseStage = (slug) => {
@@ -31,11 +32,11 @@ const caseStage = (slug) => {
 function OrderItem({item, num}) {
     return (
         <View style={styles.productItem}>
-            <Image source={{uri: item.image_url}} style={{ width: s(100), height: vs(100) }} resizeMode='center' />
-            <View style={{marginLeft: 15, justifyContent: 'flex-start'}}>
+            <Image source={{uri: item.image_url}} style={{ width: s(60), height: vs(60), borderRadius: 20 }} resizeMode='center' />
+            <View style={{marginLeft: 15}}>
                 <Text style={styles.productText} numberOfLines={1}>{num} x {item.title}</Text>
                 <View style={styles.priceContainer}>
-                    <Text style={styles.priceText}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
+                    <ScalableText style={styles.priceText}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</ScalableText>
                 </View>
             </View>
         </View>
@@ -91,10 +92,10 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
                     <ScrollView style={{backgroundColor: '#fff'}}>
                         {stage}
                         <View style={styles.productContainer}>
-                            <Text style={styles.restaurant}>{item.products[0].product.restaurant}</Text>
+                            <Text style={styles.restaurant}>{item.products.length !== 0 ? item.products[0].product.restaurant : ''}</Text>
                             {data}
                         </View>
-                        <View style={[styles.productContainer, {borderBottomWidth: 0}]}>
+                        <View style={[styles.productContainer, {borderBottomWidth: 0, paddingTop: 0}]}>
                             <Text style={[styles.restaurant, {marginBottom: 10}]}>Помощь</Text>
                             <Text style={styles.answerText}>Ответим в течение 20 минут</Text>
                             <TouchableOpacity style={styles.phoneButton} onPress={onChat}>
@@ -198,7 +199,8 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     productItem: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        marginBottom: ms(20)
     },
     productTitle: {
         fontFamily: 'Tahoma-Regular', 
@@ -210,15 +212,15 @@ const styles = StyleSheet.create({
         paddingBottom: 15
     },
     priceContainer: {
-        paddingHorizontal: 17,
         paddingVertical: 5,
         backgroundColor: '#000',
-        justifyContent: 'center',
-        borderRadius: 20
+        borderRadius: 20,
+        width: s(70),
+        alignItems: 'center'
     },
     priceText: {
         fontFamily: 'Tahoma-Regular', 
-        fontSize: 16,
+        fontSize: 15,
         color: '#fff'
     },
     answerText: {

@@ -71,7 +71,7 @@ export default function CabinetScreen({navigation}) {
                             <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
                         </View>
                     </View>
-                    <View style={{paddingLeft: 30,alignItems: 'center', justifyContent: 'space-around'}}>
+                    <View style={{paddingLeft: 30, justifyContent: 'space-around'}}>
                         <View>
                             <View style={{flexDirection: 'row', alignItems: 'center'}}>
                                 <Text style={styles.nameText}>{name}</Text>

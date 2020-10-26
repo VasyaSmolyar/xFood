@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView } from 'react-native';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
-import oback from './files/oback.png';
+import back from './files/blackArrow.png';
 import slogo from './files/slogo.png';
 import write from './files/write.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
@@ -51,12 +51,12 @@ export default function ChatScreen({navigation}) {
     });
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={oback} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
+                        <Image source={back} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.barCell}>
@@ -74,10 +74,10 @@ export default function ChatScreen({navigation}) {
                 <TextInput style={styles.mesText} placeholder='Сообщение...' multiline={true} 
                 value={value} onChangeText={(scalabletext) => setValue(scalabletext)} />
                 <TouchableOpacity onPress={onSend}>
-                    <Image source={write} style={{width: s(40), height: vs(40)}} resizeMode='contain' />
+                    <Image source={write} style={{width: s(30), height: vs(30)}} resizeMode='contain' />
                 </TouchableOpacity>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 

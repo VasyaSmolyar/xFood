@@ -50,8 +50,8 @@ export default function ModalStatus() {
     return (
         <View style={styles.backContainer}>
             <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('OrderList', {order: order})}>
-                <ScalableText style={styles.statusText}>{caseStage(order.status)}</ScalableText>
-                <ScalableText style={styles.timeText}>Доставим в {order.delivery_time}</ScalableText>
+                <ScalableText style={styles.statusText}>{caseStage(order.status_ru)}</ScalableText>
+                <ScalableText style={styles.timeText}>{order.delivery_time !== null ? 'Доставим в ' + order.delivery_time : ' '}</ScalableText>
             </TouchableOpacity>
         </View>
     );
@@ -65,8 +65,6 @@ const styles = StyleSheet.create({
         paddingVertical: ms(15),
         borderRadius: 15,
         backgroundColor: '#323131',
-        borderBottomWidth: 3,
-        borderBottomColor: '#fff'
     },
     backContainer: {
         position: 'absolute',
