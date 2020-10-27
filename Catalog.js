@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'rea
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+import ScalableText from 'react-native-text';
 import send from './utils/net'
 import { readLocate, writeLocate } from './utils/locate';
 import NavigationBar from './components/NavigationBar';
@@ -12,7 +13,8 @@ import SearchBar from './components/SearchBar';
 import price from './files/price.png';
 import star from './files/star.png';
 import timer from './files/timer.png';
-import { set } from 'react-native-reanimated';
+import noloc from './files/noloc.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 function Category(props) {
     const navigation = useNavigation();
@@ -109,6 +111,20 @@ export default function RestaurantScreen({navigation}) {
     
     const status = !found ? <ModalStatus /> : null;
 
+    if(data.length === 0) {
+        return (
+            <View style={styles.container}>
+                <StatusBar style="dark" />
+                <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
+                <View style={styles.emptyContainer}>
+                    <Image source={noloc} style={{width: s(70), height: s(70)}} resizeMode='contain' />
+                    <ScalableText style={styles.emptyText}>Пока что в вашем городе нет партнёров xFood</ScalableText>
+                </View>
+                <NavigationBar navigation={navigation} routeName="Catalog"/>
+            </View>
+        )
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
@@ -183,4 +199,18 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         paddingVertical: 10
     },
+    emptyContainer: {
+        flex: 1,
+        backgroundColor: "#fff",
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyText: {
+        color: '#898b8e',
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 14,
+        width: s(170),
+        paddingTop: 30,
+        textAlign: 'center'
+    }
 });
