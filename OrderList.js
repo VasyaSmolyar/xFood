@@ -25,15 +25,15 @@ function OrderItem({item, num}) {
 
 function Order({item, onChoice}) {
     const getColor = (str) => {
-        const status = str.trim().toLowerCase();
+        const status = str.trim().toUpperCase();
         switch(status) {
-            case "ищем курьера":
+            case "FINDING":
                 return '#00c761'
-            case "в пути":
+            case "PERFORMING":
                 return '#fc9e15'
-            case "доставлено":
+            case "DONE":
                 return '#bec2c7'
-            case "отменён":
+            case "CANCELED":
                 return '#ee361d'
             default:
                 return '#bec2c7'
@@ -68,15 +68,12 @@ function Order({item, onChoice}) {
                     </View>
                 </View>
             </View>
-            <ScrollView>
+            <ScrollView style={{paddingBottom: 5}}>
                 {data}
             </ScrollView>
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.orderButton} onPress={() => onChoice(item)}>
                     <Text style={styles.buttonText}>Подробнее</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.repeatButton}>
-                    <Image source={repeat} style={{width: 25, height: 25}} />
                 </TouchableOpacity>
             </View>
         </View>
@@ -206,7 +203,7 @@ const styles = StyleSheet.create({
     },
     orderButton: {
         borderRadius: 5,
-        width: '80%',
+        width: '100%',
         alignItems: "center",
         backgroundColor: '#f08741',
         paddingVertical: 10,
@@ -228,7 +225,7 @@ const styles = StyleSheet.create({
     productString: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingBottom: 20
+        paddingBottom: 5
     },
     productText: {
         fontFamily: 'Tahoma-Regular',

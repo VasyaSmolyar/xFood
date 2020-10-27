@@ -121,7 +121,7 @@ export default function PaymentScreen({navigation}) {
         const tmp = loc.name.split(", ");
         console.log(tmp);
         const name = tmp.length > 1 ? tmp[1] : loc.name;
-        setHouse(name);
+        setHouse(name.replace(/[^\d]/g, ''));
         if(loc.street === null) {
             setStreet(loc.name);
             setStreetName("");
@@ -199,9 +199,13 @@ export default function PaymentScreen({navigation}) {
                             <Text style={styles.inputWrapText}>Город</Text>
                             <TextInput value={region} style={styles.phone} onFocus={() => {setModal(true)}} />
                         </View>
-                        <View style={[styles.geoWrap, {width: '52%'}]}>
-                            <Text style={styles.inputWrapText}>Улица, дом</Text>
-                            <TextInput value={street} style={styles.phone} />
+                        <View style={[styles.geoWrap, {width: '32%'}]}>
+                            <Text style={styles.inputWrapText}>Улица</Text>
+                            <TextInput value={streetName} style={styles.phone} onChangeText={setStreetName} />
+                        </View>
+                        <View style={[styles.geoWrap, {width: '22%'}]}>
+                            <Text style={styles.inputWrapText}>Дом</Text>
+                            <TextInput value={house} style={styles.phone} onChangeText={setHouse} />
                         </View>
                     </View>
                     <View style={styles.geoContainer}>

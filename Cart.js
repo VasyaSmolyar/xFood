@@ -20,6 +20,7 @@ export default function CartScreen({navigation}) {
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
     const [cartCode, setCartCode] = useState(code.code);
+    const [available, setAvailable] = useState(false);
 
     const update = (scalabletext) => {
         send('api/cart/getcart', 'POST', {coupon: scalabletext}, (json) => {
@@ -31,6 +32,7 @@ export default function CartScreen({navigation}) {
             });
             loadCart(cart);
             setAddons(json.adviced);
+            setAvailable(json.order_available);
             setWares(json.tablewares);
             setOther(json);
         }, token);
@@ -44,6 +46,7 @@ export default function CartScreen({navigation}) {
         addItem(item, () => {
             send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
                 setOther(json);
+                setAvailable(json.order_available);
             }, token);
         });
     }
@@ -52,6 +55,7 @@ export default function CartScreen({navigation}) {
         removeItem(item, () => {
             send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
                 setOther(json);
+                setAvailable(json.order_available);
             }, token);
         });
     }
@@ -150,13 +154,26 @@ export default function CartScreen({navigation}) {
         update(scalabletext);
     }
 
+    const orderBlock = !available ? (
+        <View style={{paddingTop: 15}}>
+            <ScalableText style={styles.bad}>{other.message}</ScalableText>
+            <TouchableOpacity style={[styles.phoneButton, {backgroundColor: '#bec2c7'}]}>
+                <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
+            </TouchableOpacity>
+        </View>
+    ) : (
+        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
+            <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
+        </TouchableOpacity>
+    );
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
             <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
                         <ScalableText style={styles.header}>Корзина</ScalableText>
-                        <ScalableText style={styles.secondHeader}>Макдональдс</ScalableText>
+                        <ScalableText style={styles.secondHeader}>{cart[0].item.restaurant}</ScalableText>
                     </View>
                 </View>
             <ScrollView style={{height: '100%'}}>
@@ -192,10 +209,8 @@ export default function CartScreen({navigation}) {
                 </ScrollView>
                 <View style={{paddingHorizontal: 25}}>
                     <View style={{paddingVertical: 20}}>
-                        <ScalableText style={styles.titleText}>Общая стоимость: {other.delivery_cost ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
-                        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
-                            <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
-                        </TouchableOpacity>
+                        <ScalableText style={styles.titleText}>Общая стоимость: {other.summ ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
+                        {orderBlock}
                     </View>
                 </View>
             </ScrollView>
@@ -272,7 +287,7 @@ const styles = StyleSheet.create({
     },
     lowText: {
         fontSize: 22,
-        color: 'white'
+        color: '#fff'
     },
     lowNum: {
         fontSize: 18,
@@ -355,5 +370,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
         fontSize: 18,
         paddingTop: 30
+    },
+    bad: {
+        color: '#888',
+        fontSize: 14,
     }
 });
