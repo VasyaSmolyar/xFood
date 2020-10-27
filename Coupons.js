@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import send from './utils/net';
 import ModalCoupon from './components/ModalCoupon';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCode } from './utils/store';
 import { StatusBar } from 'expo-status-bar';
+import arrow from './files/blackArrow.png';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 function Coupon({item, onPress}) {
     return (
@@ -54,7 +56,14 @@ export default function CouponScreen({navigation}) {
             <StatusBar style="dark" />
             <ModalCoupon visible={modal} item={chosen} onClose={load}/>
             <View style={styles.barContainer}>
-                <Text style={styles.barText}>Купоны</Text>
+                <View style={styles.barCell}>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={arrow} style={{width: s(35), height: vs(18)}} resizeMode='contain' />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.barCell}>
+                    <Text style={styles.barText}>Купоны</Text>
+                </View>
             </View>
             <ScrollView>
                 {data}
@@ -71,18 +80,23 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     barContainer: {
-        width: '100%',
+        backgroundColor: '#fff',
         padding: 5,
-        paddingLeft: 30,
+        paddingLeft: 25,
         paddingTop: Constants.statusBarHeight,
-        borderBottomColor: '#ede9e9',
-        borderBottomWidth: 1
+        flexDirection: 'row',
+        borderBottomColor: '#f2f3f5',
+        borderBottomWidth: 3
+    },
+    barCell: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginRight: 30
     },
     barText: {
         fontWeight: "bold",
         fontSize: 20,
-        marginTop: 20,
-        marginBottom: 15
+        marginVertical: 20
     },
     couponView: {
         padding: 15,

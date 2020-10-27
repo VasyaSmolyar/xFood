@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableWithoutFeedback, Image, ScrollView, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
@@ -7,6 +7,7 @@ import useCart from './utils/cartHook';
 import NavigationBar from './components/NavigationBar';
 import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
+import ModalCart from './components/ModalCart';
 import { Carousel } from './components/Carousel/index';
 import Item from './components/Item';
 
@@ -17,6 +18,7 @@ export default function MainScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [chosen, setChosen] = useState(null);
     const [visible, setVisible] = useState(false);
+    const [reset, setReset] = useState(false);
     const {cart, addItem, removeItem, loadCart} = useCart([], token);
 
     useEffect(() => {
@@ -57,9 +59,24 @@ export default function MainScreen({navigation}) {
     }, []);
 
     const addToCart = (item) => {
-        addItem(item);
+        send('api/cart/check', 'POST', {resturant_id: item.restaurant_id}, (ret) => {
+            if(ret[2] === false) {
+                setChosen(item);
+                setReset(true);
+                return;
+            }
+            setVisible(false);
+            setReset(false);
+            addItem(item);
+            send('api/cart/getcart', 'POST', {}, setCart, token);
+        }, token);
+    }
+
+    const onReset = (item) => {
         setVisible(false);
-        send('api/cart/addtocart', 'POST', {"product.id": item.id, num: 1}, () => {}, token);
+        setReset(false);
+        addItem(item);
+        send('api/cart/getcart', 'POST', {}, setCart, token);
     }
 
     const seacrhMethod = () => {
@@ -67,17 +84,30 @@ export default function MainScreen({navigation}) {
     }
 
     const sectors = Object.keys(sections).map((key) => {
+        /*
         const items = sections[key].map((item, index) => {
-            return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
-            showItem={choiceItem} length={sections.length} index={index} />;
+            return (
+                <View style={{width: '40%'}}>
+                    <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
+                    showItem={choiceItem} length={sections[key].length} index={index} />
+                </View>
+            );
         });
+        */
 
         return (
-            <View key={key} >
+            <View key={key}>
                 <Text style={styles.header}>{key}</Text>
-                <View style={styles.flat}>
-                {items}
-                </View>
+                <FlatList onEndReachedThreshold={0.1}
+                    numColumns={2} columnWrapperStyle={styles.oneRow}
+                    keyExtractor={(item, index) => index.toString()} 
+                    data={sections[key].length % 2 === 1 ? [...sections[key], {empty: true}, {empty: true}, {empty: true}] : [...sections[key], {empty: true}, {empty: true}]} 
+                    renderItem={
+                    ({ item, index, sep }) => {
+                        return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
+                        showItem={choiceItem} length={sections[key].length} index={index} />;
+                    }
+                }  />
             </View>
         );
     }); 
@@ -86,6 +116,7 @@ export default function MainScreen({navigation}) {
         <View style={styles.container}>
             <StatusBar style="dark" />
             <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} />
+            <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
@@ -155,7 +186,7 @@ const styles = StyleSheet.create({
 		color: 'white'
     }, 
     flat: {
-        flexDirection: 'row'
+        flex: 1
     },
     cartBar: {
         flexDirection: 'row',

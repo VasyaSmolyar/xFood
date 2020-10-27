@@ -15,6 +15,11 @@ import gpay from './files/gpay.png';
 import apay from './files/apay.webp';
 import cardHand from './files/cardHand.png';
 import cardOnline from './files/cardOnline.png';
+
+import google from './files/google.png';
+import buttonCard from './files/buttonCard.png';
+import apple from './files/apple.png';
+
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 const unzip = (slug) => {
@@ -31,6 +36,46 @@ const unzip = (slug) => {
         return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
     }
     return ['', null, ''];
+}
+
+const getButton = (slug, makeOrder) => {
+    if(slug === 'transfer_online') {
+        return (
+            <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
+                <View style={styles.buttonContainer}>
+                    <Image source={buttonCard} style={{width: 25, height: 25, marginRight: 10}} resizeMode='contain' />
+                    <Text style={styles.geoText}>Перейти к оплате</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
+    if(slug === 'online') {
+        if(Platform.OS === 'ios') {
+            return (
+                <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15, backgroundColor: '#000'}]} onPress={makeOrder}>
+                    <View style={styles.buttonContainer}>
+                        <Text style={styles.geoText}>Оплатить с </Text>
+                        <Image source={apple} style={{width: 50, height: 25, marginLeft: 10, marginBottom: -5}} resizeMode='contain' />
+                    </View>
+                </TouchableOpacity>
+            );
+        }
+        return (
+            <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15, backgroundColor: '#000'}]} onPress={makeOrder}>
+                <View style={styles.buttonContainer}>
+                    <Text style={styles.geoText}>Оплатить с </Text>
+                    <Image source={google} style={{width: 50, height: 25, marginLeft: 10, marginBottom: -5}} resizeMode='contain' />
+                </View>
+            </TouchableOpacity>
+        );
+    }
+    return (
+        <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
+            <View style={styles.buttonContainer}>
+                <Text style={styles.geoText}>Заказать</Text>
+            </View>
+        </TouchableOpacity>
+    );
 }
 
 export default function PaymentScreen({navigation}) {
@@ -215,11 +260,7 @@ export default function PaymentScreen({navigation}) {
                         <TextInput value={'+7' + phone} onChangeText={(text) => setPhone(text.slice(2))} maxLength = {12} 
                         style={styles.phone} keyboardType='phone-pad' />
                     </View>
-                    <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
-                        <View style={styles.buttonContainer}>
-                            <Text style={styles.geoText}>Оформить заказ</Text>
-                        </View>
-                    </TouchableOpacity>
+                    {getButton(payType, makeOrder)}
                 </View>
                 <View style={{height: 150}}>
                 </View>
@@ -273,7 +314,7 @@ const styles = StyleSheet.create({
 	},
 	inputWrapText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 10,
+		fontSize: 12,
 		color: '#a7aaaf',
     },
     phone: {
@@ -319,7 +360,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     methodLine: {
        flexDirection: 'row',

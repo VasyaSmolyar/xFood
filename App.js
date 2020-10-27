@@ -23,13 +23,9 @@ import AboutScreen from './AboutScreen';
 import ChatScreen from './ChatScreen';
 import Welcome from './Welcome';
 import RegisterScreen from './Register';
+import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 const Stack = createStackNavigator();
-const sample = {
-	birthday: "2000-01-01",
-	first_name: "Иван",
-	last_name: "Петров"
-};
 
 function AuthScreen({navigation}) {
 
@@ -129,11 +125,11 @@ function CodeScreen({navigation}) {
 			</View>
 			<View style={{flex: 4, backgroundColor: 'white', alignItems: 'center', width: '100%'}}>
 			<ScalableText style={styles.header}>Ввод кода</ScalableText>
-				<TextInput value={value} onChangeText={(scalabletext) => setValue(scalabletext)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
-				{err}
-				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
-					<ScalableText style={styles.phoneText}>Отправить код</ScalableText>
-				</TouchableOpacity>
+			<TextInput value={value} onChangeText={(scalabletext) => setValue(scalabletext)} style={[styles.inputWrap, styles.phone, {textAlign: 'center'}]} keyboardType='phone-pad' />
+			{err}
+			<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
+				<ScalableText style={styles.phoneText}>Отправить код</ScalableText>
+			</TouchableOpacity>
 			</View>
 		</View>
 	);
@@ -327,7 +323,7 @@ const styles = StyleSheet.create({
 	},
 	inputWrapText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 10,
+		fontSize: 12,
 		color: '#a7aaaf',
 		textAlignVertical: 'center'
 	},

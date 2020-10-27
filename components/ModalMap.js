@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
 	},
 	inputWrapText: {
 		fontFamily: 'Tahoma-Regular', 
-		fontSize: 10,
+		fontSize: 12,
         color: '#a7aaaf',
         fontWeight: "700" 
     },

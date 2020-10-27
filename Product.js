@@ -148,10 +148,10 @@ export default function ProductScreen({navigation}) {
                 <ScalableText style={styles.toolText}>Проверено xFood</ScalableText>
             </View>
             <View style={styles.tool}>
-                <ScalableText style={styles.toolText}>{getDeliv(other.min_less_cost, other.odd)}</ScalableText>
+                <ScalableText style={styles.toolText}>{getDeliv(other.min_odd, other.odd)}</ScalableText>
             </View>
             <View style={styles.tool}>
-                <ScalableText style={styles.toolText}>{getMoney(other.min_less_summ)}</ScalableText>
+                <ScalableText style={styles.toolText}>{getMoney(other.min_summ)}</ScalableText>
             </View>
         </View>
     ) : null;

@@ -46,7 +46,7 @@ function Category(props) {
                 </View>
                 <View style={styles.catAppend}>
                     <Image style={styles.catIcon} source={price} resizeMode='contain'></Image>
-                    <Text style={styles.catLabel}>{getMoney(cat.min_less_summ)}</Text>
+                    <Text style={styles.catLabel}>{getMoney(cat.min_summ)}</Text>
                 </View>
             </View>
         </TouchableOpacity>
