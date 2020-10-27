@@ -12,7 +12,7 @@ import x from '../files/x.png';
 const screenWidth = Math.round((Dimensions.get('window').width - 40) / 2);
 const screenHeight = Math.round((Dimensions.get('window').height - 160) / 2);
 
-export default function ModalList(props) {
+export default function ModalList({locate, visible}) {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -29,6 +29,7 @@ export default function ModalList(props) {
         longitudeDelta: 1 
     });
     const [block, setBlock] = useState(false);
+    const [name, setName] = useState('');
     const [avaiable, setAvailable] = useState(false);
     const token = useSelector(state => state.token);
 
@@ -45,11 +46,7 @@ export default function ModalList(props) {
         })().then((res) => {
             setLocation(res);
             const addr = {lat: reg.latitude, lon: reg.longitude};
-            send('api/area/check', 'POST', addr, (json) => {
-                if(json === true) {
-                    setAvailable(true);
-                }
-            }, token);
+           
         });
     }
 
@@ -62,6 +59,7 @@ export default function ModalList(props) {
     }
 
     const serialize = () => {
+        /*
         if(errorMsg !== null) {
             return <Text style={{color: 'red'}}>{errorMsg}</Text>;
         }
@@ -69,15 +67,21 @@ export default function ModalList(props) {
             return '';
         }
         const loc = location[0];
-        const arr = [loc.street, loc.name];
-        return arr.join(', ');
+        return loc.city;
+        {lat: reg.latitude, lon: reg.longitude}
+        */
+        send('api/area/get', 'POST', find, (res) => {
+            if(res)
+                setName(res[0].area_name);
+        }, token);
+
     }
 
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
+                //setErrorMsg('Permission to access location was denied');
             }
 
             let location = await Location.getCurrentPositionAsync({});
@@ -101,40 +105,32 @@ export default function ModalList(props) {
         })();
     }, []);
 
-    const sbutton = avaiable ? (
-        <TouchableOpacity style={styles.geoButton} onPress={() => props.locate(location, find)}>
-            <Text style={styles.geoText}>Продолжить оформление</Text>
-        </TouchableOpacity>
-    ) : (
-        <TouchableOpacity style={[styles.geoButton, {backgroundColor: '#aaaaaa'}]} onPress={() => {}} activeOpacity={1}>
-            <Text style={styles.geoText}>Доставка невозможна</Text>
-        </TouchableOpacity>
-    );
+    useEffect(() => {
+        serialize();
+    }, [])
 
     return (
-        <Modal visible={props.visible}>
+        <Modal visible={visible}>
             <View style={styles.container}>
                 <View style={{flex: 3}}>
                     <MapView style={{flex: 1}} region={region} 
                     onRegionChange={(reg) => choiceLocate(reg)} showsUserLocation></MapView>
-                        <Image source={place} style={{position: "absolute", width: 40, height: 60, top: screenHeight, left: screenWidth}} resizeMode={'contain'} />
-                        <TouchableOpacity style={{position: "absolute", backgroundColor: '#fff', width: 50, height: 50, alignItems: 'center', 
-                        justifyContent: 'center', borderRadius: 100, margin: 20}} onPress={() => props.close()}>
-                            <Image source={x} style={{width: 20, height: 20}} resizeMode={'contain'} />
-                        </TouchableOpacity>
+                    <Image source={place} style={{position: "absolute", width: 40, height: 60, top: screenHeight, left: screenWidth}} resizeMode={'contain'} />
                 </View>
                 <View style={styles.uiContainer}>
-                    <Text style={styles.header}>Выбор места доставки</Text>
+                    <Text style={styles.header}>Моё местоположение</Text>
                     <View style={styles.pathContainer}>
                         <View style={styles.geoWrap}>
                             <Text style={styles.inputWrapText}>Адрес</Text>
-                            <Text style={styles.phone}>{serialize()}</Text>
+                            <Text style={styles.phone}>{name}</Text>
                         </View>
                         <View style={styles.imageContainer}>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
                         </View>
                     </View>
-                    {sbutton}
+                    <TouchableOpacity style={styles.geoButton} onPress={() => locate(name)}>
+                        <Text style={styles.geoText}>Продолжить</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

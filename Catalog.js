@@ -4,12 +4,15 @@ import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net'
+import { readLocate, writeLocate } from './utils/locate';
 import NavigationBar from './components/NavigationBar';
 import ModalStatus from './components/ModalStatus';
+import ModalFind from './components/ModalFind';
 import SearchBar from './components/SearchBar';
 import price from './files/price.png';
 import star from './files/star.png';
 import timer from './files/timer.png';
+import { set } from 'react-native-reanimated';
 
 function Category(props) {
     const navigation = useNavigation();
@@ -54,12 +57,16 @@ export default function RestaurantScreen({navigation}) {
     const [filtered, setFiltered] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [query, setQuery] = useState("");
+    const [found, setFound] = useState(false);
+    const [city, setCity] = useState("");
 
     const load = (json) => {
         setLoaded(true);
-        const list = json.resturants;
-        setData(list);
-        setFiltered(list);
+        if(json.resturants) {
+            const list = json.resturants;
+            setData(list);
+            setFiltered(list);
+        }
     };
 
     const filter = (value) => {
@@ -72,9 +79,20 @@ export default function RestaurantScreen({navigation}) {
 
     useEffect(() => {
         if(!isLoaded) {
-            send('api/restaurants/get', 'GET', {area_name: "Дмитров"}, load, token);
+            send('api/restaurants/get', 'GET', {area_name: city}, load, token);
         }
     });
+
+    useEffect(() => {
+        readLocate().then((val) => {
+            if(val !== null) {
+                setCity(val);
+            } else {
+                console.log("FOUND");
+                setFound(true);
+            }
+        });
+    }, []);
     
     const restaurants = data.map((item) => {
         return (
@@ -82,10 +100,20 @@ export default function RestaurantScreen({navigation}) {
         );
     });
 
+    const setLocale = (location) => {
+        writeLocate(location);
+        setCity(location);
+        setFound(false);
+        setLoaded(false);
+    }
+    
+    const status = !found ? <ModalStatus /> : null;
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <ModalStatus />            
+            {status}
+            <ModalFind locate={setLocale} visible={found} />            
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
             <View style={{width: '100%', paddingHorizontal: 13}}>
                 <Text style={styles.header}>Рестораны</Text>
