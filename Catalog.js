@@ -96,7 +96,7 @@ export default function RestaurantScreen({navigation}) {
         });
     }, []);
     
-    const restaurants = data.map((item) => {
+    const restaurants = filtered.map((item) => {
         return (
             <Category cat={item} />
         );

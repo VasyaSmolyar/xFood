@@ -32,6 +32,7 @@ export default function ModalList({locate, visible}) {
     const [name, setName] = useState('');
     const [avaiable, setAvailable] = useState(false);
     const token = useSelector(state => state.token);
+    const [start, setStart] = useState(null);
 
     const inProgress = (reg) => {
         setBlock(false);
@@ -81,33 +82,59 @@ export default function ModalList({locate, visible}) {
         (async () => {
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
-                //setErrorMsg('Permission to access location was denied');
+                setErrorMsg('Permission to access location was denied');
+            } else {
+                let location = await Location.getCurrentPositionAsync({});
+
+                let result = await Location.reverseGeocodeAsync(location.coords);
+                setLocation(result);
+
+                setRegion({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
+
+                setFind({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
+
+                setStart({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
             }
-
-            let location = await Location.getCurrentPositionAsync({});
-
-            let result = await Location.reverseGeocodeAsync(location.coords);
-            setLocation(result);
-
-            setRegion({ 
-                latitude: location.coords.latitude, 
-                longitude: location.coords.longitude, 
-                latitudeDelta: 0.0022, 
-                longitudeDelta: 0.0021 
-            });
-
-            setFind({ 
-                latitude: location.coords.latitude, 
-                longitude: location.coords.longitude, 
-                latitudeDelta: 0.0022, 
-                longitudeDelta: 0.0021 
-            });
         })();
     }, []);
 
     useEffect(() => {
         serialize();
-    }, [])
+    }, []);
+
+    const setLocale = () => {
+        setRegion(start);
+        setFind(start);
+    }
+
+    const getPlace = () => {
+        if(start === null) {
+            Location.requestPermissionsAsync().then(({status}) => {
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                } else {
+                    setLocale();
+                }
+            }); 
+        } else {
+            setLocale();
+        }
+    }
 
     return (
         <Modal visible={visible}>
@@ -124,9 +151,9 @@ export default function ModalList({locate, visible}) {
                             <Text style={styles.inputWrapText}>Адрес</Text>
                             <Text style={styles.phone}>{name}</Text>
                         </View>
-                        <View style={styles.imageContainer}>
+                        <TouchableOpacity style={styles.imageContainer} onPress={getPlace}>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={styles.geoButton} onPress={() => locate(name)}>
                         <Text style={styles.geoText}>Продолжить</Text>

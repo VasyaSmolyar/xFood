@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import * as Linking from 'expo-linking';
 import cancel from '../files/xorder.png';
 import sec from '../files/sec.png';
 import tele from '../files/tele.png';
@@ -46,8 +47,8 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
             </View>
             <Text style={styles.timeHours}>{item.delivery_time}</Text>
             <Text style={styles.timeText}>Примерное время доставки</Text>
-            <TouchableOpacity style={styles.phoneButton}>
-                <Image source={tele} style={{width: 30, height: 30}} resizeMode='contain'/>
+            <TouchableOpacity style={styles.phoneButton} onPress={() => Linking.openURL('tel:' + item.courier_phone)}>
+                <Image source={tele} style={{width: 30, height: 30}} resizeMode='contain' />
                 <Text style={styles.phoneText}>Связаться с курьером</Text>
             </TouchableOpacity>
         </View>
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     statusContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
+        alignItems: 'center',
         paddingBottom: 30
     },
     statusText: {

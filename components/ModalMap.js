@@ -12,7 +12,7 @@ import x from '../files/x.png';
 const screenWidth = Math.round((Dimensions.get('window').width - 40) / 2);
 const screenHeight = Math.round((Dimensions.get('window').height - 160) / 2);
 
-export default function ModalList(props) {
+export default function ModalMap(props) {
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
@@ -28,6 +28,7 @@ export default function ModalList(props) {
         latitudeDelta: 1, 
         longitudeDelta: 1 
     });
+    const [start, setStart] = useState(null);
     const [block, setBlock] = useState(false);
     const [avaiable, setAvailable] = useState(false);
     const token = useSelector(state => state.token);
@@ -78,26 +79,33 @@ export default function ModalList(props) {
             let { status } = await Location.requestPermissionsAsync();
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
+            } else {
+                let location = await Location.getCurrentPositionAsync({});
+
+                let result = await Location.reverseGeocodeAsync(location.coords);
+                setLocation(result);
+
+                setRegion({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
+
+                setFind({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
+
+                setStart({ 
+                    latitude: location.coords.latitude, 
+                    longitude: location.coords.longitude, 
+                    latitudeDelta: 0.0022, 
+                    longitudeDelta: 0.0021 
+                });
             }
-
-            let location = await Location.getCurrentPositionAsync({});
-
-            let result = await Location.reverseGeocodeAsync(location.coords);
-            setLocation(result);
-
-            setRegion({ 
-                latitude: location.coords.latitude, 
-                longitude: location.coords.longitude, 
-                latitudeDelta: 0.0022, 
-                longitudeDelta: 0.0021 
-            });
-
-            setFind({ 
-                latitude: location.coords.latitude, 
-                longitude: location.coords.longitude, 
-                latitudeDelta: 0.0022, 
-                longitudeDelta: 0.0021 
-            });
         })();
     }, []);
 
@@ -110,6 +118,25 @@ export default function ModalList(props) {
             <Text style={styles.geoText}>Доставка невозможна</Text>
         </TouchableOpacity>
     );
+
+    const setLocale = () => {
+        setRegion(start);
+        setFind(start);
+    }
+
+    const getPlace = () => {
+        if(start === null) {
+            Location.requestPermissionsAsync().then(({status}) => {
+                if (status !== 'granted') {
+                    setErrorMsg('Permission to access location was denied');
+                } else {
+                    setLocale();
+                }
+            }); 
+        } else {
+            setLocale();
+        }
+    }
 
     return (
         <Modal visible={props.visible}>
@@ -130,9 +157,9 @@ export default function ModalList(props) {
                             <Text style={styles.inputWrapText}>Адрес</Text>
                             <Text style={styles.phone}>{serialize()}</Text>
                         </View>
-                        <View style={styles.imageContainer}>
+                        <TouchableOpacity style={styles.imageContainer} onPress={getPlace}>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     {sbutton}
                 </View>

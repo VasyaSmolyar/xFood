@@ -15,6 +15,7 @@ export default function MainScreen({navigation}) {
     const [query, setQuery] = useState('');
     const [banners, setBanners] = useState([]);
     const [sections, setSections] = useState([]);
+    //const [filtered, setFiltered] = useState([]);
     const token = useSelector(state => state.token);
     const [chosen, setChosen] = useState(null);
     const [visible, setVisible] = useState(false);
@@ -25,6 +26,7 @@ export default function MainScreen({navigation}) {
         send('api/main/get', 'POST', {}, (json) => {
             setBanners(json.banners);
             setSections(json.sections);
+            //setFiltered(json.sections);
         }, token);
     }, []);
 
@@ -38,6 +40,18 @@ export default function MainScreen({navigation}) {
             )
         }
     });
+
+    const filter = (value) => {
+        setQuery(value);
+        /*
+        const list = Object.keys(sections).map((data) => {
+            return sections[data].filter((item) => {
+                return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
+            });
+        })
+        setFiltered(list); 
+        */
+    }
 
     const choiceItem = (item) => {
         setChosen(item);
@@ -78,10 +92,11 @@ export default function MainScreen({navigation}) {
         addItem(item);
         send('api/cart/getcart', 'POST', {}, setCart, token);
     }
-
+    /*
     const seacrhMethod = () => {
         navigation.navigate('Products', {title: "all", query: query});
     }
+    */
 
     const sectors = Object.keys(sections).map((key) => {
         /*
@@ -95,29 +110,33 @@ export default function MainScreen({navigation}) {
         });
         */
 
+        const filtered = sections[key].filter((item) => {
+            return item.title.toLowerCase().search(query.toLowerCase()) !== -1;
+        });
+
         return (
             <View key={key}>
                 <Text style={styles.header}>{key}</Text>
                 <FlatList onEndReachedThreshold={0.1}
                     numColumns={2} columnWrapperStyle={styles.oneRow}
                     keyExtractor={(item, index) => index.toString()} 
-                    data={sections[key].length % 2 === 1 ? [...sections[key], {empty: true}, {empty: true}, {empty: true}] : [...sections[key], {empty: true}, {empty: true}]} 
+                    data={filtered.length % 2 === 1 ? [...filtered, {empty: true}, {empty: true}, {empty: true}] : [...filtered, {empty: true}, {empty: true}]} 
                     renderItem={
                     ({ item, index, sep }) => {
                         return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
-                        showItem={choiceItem} length={sections[key].length} index={index} />;
+                        showItem={choiceItem} length={filtered.length} index={index} />;
                     }
                 }  />
             </View>
         );
-    }); 
+    });
 
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
             <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
-            <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={setQuery} onSubmitEditing={seacrhMethod} />
+            <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={filter} /* onSubmitEditing={seacrhMethod} */ />
             <ScrollView style={{width: '100%'}}>
                 <Carousel style="stats" itemsPerInterval={1} items={banner} />
                 <View style={{marginTop: -25}}>

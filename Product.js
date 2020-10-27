@@ -63,14 +63,17 @@ export default function ProductScreen({navigation}) {
     const filterQuery = (value) => {
         setOffset(0);
         setQuery(value);
+        setLoaded(true);
         //const title = "Все категории" ? "all" : title;
-        let data = {title: value, offset: offset, num: num, search: query};
-        data.subcategory = subs[sub];
-        if (sub == 0) {
-            data.title = "all";
+        const ret = sub === 0 ? "all" : subs[sub];
+        let data = {title: ret, offset: 0, num: num, search: value};
+        if (spec) {
+            data.special_offer = true;
         }
+        data.restaurant_id = route.params.id;
         send('api/catalog/getbycategory', 'GET', data, (json) => {
             if(json.details !== undefined) {
+                setData([]);
                 return;
             }
             setData(json);
@@ -159,7 +162,7 @@ export default function ProductScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <SearchBar placeholder="Поиск по категории" value={query} onChangeScalableText={filterQuery} />
+            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
             <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <ModalStatus />
