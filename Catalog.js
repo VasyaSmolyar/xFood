@@ -115,6 +115,7 @@ export default function RestaurantScreen({navigation}) {
         return (
             <View style={styles.container}>
                 <StatusBar style="dark" />
+                <ModalFind locate={setLocale} visible={found} />   
                 <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
                 <View style={styles.emptyContainer}>
                     <Image source={noloc} style={{width: s(70), height: s(70)}} resizeMode='contain' />

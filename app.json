@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "xBeer",
-    "slug": "xBeer",
+    "name": "xFood",
+    "slug": "xFood",
     "platforms": [
       "ios",
       "android",
@@ -25,7 +25,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.xgamegen.xbeer"
+      "package": "com.xgen.xfood"
     }
   }
 }

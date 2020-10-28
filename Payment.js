@@ -148,7 +148,7 @@ export default function PaymentScreen({navigation}) {
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {
-                navigation.navigate('Cabinet');
+                navigation.navigate('Catalog');
             }
         }, token);
     }
