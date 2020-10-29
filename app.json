@@ -25,7 +25,10 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.xgen.xfood"
+      "package": "com.xgen.xfood",
+      "config": {
+          "googleMaps": { "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM" }   
+      }
     }
   }
 }

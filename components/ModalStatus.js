@@ -15,7 +15,7 @@ export default function ModalStatus() {
     useEffect(() => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
             const orders = json.filter((order) => {
-                return  ['PERFORMING', 'FINDING', 'WAITCOUR'].indexOf(order.status) !== -1;
+                return  [ 'COOKING', 'TORESTAURANT', 'PERFORMING', 'FINDING', 'WAITCOUR', 'WAITREST' ].indexOf(order.status) !== -1;
             });
             if(orders.length !== 0) {
                 setOrder(orders[0]);
