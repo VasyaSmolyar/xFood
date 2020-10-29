@@ -18,6 +18,9 @@ function Index({name, value, free}) {
 export default function ModalItem(props) {
     const { visible, item, onClose, addInCart } = props;
 
+    console.log("ITEM");
+    console.log(item);
+
     if (item === null) {
         return <View></View>
     }
@@ -45,7 +48,7 @@ export default function ModalItem(props) {
                             <Image source={{uri: item.image_url}} resizeMode={'contain'} style={styles.itemImage} />
                         </View>
                         <View style={{paddingHorizontal: 35}}>
-                            <Text style={styles.itemCompany}>{item.restaurant}</Text>
+                            <Text style={styles.itemCompany}>{item.restaurant.title !== undefined ? item.restaurant.title : item.restaurant }</Text>
                             <View style={styles.titleContainer}>
                                 <Text style={styles.itemText}>{item.title}</Text>
                                 <View style={styles.priceContainer}>

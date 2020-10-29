@@ -5,6 +5,7 @@ import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Image } from 'rea
 import send from './utils/net';
 import ModalCoupon from './components/ModalCoupon';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRoute } from '@react-navigation/native';
 import { setCode } from './utils/store';
 import { StatusBar } from 'expo-status-bar';
 import arrow from './files/blackArrow.png';
@@ -14,7 +15,7 @@ function Coupon({item, onPress}) {
     return (
         <View style={styles.couponView}>
             <Text style={styles.couponTime}>Действителен до {item.date_expire}</Text>
-            <Text style={styles.couponTitle}>Скидка на доставку {item.discount_amount}%</Text>
+            <Text style={styles.couponTitle}>{item.title}</Text>
             <Text style={styles.couponDesc}>{item.description}</Text>
             <TouchableOpacity style={styles.couponButton} onPress={onPress}>
                 <Text style={styles.buttonText}>Показать акцию</Text>
@@ -26,10 +27,14 @@ function Coupon({item, onPress}) {
 export default function CouponScreen({navigation}) {
     const token = useSelector(state => state.token);
     const dispath = useDispatch();
+    const route = useRoute();
+    console.log("ROUTE");
+    console.log(route);
+    const coupon = (route.params !== undefined) && (route.params.coupon !== undefined) ? route.params.coupon : null;
 
     const [list, setList] = useState([]);
-    const [modal, setModal] = useState(false);
-    const [chosen, setChosen] = useState(null);
+    const [modal, setModal] = useState(coupon !== null);
+    const [chosen, setChosen] = useState(coupon);
 
     useEffect(() => {
         send('api/coupons/getbyuser', 'POST', {}, (json) => {

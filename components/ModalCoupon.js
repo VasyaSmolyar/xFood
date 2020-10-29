@@ -16,7 +16,7 @@ export default function ModalCoupon({item, visible, onClose}) {
                     <Image source={dollar} style={{width: 70, height: 70, marginBottom: 15}} resizeMode={'contain'}/>
                     <View style={{alignItems: 'center', paddingTop: 15}}>
                         <Text style={styles.codeText}>Купон {item.code}</Text>
-                        <Text style={styles.perText}>Скидка {item.discount_amount}% на доставку</Text>
+                        <Text style={styles.perText}>{item.title}</Text>
                     </View>
                     <TouchableOpacity style={styles.couponButton} onPress={() => onClose(item.code)}>
                         <Text style={styles.buttonText}>Копировать код</Text>

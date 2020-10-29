@@ -52,12 +52,15 @@ export default function ProductScreen({navigation}) {
         if (route.params.query !== undefined) {
             setQuery(route.params.query);
         }
+        setLoaded(false);
     }, []);
     
 
     const upload = () => {
-        setOffset(offset + num);
-        setLoaded(false);
+        if(isLoaded) {
+            setOffset(offset + num);
+            setLoaded(false);
+        }
     }
 
     const filterQuery = (value) => {
@@ -67,11 +70,18 @@ export default function ProductScreen({navigation}) {
         //const title = "Все категории" ? "all" : title;
         const ret = sub === 0 ? "all" : subs[sub];
         let data = {title: ret, offset: 0, num: num, search: value};
+        console.log("FILTER:");
         if (spec) {
             data.special_offer = true;
+            data.title = title;
+            if(data.length === 0 )
+                    data.offset = 0;
+        } else {
+            data.restaurant_id = route.params.id;
         }
-        data.restaurant_id = route.params.id;
         send('api/catalog/getbycategory', 'GET', data, (json) => {
+            console.log("JSON");
+            console.log(json);
             if(json.details !== undefined) {
                 setData([]);
                 return;
@@ -116,11 +126,21 @@ export default function ProductScreen({navigation}) {
         if(!isLoaded) {
             const value = sub === 0 ? "all" : subs[sub];
             let data = {title: value, offset: offset, num: num, search: query};
+            console.log("SPEC");
+            console.log(spec);
             if (spec) {
                 data.special_offer = true;
+                data.title = title;
+                if(data.length === 0 )
+                    data.offset = 0;
+            } else {
+                data.restaurant_id = route.params.id;
             }
-            data.restaurant_id = route.params.id;
+            console.log("DATA");
+            console.log(data);
             send('api/catalog/getbycategory', 'GET', data, load, token);
+        }
+        return () => {
         }
     });
 
@@ -138,7 +158,7 @@ export default function ProductScreen({navigation}) {
         return 'Доставка ' + price + " ₽";
     }
 
-    const about = other !== undefined ? (
+    const about = other !== null ? (
         <View style={styles.toolView}>
             <View style={styles.tool}>
                 <Image style={styles.toolImage} resizeMode={'contain'} source={star}></Image>
@@ -159,20 +179,9 @@ export default function ProductScreen({navigation}) {
         </View>
     ) : null;
 
-    return (
-        <View style={styles.container}>
-            <StatusBar style="dark" />
-            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
-            <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
-            <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
-            <ModalStatus />
-            <View style={{width: '100%', paddingHorizontal: 20}}>
-                <ScalableText style={styles.header}>{title}</ScalableText>
-            </View>
-            <ScrollView>
-            {about}
-            <View style={{flexDirection: 'row', width: '100%'}}>
-                <FlatList data={subs} renderItem={
+    const horizontal = !spec ? (
+        <View style={{flexDirection: 'row', width: '100%'}}>
+            <FlatList data={subs} renderItem={
                     (item) => {
                         const color = sub === item.index ? [styles.subButton, {backgroundColor: '#cccccc'}] : styles.subButton; 
                         return (
@@ -188,8 +197,23 @@ export default function ProductScreen({navigation}) {
                     }
                 } horizontal={true} style={{width: '70%'}}
                 showsHorizontalScrollIndicator={false} />
+        </View>
+    ) : null;
+
+    return (
+        <View style={styles.container}>
+            <StatusBar style="dark" />
+            <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
+            <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
+            <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
+            { /* <ModalStatus /> */ }
+            <View style={{width: '100%', paddingHorizontal: 20}}>
+                <ScalableText style={styles.header}>{title}</ScalableText>
             </View>
-            <FlatList onEndReachedThreshold={0.1}
+            <ScrollView>
+            {about}
+            {horizontal}
+            <FlatList onEndReachedThreshold={0.01}
             numColumns={2} columnWrapperStyle={styles.oneRow}
             onEndReached={upload} keyExtractor={(item, index) => index.toString()} 
             data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 

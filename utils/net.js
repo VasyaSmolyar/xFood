@@ -35,9 +35,9 @@ function send(url, method, data, callback, token={}) {
     })
     .then((text) => {
         //if(text !== null) {
-            console.log("===========SOURCE:=============\n", text);
+            //console.log("===========SOURCE:=============\n", text);
             const json = JSON.parse(text);
-            console.log(json);
+            //console.log(json);
             callback(json);
         //}
     })

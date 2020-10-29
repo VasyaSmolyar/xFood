@@ -34,7 +34,7 @@ export default function MainScreen({navigation}) {
         return {
             value: (
             <TouchableWithoutFeedback style={{borderRadius: 20, overflow: 'hidden'}} pressRetentionOffset={5}
-            onPress={() => {navigation.navigate('Products', {title: "all", banner: banner.code, subs: [] })}}>
+            onPress={() => onBanner(banner)}>
                 <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain', borderRadius: 20, overflow: 'hidden'}} />
             </TouchableWithoutFeedback>
             )
@@ -57,6 +57,18 @@ export default function MainScreen({navigation}) {
         setChosen(item);
         setVisible(true);
     };
+
+    const onBanner = (banner) => {
+        console.log("BANNER");
+        console.log(banner);
+        if(banner.products.length === 1) {
+            choiceItem(banner.products[0]);
+        } else if(banner.coupon) {
+            navigation.replace('Coupon', {coupon: banner.coupon});
+        } else if(banner.products.length > 1) {
+            navigation.replace('Products', {banner: banner.code, subs: [], other: null });
+        }
+    }
 
     const setCart = (json) => {
         const cart = json.items.map(item => {

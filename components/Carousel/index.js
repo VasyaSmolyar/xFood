@@ -57,7 +57,7 @@ export const Carousel = (props) => {
         showsHorizontalScrollIndicator={false}
         onContentSizeChange={(w, h) => init(w)}
         onScroll={data => {
-          setWidth(data.nativeEvent.contentSize.width);
+          setWidth(data.nativeEvent.contentSize.width / 2);
           setInterval(getInterval(data.nativeEvent.contentOffset.x));
         }}
         scrollEventThrottle={200}
