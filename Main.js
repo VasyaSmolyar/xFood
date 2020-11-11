@@ -71,7 +71,7 @@ export default function MainScreen({navigation}) {
     }
 
     const setCart = (json) => {
-        const cart = json.items.map(item => {
+        const cart = json.items[0].map(item => {
             return {
                 item: item.product,
                 num: item.num

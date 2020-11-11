@@ -24,7 +24,7 @@ export default function CartScreen({navigation}) {
 
     const update = (scalabletext) => {
         send('api/cart/getcart', 'POST', {coupon: scalabletext}, (json) => {
-            const cart = json.items.map(item => {
+            const cart = json.items[0].map(item => {
                 return {
                     item: item.product,
                     num: item.num

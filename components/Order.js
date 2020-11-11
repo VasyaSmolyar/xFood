@@ -33,7 +33,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
         return '0000000000000'.substr(size) + num;
     }
 
-    const data = item.products.map((line, id) => {
+    const data = item.products[0].map((line, id) => {
         return (
             <OrderItem key={id} item={line.product} num={line.num} />
         )
@@ -72,7 +72,7 @@ export default function ModalOrder({item, visible, onExit, onChat}) {
                     <ScrollView style={{backgroundColor: '#fff'}}>
                         {stage}
                         <View style={styles.productContainer}>
-                            <Text style={styles.restaurant}>{item.products.length !== 0 ? item.products[0].product.restaurant : ''}</Text>
+                            <Text style={styles.restaurant}>{item.products[0].length !== 0 ? item.products[0][0].product.restaurant : ''}</Text>
                             {data}
                         </View>
                         <View style={[styles.productContainer, {borderBottomWidth: 0, paddingTop: 0}]}>

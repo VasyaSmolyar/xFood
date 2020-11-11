@@ -3,6 +3,7 @@ import background from './files/background.png';
 import logo from './files/logo.png';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import Constants from 'expo-constants';
 
 export default function Welcome({navigation}) {
 
@@ -48,7 +49,8 @@ const styles = StyleSheet.create({
 		flex: 1,
         alignItems: 'center',
 		justifyContent: 'space-around',
-		backgroundColor: 'white'
+        backgroundColor: 'white',
+        paddingTop: Constants.statusBarHeight
     },
     opac: {
 		position: 'absolute',
@@ -60,6 +62,7 @@ const styles = StyleSheet.create({
     },
     first: {
         flex: 1,
+        paddingTop: 10,
         padding: 25,
         width: '100%',
         alignItems: 'flex-start'

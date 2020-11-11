@@ -56,7 +56,6 @@ function Category(props) {
 export default function RestaurantScreen({navigation}) {
     const token = useSelector(state => state.token);
     const [data, setData] = useState([]);
-    const [filtered, setFiltered] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [query, setQuery] = useState("");
     const [found, setFound] = useState(false);
@@ -64,19 +63,13 @@ export default function RestaurantScreen({navigation}) {
 
     const load = (json) => {
         setLoaded(true);
-        if(json.resturants) {
-            const list = json.resturants;
-            setData(list);
-            setFiltered(list);
+        if(json.details === undefined) {
+            setData(json);
         }
     };
 
     const filter = (value) => {
         setQuery(value);
-        const list = data.filter((item) => {
-            return item.title.toLowerCase().search(value.toLowerCase()) !== -1;
-        });
-        setFiltered(list);    
     }
 
     useEffect(() => {
@@ -87,6 +80,7 @@ export default function RestaurantScreen({navigation}) {
 
     useEffect(() => {
         readLocate().then((val) => {
+            console.log(val);
             if(val) {
                 setCity(val);
             } else {
@@ -95,12 +89,6 @@ export default function RestaurantScreen({navigation}) {
             }
         });
     }, []);
-    
-    const restaurants = filtered.map((item) => {
-        return (
-            <Category cat={item} />
-        );
-    });
 
     const setLocale = (location) => {
         writeLocate(location);
@@ -126,15 +114,33 @@ export default function RestaurantScreen({navigation}) {
         )
     }
 
+    const restaurants = Object.keys(data).map((key) => {
+        
+        const filtered = data[key].filter((item) => {
+            return item.title.toLowerCase().search(query.toLowerCase()) !== -1;
+        });
+
+        const items = filtered.map((item) => {
+            return (
+                <Category cat={item} />
+            );
+        });
+
+        return (
+            <View>
+                <Text style={styles.header}>{key}</Text>
+                {items}
+            </View>
+        );
+
+    });
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
             {status}
             <ModalFind locate={setLocale} visible={found} />            
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
-            <View style={{width: '100%', paddingHorizontal: 13}}>
-                <Text style={styles.header}>Рестораны</Text>
-            </View>
             <ScrollView style={{width: '90%'}}>
                 {restaurants}
             </ScrollView>

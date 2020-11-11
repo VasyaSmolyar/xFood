@@ -45,7 +45,7 @@ function Order({item, onChoice}) {
         return '0000000000000'.substr(size) + num;
     }
 
-    const data = item.products.map((line, id) => {
+    const data = item.products[0].map((line, id) => {
         return (
             <OrderItem key={id} item={line.product} num={line.num} />
         )
