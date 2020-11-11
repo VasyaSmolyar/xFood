@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity, TextInput, Keyboard} f
 import cancel from './files/xorder.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, CommonActions } from '@react-navigation/native';
 import send from './utils/net';
 import { writeToken } from './utils/token';
 import { setToken, setUser } from './utils/store';
@@ -25,7 +25,14 @@ export default function RegisterScreen({navigation}) {
 	const navigate = (json) => {
         dispath(setToken(json.login, json.times, json.token));
 		dispath(setUser(name, phone));
-		navigation.navigate('Catalog');
+		navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: 'Catalog' },
+                ],
+            })
+        );
 	};
 
 	const press = (text) => {

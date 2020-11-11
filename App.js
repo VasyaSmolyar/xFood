@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavigationContainer, useRoute} from '@react-navigation/native';
+import { NavigationContainer, useRoute, CommonActions} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput } from 'react-native';
 import ScalableText from 'react-native-text';
@@ -31,19 +31,28 @@ function AuthScreen({navigation}) {
 
 	const dispath = useDispatch();
 
-	useEffect(async () => {
-		const myToken = await readToken();
-		console.log(myToken);
-		send('api/user/get', 'POST', {}, (json) => {
-			if(json.detail !== undefined) {
-				return;
-			}
-			dispath(setUser(json.first_name, json.phone));
-			send('api/user/reauth', 'POST', {}, (res) => {
-				dispath(setToken(res.login, res.times, res.token));
-				navigation.navigate('Catalog');
+	useEffect(() => {
+		readToken().then((myToken) => {
+			console.log(myToken);
+			send('api/user/get', 'POST', {}, (json) => {
+				if(json.detail !== undefined) {
+					return;
+				}
+				dispath(setUser(json.first_name, json.phone));
+				send('api/user/reauth', 'POST', {}, (res) => {
+					dispath(setToken(res.login, res.times, res.token));
+					//const resetAction = ...StackActions.replace('Profile'
+					navigation.dispatch(
+						CommonActions.reset({
+							index: 1,
+							routes: [
+								{ name: 'Catalog' },
+							],
+						})
+					);
+				}, myToken);
 			}, myToken);
-		}, myToken);
+		});
 	}, []);
 
 	return (
@@ -102,7 +111,14 @@ function CodeScreen({navigation}) {
 							return;
 						}
 						dispath(setUser(json.first_name, json.phone));
-						navigation.navigate('Catalog');
+						navigation.dispatch(
+							CommonActions.reset({
+								index: 1,
+								routes: [
+									{ name: 'Catalog' },
+								],
+							})
+						);
 					}, myToken);
 				});
 			} else {
