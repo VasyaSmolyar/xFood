@@ -31,7 +31,7 @@ export default function ModalItem(props) {
         </TouchableOpacity>
     ) : (
         <TouchableOpacity style={[styles.phoneButton, { backgroundColor: '#aaaaaa'}]} onPress={() => {}}>
-            <Text style={styles.phoneText}>Добавить в корзину</Text>
+            <Text style={styles.phoneText}>Закончилось</Text>
         </TouchableOpacity>
     );
 

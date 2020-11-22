@@ -9,7 +9,7 @@ function Create({item, addToCart}) {
     if(!item.activated) {
         return (
             <TouchableOpacity style={[styles.phoneButton, { backgroundColor: '#aaaaaa'}]} onPress={() => {}}>
-                <ScalableText style={styles.phoneText}>Добавить</ScalableText>
+                <ScalableText style={styles.phoneText}>Закончилось</ScalableText>
             </TouchableOpacity>
         );
     }
