@@ -14,7 +14,17 @@ import price from './files/price.png';
 import star from './files/star.png';
 import timer from './files/timer.png';
 import noloc from './files/noloc.png';
+import pen from './files/pen.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+
+function Place({addr, setPlace}) {
+    return (
+        <TouchableOpacity style={styles.placeContainer} onPress={setPlace}>
+            <Text style={styles.placeText}>{addr}</Text>
+            <Image source={pen} style={{width: 20, height: 20}} resizeMode='contain' />
+        </TouchableOpacity>
+    );
+}
 
 function Category(props) {
     const navigation = useNavigation();
@@ -105,6 +115,7 @@ export default function RestaurantScreen({navigation}) {
                 <StatusBar style="dark" />
                 <ModalFind locate={setLocale} visible={found} />   
                 <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
+                <Place addr={city} setPlace={() => setFound(true)}/>
                 <View style={styles.emptyContainer}>
                     <Image source={noloc} style={{width: s(70), height: s(70)}} resizeMode='contain' />
                     <ScalableText style={styles.emptyText}>Пока что в вашем городе нет партнёров xFood</ScalableText>
@@ -141,6 +152,7 @@ export default function RestaurantScreen({navigation}) {
             {status}
             <ModalFind locate={setLocale} visible={found} />            
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
+            <Place addr={city} setPlace={() => setFound(true)}/>
             <ScrollView style={{width: '90%'}}>
                 {restaurants}
             </ScrollView>
@@ -219,5 +231,19 @@ const styles = StyleSheet.create({
         width: s(170),
         paddingTop: 30,
         textAlign: 'center'
+    },
+    placeContainer: {
+        flexDirection: 'row',
+        width: '90%',
+        justifyContent: 'space-between',
+        paddingBottom: 15,
+        marginBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#e5e4e4'
+    },
+    placeText: {
+        color: '#a1a1a1',
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 14,
     }
 });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer, useRoute, CommonActions} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput, Text } from 'react-native';
 import ScalableText from 'react-native-text';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch } from 'react-redux';
@@ -22,6 +22,8 @@ import MainScreen from './Main';
 import AboutScreen from './AboutScreen';
 import ChatScreen from './ChatScreen';
 import Welcome from './Welcome';
+import * as Linking from 'expo-linking';
+import Pay from './components/Pay';
 import RegisterScreen from './Register';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
@@ -84,6 +86,9 @@ function PhoneScreen({navigation}) {
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<ScalableText style={styles.phoneText}>Отправить код</ScalableText >
 				</TouchableOpacity>
+				<View style={{width: '75%', marginTop: 20}}>
+					<Text style={styles.policeText}>Нажимая кнопку, вы соглашаетесь с <Text onPress={() => Linking.openURL('https://xfood.store/agreement')}>Политикой конфиденциальности</Text> и <Text onPress={() => Linking.openURL('https://xfood.store/privacy-policy')}>Пользовательским соглашением</Text></Text>
+				</View>
 			</View>
 		</View>
 	);
@@ -221,6 +226,7 @@ function AppFunc() {
 		<Provider store={store}>
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false, animationEnabled: false}}>
+					{ /* <Stack.Screen name="Pay" component={Pay} /> */ }
 					<Stack.Screen name="Welcome" component={AuthScreen} />
 					<Stack.Screen name="Phone" component={PhoneScreen} />
 					<Stack.Screen name="Code" component={CodeScreen} />
@@ -372,4 +378,10 @@ const styles = StyleSheet.create({
 		marginTop: -20,
 		paddingBottom: 10
 	},
+	policeText: {
+		fontFamily: 'Tahoma-Regular', 
+		fontSize: 12,
+		color: '#a7aaaf',
+		textAlign: 'left'
+	}
 });

@@ -9,6 +9,7 @@ import SearchBar from './components/SearchBar';
 import ModalItem from './components/ModalItem';
 import ModalCart from './components/ModalCart';
 import { Carousel } from './components/Carousel/index';
+import { readLocate } from './utils/locate';
 import Item from './components/Item';
 
 export default function MainScreen({navigation}) {
@@ -23,11 +24,13 @@ export default function MainScreen({navigation}) {
     const {cart, addItem, removeItem, loadCart} = useCart([], token);
 
     useEffect(() => {
-        send('api/main/get', 'POST', {}, (json) => {
-            setBanners(json.banners);
-            setSections(json.sections);
-            //setFiltered(json.sections);
-        }, token);
+        readLocate().then((val) => {
+            send('api/main/get', 'POST', {area: val}, (json) => {
+                setBanners(json.banners);
+                setSections(json.sections);
+                //setFiltered(json.sections);
+            }, token);
+        });
     }, []);
 
     const banner = banners.map((banner) => {

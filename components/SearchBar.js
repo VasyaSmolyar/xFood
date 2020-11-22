@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Image, TouchableWithoutFeedback} from 'react-native';
 import Constants from 'expo-constants';
-import search from '../files/search.png';
-import scanner from '../files/scanner.png';
+import search from '../files/lupa.png';
 
 export default function SearchBar({...props}) {
     return (
