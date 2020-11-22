@@ -137,6 +137,10 @@ export default function RestaurantScreen({navigation}) {
             );
         });
 
+        if (filtered.length === 0) {
+            return null;
+        }
+
         return (
             <View>
                 <Text style={styles.header}>{key}</Text>

@@ -25,6 +25,16 @@ export default function ModalItem(props) {
         return <View></View>
     }
 
+    const but = item.activated ? (
+        <TouchableOpacity style={styles.phoneButton} onPress={() => {addInCart(item)}}>
+            <Text style={styles.phoneText}>Добавить в корзину</Text>
+        </TouchableOpacity>
+    ) : (
+        <TouchableOpacity style={[styles.phoneButton, { backgroundColor: '#aaaaaa'}]} onPress={() => {}}>
+            <Text style={styles.phoneText}>Добавить в корзину</Text>
+        </TouchableOpacity>
+    );
+
     /*
     const flag = item.country !== "Русская кухня" ? (
         <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
@@ -72,9 +82,7 @@ export default function ModalItem(props) {
                         </View>
                     </ScrollView>
                     <View style={styles.phoneWidth}>
-                        <TouchableOpacity style={styles.phoneButton} onPress={() => {addInCart(item)}}>
-                            <Text style={styles.phoneText}>Добавить в корзину</Text>
-                        </TouchableOpacity>
+                        {but}
                     </View>
                 </View>
             </View>

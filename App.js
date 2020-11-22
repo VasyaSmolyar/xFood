@@ -87,7 +87,7 @@ function PhoneScreen({navigation}) {
 					<ScalableText style={styles.phoneText}>Отправить код</ScalableText >
 				</TouchableOpacity>
 				<View style={{width: '75%', marginTop: 20}}>
-					<Text style={styles.policeText}>Нажимая кнопку, вы соглашаетесь с <Text onPress={() => Linking.openURL('https://xfood.store/agreement')}>Политикой конфиденциальности</Text> и <Text onPress={() => Linking.openURL('https://xfood.store/privacy-policy')}>Пользовательским соглашением</Text></Text>
+					<Text style={styles.policeText}>Нажимая кнопку, вы соглашаетесь с <Text onPress={() => Linking.openURL('https://xfood.store/privacy-policy')}>Политикой конфиденциальности</Text> и <Text onPress={() => Linking.openURL('https://xfood.store/agreement')}>Пользовательским соглашением</Text></Text>
 				</View>
 			</View>
 		</View>

@@ -9,6 +9,7 @@ import { useRoute } from '@react-navigation/native';
 import { setCode } from './utils/store';
 import { StatusBar } from 'expo-status-bar';
 import arrow from './files/blackArrow.png';
+import percent from './files/percent.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 function Coupon({item, onPress}) {
@@ -56,6 +57,21 @@ export default function CouponScreen({navigation}) {
         return <Coupon item={item} onPress={() => choose(item)} />
     });
 
+    let block = (
+        <ScrollView>
+            {data}
+        </ScrollView>
+    );
+
+    if(list.length === 0) {
+        block = ( 
+            <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
+                <Image source={percent} style={{width: 75, height: 75, marginBottom: 20}} resizeMode='contain' />
+                <Text style={styles.noText}>У вас нет купонов</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
@@ -70,9 +86,7 @@ export default function CouponScreen({navigation}) {
                     <Text style={styles.barText}>Купоны</Text>
                 </View>
             </View>
-            <ScrollView>
-                {data}
-            </ScrollView>
+            {block}
             <NavigationBar navigation={navigation} routeName="Cabinet"/>
         </View>
     );
@@ -138,5 +152,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular',
         color: 'white',
         fontSize: 16
+    },
+    noText: {
+        fontFamily: 'Tahoma-Regular',
+        fontSize: 18,
+        color: '#898b8e',
+        textAlign: 'center'
     }
 });

@@ -5,6 +5,21 @@ import minus from '../files/minus.png';
 import plus from '../files/plus.png';
 import ScalableText from 'react-native-text';
 
+function Create({item, addToCart}) {
+    if(!item.activated) {
+        return (
+            <TouchableOpacity style={[styles.phoneButton, { backgroundColor: '#aaaaaa'}]} onPress={() => {}}>
+                <ScalableText style={styles.phoneText}>Добавить</ScalableText>
+            </TouchableOpacity>
+        );
+    }
+    return (
+        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item)}>
+            <ScalableText style={styles.phoneText}>Добавить</ScalableText>
+        </TouchableOpacity>
+    );
+}
+
 export default function Item(props) {
     const { cart, item, addToCart, removeFromCart } = props;
     if(item.item.empty !== undefined) {
@@ -17,11 +32,8 @@ export default function Item(props) {
         return item.item.title === i.item.title;
     });
 
-    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.num} addToCart={addToCart} removeFromCart={removeFromCart} /> : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => addToCart(item.item)}>
-            <ScalableText style={styles.phoneText}>Добавить</ScalableText>
-        </TouchableOpacity>
-    );
+    const add = inCart != undefined ? <CartBar item={item.item} value={inCart.num} addToCart={addToCart} removeFromCart={removeFromCart} /> : 
+    <Create item={item.item} addToCart={addToCart} />;
 
     const flag = item.item.country !== "Русская кухня" ? (
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 10}}>

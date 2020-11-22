@@ -15,7 +15,7 @@ import ScalableText from 'react-native-text';
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
     const code = useSelector(state => state.code);
-    const {cart, addItem, removeItem, loadCart} = useCart([], token);
+    const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
     const [addons, setAddons] = useState([]);
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
@@ -52,12 +52,21 @@ export default function CartScreen({navigation}) {
     }
 
     const removeToCart = (item) => {
-        removeItem(item, () => {
-            send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
-                setOther(json);
-                setAvailable(json.order_available);
-            }, token);
-        });
+        if(!item.activated) {
+            removeAll(item, () => {
+                send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                    setOther(json);
+                    setAvailable(json.order_available);
+                }, token);
+            });
+        } else {
+            removeItem(item, () => {
+                send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                    setOther(json);
+                    setAvailable(json.order_available);
+                }, token);
+            });
+        }
     }
 
     if(cart.length === 0) {
@@ -80,17 +89,35 @@ export default function CartScreen({navigation}) {
 
     const cartData = cart.map((prod) => {
         const item = prod.item;
+
+        const plus = item.activated ? (
+            <TouchableOpacity style={styles.highButton} onPress={() => addToCart(item)}>
+                <ScalableText style={styles.lowText}>+</ScalableText>
+            </TouchableOpacity>
+        ) : (
+            <View style={[styles.highButton, {opacity: 0}]} onPress={() => addToCart(item)}>
+                <ScalableText style={styles.lowText}>+</ScalableText>
+            </View>
+        );
+
+        const tablet = item.activated ? (
+            <View style={styles.infoContainer}>
+                <ScalableText style={styles.titleText} numberOfLines={1}>{item.title}</ScalableText>
+                <ScalableText style={styles.priceText}>{item.price} ₽</ScalableText>
+            </View>
+        ) : (
+            <View style={styles.infoContainer}>
+                <ScalableText style={[styles.titleText, {color: '#888'}]} numberOfLines={1}>{item.title}</ScalableText>
+                <ScalableText style={[styles.priceText, {color: '#888'}]}>{item.price} ₽</ScalableText>
+            </View>
+        );
+
         return (
             <View style={styles.itemContainer}>
                 <Image source={{uri: item.image_url}} style={{width: 60, height: 60, marginRight: 5, borderRadius: 20}} resizeMode='contain' />
-                <View style={styles.infoContainer}>
-                    <ScalableText style={styles.titleText} numberOfLines={1}>{item.title}</ScalableText>
-                    <ScalableText style={styles.priceText}>{item.price} ₽</ScalableText>
-                </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.highButton} onPress={() => addToCart(item)}>
-                        <ScalableText style={styles.lowText}>+</ScalableText>
-                    </TouchableOpacity>
+                {tablet}
+                <View style={styles.buttonContainer}> 
+                    {plus}
                         <ScalableText style={styles.lowNum}>{prod.num}</ScalableText>
                     <TouchableOpacity style={styles.lowButton} onPress={() => removeToCart(item)}>
                         <ScalableText style={styles.lowText}>-</ScalableText>

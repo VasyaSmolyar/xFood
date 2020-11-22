@@ -56,9 +56,10 @@ export default function useCart(initialState, token) {
             return res;
         }, -1);
         if(pos !== -1) {
-            send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: items[pos].count}, () => {
+            send('api/cart/deletefromcart', 'POST', {"product.id": item.id, num: items[pos].num}, () => {
                 items.splice(pos, 1);
                 setCart(items);
+
             }, token);
         }
         return items;
