@@ -6,6 +6,7 @@ import arrow from './files/blackArrow.png';
 import xFood from './files/xFood.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
+import { version } from './utils/net';
 
 export default function AboutScreen({navigation}) {
     return (
@@ -24,7 +25,7 @@ export default function AboutScreen({navigation}) {
             <View style={styles.aboutContainer}>
                 <Image source={xFood} style={{width: s(300), height: vs(100), marginBottom: 10}} resizeMode='contain' />
                 <ScalableText style={styles.textAbout}>Агрегатор доставки еды из ресторанов</ScalableText>
-                <ScalableText style={styles.textAbout}>Версия приложения: 0.1</ScalableText>
+                <ScalableText style={styles.textAbout}>Версия приложения: {version}</ScalableText>
                 <ScalableText style={styles.textLow}>В приложении использованы материалы ресурса icons8.ru</ScalableText>
             </View>
             <View style={styles.aboutContainer}>

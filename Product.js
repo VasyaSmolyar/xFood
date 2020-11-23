@@ -16,6 +16,7 @@ import { ScaledSheet,  scale, verticalScale, moderateScale } from 'react-native-
 import ScalableText from 'react-native-text';
 import { ScrollView } from 'react-native-gesture-handler';
 import ModalStatus from './components/ModalStatus';
+import ProductHolder from './components/ProductHolder';
 
 export default function ProductScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -200,6 +201,16 @@ export default function ProductScreen({navigation}) {
         </View>
     ) : null;
 
+    /* if(( isLoaded || data.length === 0 || true ) === false) {
+        return (
+            <View style={styles.container}>
+                <StatusBar style="dark" />
+                <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
+                <ProductHolder />
+                <NavigationBar navigation={navigation} routeName="Catalog"/>
+            </View>
+        )
+    */
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />

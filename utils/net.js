@@ -1,9 +1,12 @@
 const backend = 'https://xfood.store/';
 
+export const version = '1.0.0';
+
 function send(url, method, data, callback, token={}) {
     let headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        'App-Version': version
     };
     if (token !== {}) {
         headers['Login'] = token.login;

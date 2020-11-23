@@ -24,6 +24,7 @@ import ChatScreen from './ChatScreen';
 import Welcome from './Welcome';
 import * as Linking from 'expo-linking';
 import Pay from './components/Pay';
+import ProductHolder from './components/ProductHolder';
 import RegisterScreen from './Register';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
@@ -222,11 +223,15 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer);
 
 function AppFunc() {
+	function fake ({navigation}) {
+		return <View key={navigation}><ProductHolder /></View>
+	}
+
     return (
 		<Provider store={store}>
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false, animationEnabled: false}}>
-					{ /* <Stack.Screen name="Pay" component={Pay} /> */ }
+					{ /* <Stack.Screen name="Pay" component={fake} /> */ }
 					<Stack.Screen name="Welcome" component={AuthScreen} />
 					<Stack.Screen name="Phone" component={PhoneScreen} />
 					<Stack.Screen name="Code" component={CodeScreen} />
