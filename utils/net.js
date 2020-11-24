@@ -34,15 +34,20 @@ function send(url, method, data, callback, token={}) {
             return null;  
         }
         */
-        return response.text();
+        if(response.status === 429) {
+            setTimeout(() => send(url, method, data, callback, token), 1000);
+            return null;
+        } else {
+            return response.text();
+        }
     })
     .then((text) => {
-        //if(text !== null) {
+        if(text !== null) {
             console.log("===========SOURCE:=============\n", text);
             const json = JSON.parse(text);
             //console.log(json);
             callback(json);
-        //}
+        }
     })
     .catch((error) => {
         console.log(error);
