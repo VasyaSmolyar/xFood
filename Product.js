@@ -15,7 +15,6 @@ import star from './files/toolStar.png';
 import { ScaledSheet,  scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
 import { ScrollView } from 'react-native-gesture-handler';
-import ModalStatus from './components/ModalStatus';
 import ProductHolder from './components/ProductHolder';
 
 export default function ProductScreen({navigation}) {
@@ -211,6 +210,20 @@ export default function ProductScreen({navigation}) {
             </View>
         )
     */
+
+    const flat = isLoaded ? (
+        <FlatList onEndReachedThreshold={0.01}
+            numColumns={2} columnWrapperStyle={styles.oneRow}
+            onEndReached={upload} keyExtractor={(item, index) => index.toString()} 
+            data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 
+            renderItem={
+              ({ item, index, sep }) => {
+                return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
+                showItem={showModal} length={data.length} index={index} />;
+              }
+            }  />
+    ) : <ProductHolder />
+
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
@@ -224,16 +237,7 @@ export default function ProductScreen({navigation}) {
             <ScrollView>
             {about}
             {horizontal}
-            <FlatList onEndReachedThreshold={0.01}
-            numColumns={2} columnWrapperStyle={styles.oneRow}
-            onEndReached={upload} keyExtractor={(item, index) => index.toString()} 
-            data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 
-            renderItem={
-              ({ item, index, sep }) => {
-                return <Item item={{item: item}} cart={cart} addToCart={addToCart} removeFromCart={removeItem} 
-                showItem={showModal} length={data.length} index={index} />;
-              }
-            }  />
+            {flat}
             </ScrollView>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>

@@ -1,29 +1,30 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import { View } from 'react-native';
-//import SkeletonContent from 'react-native-skeleton-content';
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder'
+import { Dimensions } from 'react-native';
 
-export default function ProductHolder() {
-    const [load, setLoad] = useState(1);
+const windowWidth = Dimensions.get('window').width;
 
-    useEffect(() => {
-        setTimeout(() => setLoad(false), 5000);
-    }, []);
+export default function() {
+    const Item = ({style}) => (
+        <View style={[{width: windowWidth / 100 * 45}, {...style}]} >
+            <ShimmerPlaceholder width={120} height={120} shimmerStyle={{marginTop: 10, marginBottom: 10, borderRadius: 10}}></ShimmerPlaceholder>
+            <ShimmerPlaceholder width={50} height={20} shimmerStyle={{marginBottom: 10, borderRadius: 5}}></ShimmerPlaceholder>
+            <ShimmerPlaceholder width={120} height={40} shimmerStyle={{marginBottom: 20, borderRadius: 5}}></ShimmerPlaceholder>
+            <ShimmerPlaceholder width={120} height={30} shimmerStyle={{marginBottom: 20, borderRadius: 5}}></ShimmerPlaceholder>
+        </View>
+    );
 
     return (
-        <SkeletonPlaceholder>
-            <SkeletonPlaceholder.Item flexDirection="row" alignItems="center">
-                <SkeletonPlaceholder.Item width={60} height={60} borderRadius={50} />
-                <SkeletonPlaceholder.Item marginLeft={20}>
-                    <SkeletonPlaceholder.Item width={120} height={20} borderRadius={4} />
-                    <SkeletonPlaceholder.Item
-                        marginTop={6}
-                        width={80}
-                        height={20}
-                        borderRadius={4}
-                    />
-                </SkeletonPlaceholder.Item>
-            </SkeletonPlaceholder.Item>
-        </SkeletonPlaceholder>
+        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <View >
+                <Item style={{borderRightWidth: 1, borderRightColor: '#ede9e9', borderBottomColor: '#ede9e9', borderBottomWidth: 1}} />
+                <Item style={{borderRightWidth: 1, borderRightColor: '#ede9e9'}} />
+            </View>
+            <View> 
+                <Item style={{paddingLeft: 10, borderBottomColor: '#ede9e9', borderBottomWidth: 1}} />
+                <Item style={{paddingLeft: 10}} />
+            </View>
+        </View>
     )
 }
