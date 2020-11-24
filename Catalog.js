@@ -16,6 +16,11 @@ import timer from './files/timer.png';
 import noloc from './files/noloc.png';
 import pen from './files/pen.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+import { duration } from './components/ProductHolder';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 
 function Place({addr, setPlace}) {
     return (
@@ -109,7 +114,7 @@ export default function RestaurantScreen({navigation}) {
     
     const status = !found ? <ModalStatus /> : null;
 
-    if(data.length === 0) {
+    if(isLoaded && (data.length === 0)) {
         return (
             <View style={styles.container}>
                 <StatusBar style="dark" />
@@ -158,7 +163,15 @@ export default function RestaurantScreen({navigation}) {
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
             <Place addr={city} setPlace={() => setFound(true)}/>
             <ScrollView style={{width: '90%'}}>
-                {restaurants}
+                {isLoaded ? restaurants : (
+                    <View>
+                        <ShimmerPlaceholder style={{width: 250, height: 40, borderRadius: 5, marginVertical: 20}} duration={duration}></ShimmerPlaceholder>
+                        <View style={{alignItems: 'center'}}>
+                            <ShimmerPlaceholder duration={duration} width={windowWidth * 0.95} height={200} shimmerStyle={{borderRadius: 20, marginBottom: 30}}></ShimmerPlaceholder>
+                            <ShimmerPlaceholder duration={duration} width={windowWidth * 0.95} height={200} shimmerStyle={{borderRadius: 20, marginBottom: 30}}></ShimmerPlaceholder>
+                        </View>
+                    </View>
+                )}
             </ScrollView>
             <NavigationBar navigation={navigation} routeName="Catalog"/>
         </View>
