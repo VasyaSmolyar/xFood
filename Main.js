@@ -11,6 +11,11 @@ import ModalCart from './components/ModalCart';
 import { Carousel } from './components/Carousel/index';
 import { readLocate } from './utils/locate';
 import Item from './components/Item';
+import ProductHolder, { duration } from './components/ProductHolder';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default function MainScreen({navigation}) {
     const [query, setQuery] = useState('');
@@ -21,6 +26,7 @@ export default function MainScreen({navigation}) {
     const [chosen, setChosen] = useState(null);
     const [visible, setVisible] = useState(false);
     const [reset, setReset] = useState(false);
+    const [isLoaded, setLoaded] = useState(false);
     const {cart, addItem, removeItem, loadCart} = useCart([], token);
 
     useEffect(() => {
@@ -29,6 +35,7 @@ export default function MainScreen({navigation}) {
                 setBanners(json.banners);
                 setSections(json.sections);
                 //setFiltered(json.sections);
+                setLoaded(true);
             }, token);
         });
     }, []);
@@ -153,9 +160,20 @@ export default function MainScreen({navigation}) {
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={filter} /* onSubmitEditing={seacrhMethod} */ />
             <ScrollView style={{width: '100%'}}>
-                <Carousel style="stats" itemsPerInterval={1} items={banner} />
+                {isLoaded ? <Carousel style="stats" itemsPerInterval={1} items={banner} /> : (
+                    <View style={{alignItems: 'center'}}>
+                        <ShimmerPlaceholder duration={duration} width={windowWidth * 0.95} height={200} shimmerStyle={{borderRadius: 20, marginBottom: 30}}></ShimmerPlaceholder>
+                    </View>
+                    
+                )}
                 <View style={{marginTop: -25}}>
-                    {sectors}
+                    {isLoaded ? sectors : (
+                        <View>
+                            <ShimmerPlaceholder style={{width: 250, height: 35, borderRadius: 5, marginVertical: 20, marginLeft: 20}} duration={duration}>
+                            </ShimmerPlaceholder>
+                            <ProductHolder />
+                        </View>
+                    )}
                 </View>
             </ScrollView>
             <NavigationBar navigation={navigation} routeName="Main"/>
