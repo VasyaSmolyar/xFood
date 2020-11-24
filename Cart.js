@@ -11,6 +11,7 @@ import pack from './files/package.png';
 import pocket from './files/pocket.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
+import CartHolder from './components/CartHolder';
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
@@ -220,7 +221,7 @@ export default function CartScreen({navigation}) {
                 {block}
                 <ScrollView style={styles.listContainer} contentContainerStyle={{justifyContent: 'center'}}>
                     <View style={{ borderBottomColor: '#e5e4e4', borderBottomWidth: 1 }}>
-                        {cartData}
+                        {true ? cartData : <CartHolder />}
                     </View>
                     <View style={[styles.horContainer, {flexDirection: 'row'}]}>
                         <Image source={pack} style={{width: s(35), height: s(35), marginRight: ms(20)}} resizeMode='contain' />
