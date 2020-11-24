@@ -11,12 +11,14 @@ import pack from './files/package.png';
 import pocket from './files/pocket.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import ScalableText from 'react-native-text';
-import CartHolder from './components/CartHolder';
+import CartHolder, { Item, duration } from './components/CartHolder';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder'
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
     const code = useSelector(state => state.code);
     const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
+    const [loaded, isLoaded] = useState(false);
     const [addons, setAddons] = useState([]);
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
@@ -36,6 +38,7 @@ export default function CartScreen({navigation}) {
             setAvailable(json.order_available);
             setWares(json.tablewares);
             setOther(json);
+            isLoaded(true);
         }, token);
     }
 
@@ -70,7 +73,7 @@ export default function CartScreen({navigation}) {
         }
     }
 
-    if(cart.length === 0) {
+    if(loaded && (cart.length === 0)) {
         return (
             <View style={styles.container}>
                 <StatusBar style="dark" />
@@ -201,7 +204,9 @@ export default function CartScreen({navigation}) {
             <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
                         <ScalableText style={styles.header}>Корзина</ScalableText>
-                        <ScalableText style={styles.secondHeader}>{cart[0].item.restaurant}</ScalableText>
+                        <ShimmerPlaceholder visible={loaded} style={{width: 250, height: 25, borderRadius: 5, marginBottom: 20, marginLeft: 5}} duration={duration}>
+                            <ScalableText style={styles.secondHeader}>{cart[0] ? cart[0].item.restaurant : ''}</ScalableText>
+                        </ShimmerPlaceholder>
                     </View>
                 </View>
             <ScrollView style={{height: '100%'}}>
@@ -218,16 +223,20 @@ export default function CartScreen({navigation}) {
                             {remButton}
                         </View>
                 </View>
-                {block}
+                {loaded ? block : (
+                    null
+                )}
                 <ScrollView style={styles.listContainer} contentContainerStyle={{justifyContent: 'center'}}>
                     <View style={{ borderBottomColor: '#e5e4e4', borderBottomWidth: 1 }}>
-                        {true ? cartData : <CartHolder />}
+                        {loaded ? cartData : <CartHolder />}
                     </View>
-                    <View style={[styles.horContainer, {flexDirection: 'row'}]}>
+                    <View style={[styles.horContainer, {flexDirection: 'row', alignItems: 'center'}]}>
                         <Image source={pack} style={{width: s(35), height: s(35), marginRight: ms(20)}} resizeMode='contain' />
                         <View style={styles.infoContainer}>
                             <ScalableText style={styles.titleText}>Доставка</ScalableText>
-                            <ScalableText style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
+                            <ShimmerPlaceholder duration={duration} visible={loaded} style={{width: 80, height: 20, borderRadius: 5, marginTop: 5}}>
+                                <ScalableText style={styles.priceText}>{other.delivery_cost ? other.delivery_cost.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
+                            </ShimmerPlaceholder>                            
                         </View>
                     </View>
                     <View style={[styles.horContainer, {borderBottomWidth: 0}]}>
@@ -237,7 +246,9 @@ export default function CartScreen({navigation}) {
                 </ScrollView>
                 <View style={{paddingHorizontal: 25}}>
                     <View style={{paddingVertical: 20}}>
-                        <ScalableText style={styles.titleText}>Общая стоимость: {other.summ ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText>
+                        { !loaded && <ShimmerPlaceholder duration={duration} visible={loaded} style={{width: 200, height: 30, borderRadius: 5}}>
+                        </ShimmerPlaceholder> }
+                        { loaded && <ScalableText style={styles.titleText}>Общая стоимость: {other.summ ? other.summ.toFixed(2).replace(/\.00$/,'') : 0} ₽</ScalableText> }
                         {orderBlock}
                     </View>
                 </View>
@@ -271,7 +282,7 @@ const styles = StyleSheet.create({
         color: '#989898',
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
-        marginLeft: 10,
+        marginLeft: 5,
         paddingBottom: 10
     },
     titleText: {
