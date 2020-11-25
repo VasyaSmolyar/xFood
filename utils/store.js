@@ -5,9 +5,15 @@ const LOAD_CART = "LOAD_CART";
 const SET_PRICE = "SET_PRICE"; 
 const SET_USER = "SET_USER";
 const SET_CODE = "SET_CODE";
+const SET_PUSH = "SET_PUSH";
 
 export const setToken = (login, times, token) => {
     return {type: SET_TOKEN, login: login, times: times, token: token}
+}
+
+export const setPush = (token) => {
+    console.log("PUSH 2: ", token);
+    return {type: SET_PUSH, token: token}
 }
 
 export const addItem = (item) => {
@@ -41,6 +47,10 @@ export const setUser = (user, phone) => {
 const initialState = {
     login: "",
     times: "",
+    token: ""
+};
+
+const initialPush = {
     token: ""
 };
 
@@ -129,6 +139,16 @@ export const userReducer = (state = initialUser, action) => {
     switch(action.type) {
         case SET_USER:
             return {...state, user: action.user, phone: action.phone}
+        default:
+            return state;
+    }
+}
+
+export const pushReducer = (state = initialPush, action) => {
+    switch(action.type) {
+        case SET_PUSH:
+            console.log("PUSH 3: " + action.token);
+            return {...state, token: action.token}
         default:
             return state;
     }

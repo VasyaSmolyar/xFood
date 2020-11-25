@@ -4,13 +4,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput, Text } from 'react-native';
 import ScalableText from 'react-native-text';
 import { createStore, combineReducers } from 'redux';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
 import { readToken, writeToken } from './utils/token';
-import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer, codeReducer } from './utils/store';
+import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer, codeReducer, pushReducer } from './utils/store';
 import RestaurantScreen from './Catalog';
 import ProductScreen from './Product';
 import CartScreen from './Cart';
@@ -26,35 +26,41 @@ import * as Linking from 'expo-linking';
 import Pay from './components/Pay';
 import ProductHolder from './components/ProductHolder';
 import RegisterScreen from './Register';
+import Notification, { registerForPushNotificationsAsync } from './components/Notifications';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 const Stack = createStackNavigator();
 
 function AuthScreen({navigation}) {
-
+	const push = useSelector(state => state.push);
 	const dispath = useDispatch();
 
 	useEffect(() => {
-		readToken().then((myToken) => {
-			console.log(myToken);
-			send('api/user/get', 'POST', {}, (json) => {
-				if(json.detail !== undefined) {
-					return;
-				}
-				dispath(setUser(json.first_name, json.phone));
-				send('api/user/reauth', 'POST', {}, (res) => {
-					dispath(setToken(res.login, res.times, res.token));
-					//const resetAction = ...StackActions.replace('Profile'
-					navigation.dispatch(
-						CommonActions.reset({
-							index: 1,
-							routes: [
-								{ name: 'Catalog' },
-							],
-						})
-					);
+		registerForPushNotificationsAsync().then((token) => {
+			console.log('PUSH 4: ' + token);
+			readToken().then((myToken) => {
+				console.log(myToken);
+				send('api/user/get', 'POST', {}, (json) => {
+					if(json.detail !== undefined) {
+						return;
+					}
+					dispath(setUser(json.first_name, json.phone));
+					send('api/user/reauth', 'POST', {}, (res) => {
+						dispath(setToken(res.login, res.times, res.token));
+						console.log("PUSH: " + push.token);
+						send('api/notifications/setpushtoken', 'POST', {token: token}, () => {
+							navigation.dispatch(
+								CommonActions.reset({
+									index: 1,
+									routes: [
+										{ name: 'Catalog' },
+									],
+								})
+							);
+						}, res);
+					}, myToken);
 				}, myToken);
-			}, myToken);
+			});
 		});
 	}, []);
 
@@ -101,6 +107,7 @@ function CodeScreen({navigation}) {
 	const [value, setValue] = useState('');
 	const [wrong, setWrong] = useState(false);
 	const dispath = useDispatch();
+	const push = useSelector(state => state.push);
 
 	const navigate = json => {
 		const valid = json.isValid === "true";
@@ -117,14 +124,16 @@ function CodeScreen({navigation}) {
 							return;
 						}
 						dispath(setUser(json.first_name, json.phone));
-						navigation.dispatch(
-							CommonActions.reset({
-								index: 1,
-								routes: [
-									{ name: 'Catalog' },
-								],
-							})
-						);
+						send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
+							navigation.dispatch(
+								CommonActions.reset({
+									index: 1,
+									routes: [
+										{ name: 'Catalog' },
+									],
+								})
+							);
+						});
 					}, myToken);
 				});
 			} else {
@@ -217,18 +226,17 @@ const rootReducer = combineReducers({
 	cart: cartReducer,
 	prices: priceReducer,
 	user: userReducer,
-	code: codeReducer
+	code: codeReducer,
+	push: pushReducer
 });
 
 const store = createStore(rootReducer);
 
 function AppFunc() {
-	function fake ({navigation}) {
-		return <View key={navigation}><ProductHolder /></View>
-	}
 
     return (
 		<Provider store={store}>
+			<Notification />
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{headerShown: false, animationEnabled: false}}>
 					{ /* <Stack.Screen name="Pay" component={fake} /> */ }
