@@ -26,7 +26,7 @@ function Place({addr, setPlace}) {
     return (
         <TouchableOpacity style={styles.placeContainer} onPress={setPlace}>
             <Text style={styles.placeText}>{addr}</Text>
-            <Image source={pen} style={{width: 20, height: 20}} resizeMode='contain' />
+            <Image source={pen} style={{width: s(18), height: vs(18)}} resizeMode='contain' />
         </TouchableOpacity>
     );
 }
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '90%',
         justifyContent: 'space-between',
+        alignItems: 'center',
         paddingBottom: 15,
         marginBottom: 10,
         borderBottomWidth: 1,

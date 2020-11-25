@@ -24,6 +24,9 @@ export default function RegisterScreen({navigation}) {
 	data.code = code;
 
 	const navigate = (json) => {
+        if(json.details) {
+            send('api/user/create', 'POST', data, navigate);
+        }
         dispath(setToken(json.login, json.times, json.token));
         dispath(setUser(name, phone));
         send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
@@ -43,7 +46,7 @@ export default function RegisterScreen({navigation}) {
             data.first_name = name;
         }
         Keyboard.dismiss();
-        console.log(data);
+        console.log("EXIT", data);
 		send('api/user/create', 'POST', data, navigate);
     };
     
