@@ -14,17 +14,23 @@ const unzip = (slug) => {
         return ['Оплата картой при получении', cardHand, 'transfer'];
     }
     if(slug === 'transfer_online') {
-        return ['Оплата картой онлайн', cardOnline, 'transfer_online'];
+        return ['Оплата онлайн', cardOnline, 'transfer_online'];
     }
+    /*
     if(slug === 'online') {
         return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
     }
+    */
     return ['', null, ''];
 }
 
 function Pay({slug, onClose}) {
 
     const [title, src] = unzip(slug);
+
+    if(title === '') {
+        return null;
+    }
 
     return (
         <TouchableOpacity style={styles.payContainer} onPress={() => onClose(slug)}>

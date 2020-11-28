@@ -31,11 +31,12 @@ const unzip = (slug) => {
         return ['Оплата картой при получении', cardHand, 'transfer'];
     }
     if(slug === 'transfer_online') {
-        return ['Оплата картой онлайн', cardOnline, 'transfer_online'];
+        return ['Оплата онлайн', cardOnline, 'transfer_online'];
     }
+    /*
     if(slug === 'online') {
         return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
-    }
+    } */
     return ['', null, ''];
 }
 
@@ -151,8 +152,12 @@ export default function PaymentScreen({navigation}) {
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {
+                if(payType === 'transfer_online') {
                 //navigation.navigate('Catalog');
-                navigation.navigate('Pay', {order_id: json["order.id"], summ: summ});
+                    navigation.navigate('Pay', {order_id: json["order.id"], summ: summ});
+                } else {
+                    navigation.navigate('Catalog');
+                }
             }
         }, token);
     }

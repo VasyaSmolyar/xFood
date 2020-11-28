@@ -59,7 +59,7 @@ export default function Pay({navigation}) {
 
     const onSuccess = (event) => {
         console.log(event.nativeEvent.data);
-        if(event.nativeEvent.data === true) {
+        if(event.nativeEvent.data === "true") {
             navigation.navigate('Catalog');
         } else {
             setImp(<Fail />);
