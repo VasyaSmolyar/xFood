@@ -254,6 +254,7 @@ function AppFunc() {
 					<Stack.Screen name="Coupon" component={CouponScreen} />
 					<Stack.Screen name="About" component={AboutScreen} />
 					<Stack.Screen name="Chat" component={ChatScreen} />
+					<Stack.Screen name="Pay" component={Pay} /> 
 				</Stack.Navigator>
 			</NavigationContainer>
 		</Provider>  

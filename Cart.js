@@ -193,7 +193,7 @@ export default function CartScreen({navigation}) {
             </TouchableOpacity>
         </View>
     ) : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment')}>
+        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment', {summ: other.summ})}>
             <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
         </TouchableOpacity>
     );

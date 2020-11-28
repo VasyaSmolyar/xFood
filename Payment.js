@@ -7,6 +7,7 @@ import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
 import ModalPay from './components/ModalPay';
 import send from './utils/net';
+import { useRoute } from '@react-navigation/native';
 import arrow from './files/blackArrow.png';
 import path from './files/path.png';
 import price from './files/payCash.png';
@@ -81,6 +82,8 @@ const getButton = (slug, makeOrder) => {
 export default function PaymentScreen({navigation}) {
     const user = useSelector(state => state.user);
     const token = useSelector(state => state.token);
+    const route = useRoute();
+    const summ = route.params.summ;
 
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone.slice(2));
@@ -148,7 +151,8 @@ export default function PaymentScreen({navigation}) {
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {
-                navigation.navigate('Catalog');
+                //navigation.navigate('Catalog');
+                navigation.navigate('Pay', {order_id: json["order.id"], summ: summ});
             }
         }, token);
     }

@@ -68,7 +68,7 @@ export default function CabinetScreen({navigation}) {
                 <View style={{flexDirection: 'row', padding: 20}}>
                     <View style={styles.imageBox}>
                         <View style={{overflow: "hidden"}}>
-                            <Image source={icon} resizeMode="center" style={{width: 90, height: 100, marginLeft: 10}}/>
+                            <Image source={icon} resizeMode="center" style={{width: 100, height: 100}}/>
                         </View>
                     </View>
                     <View style={{paddingLeft: 30, justifyContent: 'space-around'}}>
