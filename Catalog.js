@@ -26,7 +26,7 @@ function Place({addr, setPlace}) {
     return (
         <TouchableOpacity style={styles.placeContainer} onPress={setPlace}>
             <Text style={styles.placeText}>{addr}</Text>
-            <Image source={pen} style={{width: s(18), height: vs(18)}} resizeMode='contain' />
+            <Image source={pen} style={{width: s(15), height: vs(15)}} resizeMode='contain' />
         </TouchableOpacity>
     );
 }
