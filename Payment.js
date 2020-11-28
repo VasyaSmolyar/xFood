@@ -10,7 +10,7 @@ import send from './utils/net';
 import { useRoute } from '@react-navigation/native';
 import arrow from './files/blackArrow.png';
 import path from './files/path.png';
-import price from './files/payCash.png';
+import price from './files/price.png';
 // ----------------------------------
 import gpay from './files/gpay.png';
 import apay from './files/apay.webp';
