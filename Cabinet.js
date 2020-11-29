@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import ModalUser from './components/ModalUser';
 import { delToken } from './utils/token';
+import { CommonActions } from '@react-navigation/native';
 import send from './utils/net';
 import arrow from './files/arrow.png';
 import man from './files/man.png';
@@ -53,8 +54,18 @@ export default function CabinetScreen({navigation}) {
     }
 
     const onExit = () => {
-        delToken();
-        navigation.navigate('Welcome');
+        delToken().then(() => {
+            console.log("TOKEN SSL");
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 1,
+                    routes: [
+                        { name: 'Welcome' },
+                    ],
+                })
+            );
+        });
+        //navigation.navigate('Welcome');
     }
 
     return (

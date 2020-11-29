@@ -117,7 +117,7 @@ export default function CartScreen({navigation}) {
         );
 
         return (
-            <View style={styles.itemContainer}>
+            <View style={[styles.itemContainer, { paddingVertical: 15}]}>
                 <Image source={{uri: item.image_url}} style={{width: 60, height: 60, marginRight: 5, borderRadius: 20}} resizeMode='contain' />
                 {tablet}
                 <View style={styles.buttonContainer}> 

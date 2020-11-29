@@ -11,16 +11,14 @@ export async function readToken() {
     }
 }
 
-export function writeToken(token) {
-    SecureStore.setItemAsync("login", token.login);
-    SecureStore.setItemAsync("times", token.times);
-    SecureStore.setItemAsync("token", token.token);
+export async function writeToken(token) {
+    await SecureStore.setItemAsync("login", token.login);
+    await SecureStore.setItemAsync("times", token.times);
+    await SecureStore.setItemAsync("token", token.token);
 }
 
-export function delToken() {
-    writeToken({
-        login: "",
-        times: "",
-        token: ""
-    });
+export async function delToken() {
+    await SecureStore.deleteItemAsync("login");
+    await SecureStore.deleteItemAsync("times");
+    await SecureStore.deleteItemAsync("token");
 }
