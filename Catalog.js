@@ -77,10 +77,10 @@ export default function RestaurantScreen({navigation}) {
     const [city, setCity] = useState("");
 
     const load = (json) => {
-        setLoaded(true);
         if(json.details === undefined) {
             setData(json);
         }
+        setLoaded(true);
     };
 
     const filter = (value) => {
@@ -88,16 +88,12 @@ export default function RestaurantScreen({navigation}) {
     }
 
     useEffect(() => {
-        if(!isLoaded) {
-            send('api/restaurants/get', 'GET', {area_name: city}, load, token);
-        }
-    });
-
-    useEffect(() => {
-        readLocate().then((val) => {
+        readLocate().then((vl) => {
+            const val = '';
             console.log(val);
             if(val) {
                 setCity(val);
+                send('api/restaurants/get', 'GET', {area_name: city}, load, token);
             } else {
                 console.log("FOUND");
                 setFound(true);
@@ -108,8 +104,8 @@ export default function RestaurantScreen({navigation}) {
     const setLocale = (location) => {
         writeLocate(location);
         setCity(location);
+        send('api/restaurants/get', 'GET', {area_name: location}, load, token);
         setFound(false);
-        setLoaded(false);
     }
     
     const status = !found ? <ModalStatus /> : null;

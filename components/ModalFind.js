@@ -72,7 +72,7 @@ export default function ModalList({locate, visible}) {
         {lat: reg.latitude, lon: reg.longitude}
         */
         send('api/area/get', 'POST', find, (res) => {
-            if(res)
+            if(res[0] && res[0].area_name)
                 setName(res[0].area_name);
         }, token);
 

@@ -151,7 +151,7 @@ export default function CartScreen({navigation}) {
 
     const block = included.length > 0 ? (
         <View style={{paddingHorizontal: 25}}>
-            <ScalableText style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</ScalableText>
+            <ScalableText style={[styles.priceText, {fontSize: 22, marginTop: 15, marginLeft: 10}]}>К заказу</ScalableText>
             <ScrollView horizontal={true} style={styles.horContainer}>
                 {addData}
             </ScrollView>
@@ -204,7 +204,7 @@ export default function CartScreen({navigation}) {
             <View style={{paddingHorizontal: 25}}>
                     <View style={styles.headerContainer}>
                         <ScalableText style={styles.header}>Корзина</ScalableText>
-                        <ShimmerPlaceholder visible={loaded} style={{width: 250, height: 25, borderRadius: 5, marginBottom: 20, marginLeft: 5}} duration={duration}>
+                        <ShimmerPlaceholder visible={loaded} style={{width: 250, height: 25, borderRadius: 5, marginBottom: 10, marginLeft: 5}} duration={duration}>
                             <ScalableText style={styles.secondHeader}>{cart[0] ? cart[0].item.restaurant : ''}</ScalableText>
                         </ShimmerPlaceholder>
                     </View>
@@ -240,7 +240,7 @@ export default function CartScreen({navigation}) {
                         </View>
                     </View>
                     <View style={[styles.horContainer, {borderBottomWidth: 0}]}>
-                        <ScalableText style={[styles.priceText, {fontSize: 16, marginBottom: 10}]}>Скидки и купоны</ScalableText>
+                        <ScalableText style={[styles.priceText, {fontSize: 20, marginBottom: 10}]}>Скидки и купоны</ScalableText>
                         <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(scalabletext) => newCode(scalabletext)} />
                     </View>
                 </ScrollView>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 22,
+        fontSize: 26,
         fontWeight: 'bold',
         marginLeft: 10,
         marginTop: Constants.statusBarHeight,
@@ -281,13 +281,12 @@ const styles = StyleSheet.create({
     secondHeader: {
         color: '#989898',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
-        marginLeft: 5,
-        paddingBottom: 10
+        fontSize: 18,
+        marginLeft: 5
     },
     titleText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 16,
+        fontSize: 20,
     },
     deviceContainer: {
         flexDirection: 'row',
@@ -325,11 +324,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     lowText: {
-        fontSize: 22,
+        fontSize: 26,
         color: '#fff'
     },
     lowNum: {
-        fontSize: 18,
+        fontSize: 22,
         fontFamily: 'Tahoma-Regular',
         marginHorizontal: ms(15)
     },
@@ -362,12 +361,12 @@ const styles = StyleSheet.create({
     },
     priceText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 15,
+        fontSize: 19,
         fontWeight: 'bold'
     },
     priceSecond: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
+        fontSize: 18,
         color: '#989898',
     },
     buttonContainer: {
@@ -380,7 +379,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: '#e5e6e7',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 14,
+        fontSize: 18,
         width: '70%',
         borderRadius: 10
     },
@@ -394,7 +393,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-        fontSize: 14, 
+        fontSize: 18, 
         fontWeight: 'bold',
 		color: 'white'
     },
@@ -407,11 +406,11 @@ const styles = StyleSheet.create({
     emptyText: {
         color: '#898b8e',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
+        fontSize: 22,
         paddingTop: 30
     },
     bad: {
         color: '#888',
-        fontSize: 14,
+        fontSize: 18,
     }
 });
