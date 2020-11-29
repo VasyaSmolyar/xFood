@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
 import { StatusBar } from 'expo-status-bar';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, TextInput, Keyboard } from 'react-native';
+import { Dimensions } from 'react-native';
 import send from './utils/net';
 import { useSelector } from 'react-redux';
 import back from './files/blackArrow.png';
 import slogo from './files/slogo.png';
 import write from './files/write.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ScalableText from 'react-native-text';
+
 
 function Message({item}) {
     const style = item.author === 'USER' ? styles.userContainer : styles.supportContainer;
@@ -52,7 +55,8 @@ export default function ChatScreen({navigation}) {
     });
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <KeyboardAwareScrollView  contentContainerStyle={{flexGrow: 1}}>
+        <View style={styles.container}>
             <StatusBar style="dark" />
             <View style={styles.barContainer}>
                 <View style={styles.barCell}>
@@ -78,7 +82,8 @@ export default function ChatScreen({navigation}) {
                     <Image source={write} style={{width: s(30), height: vs(30)}} resizeMode='contain' />
                 </TouchableOpacity>
             </View>
-        </KeyboardAvoidingView>
+        </View>
+       </KeyboardAwareScrollView>
     );
 }
 
