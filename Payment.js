@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView,  Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
@@ -112,20 +112,21 @@ export default function PaymentScreen({navigation}) {
     const choiceRegion = (name) => {
         setRegion(name);
         setModal(false);
+        Keyboard.dismiss(); 
     };
 
     const choiceLocate = (location, geo) => {
         setMap(false);
+        setCoords({lat: geo.latitude, lon: geo.longitude});
         if(location === null || location === undefined) {
             return;
         }
-        setCoords({lat: geo.latitude, lon: geo.longitude});
         const loc = location[0];
         setRegion(loc.city);
         const tmp = loc.name.split(", ");
         console.log(tmp);
         const name = tmp.length > 1 ? tmp[1] : loc.name;
-        setHouse(name.replace(/[^\d]/g, ''));
+        setHouse(name);
         if(loc.street === null) {
             setStreet(loc.name);
             setStreetName("");
@@ -141,6 +142,9 @@ export default function PaymentScreen({navigation}) {
 
     const makeOrder = () => {
         let data = coords;
+        if(data === null) {
+            return;
+        }
         data.pay_type = retSlug;
         data.street = getValue(streetName);
         data.house = getValue(house);
@@ -204,10 +208,10 @@ export default function PaymentScreen({navigation}) {
                 <View style={styles.blockConatiner}> 
                     <Text style={styles.header}>Доставка</Text>
                     <View style={styles.geoContainer}>
-                        <View style={[styles.geoWrap, {width: '40%'}]}>
+                        <TouchableOpacity style={[styles.geoWrap, {width: '40%'}]} onPress={() => {setModal(true)}}>
                             <Text style={styles.inputWrapText}>Город</Text>
-                            <TextInput value={region} style={styles.phone} onFocus={() => {setModal(true)}} />
-                        </View>
+                            <TextInput value={region} style={styles.phone} editable={false} />
+                        </TouchableOpacity>
                         <View style={[styles.geoWrap, {width: '32%'}]}>
                             <Text style={styles.inputWrapText}>Улица</Text>
                             <TextInput value={streetName} style={styles.phone} onChangeText={setStreetName} />
@@ -223,7 +227,7 @@ export default function PaymentScreen({navigation}) {
                             <TextInput value={corpus} onChangeText={setCorpus} style={styles.phone} />
                         </View>
                         <View style={styles.cellWrap}>
-                            <Text style={styles.inputWrapText}>Квартира</Text>
+                            <Text style={styles.inputWrapText} numberOfLines={1}>Квартира</Text>
                             <TextInput value={apartament} onChangeText={setApartament} style={styles.phone} />
                         </View>
                         <View style={styles.cellWrap}>
@@ -231,7 +235,7 @@ export default function PaymentScreen({navigation}) {
                             <TextInput value={stage} onChangeText={setStage} style={styles.phone} />
                         </View>
                         <View style={styles.cellWrap}>
-                            <Text style={styles.inputWrapText}>Домофон</Text>
+                            <Text style={styles.inputWrapText} numberOfLines={1}>Домофон</Text>
                             <TextInput value={doorphone} onChangeText={setDoorphone} style={styles.phone} />
                         </View>
                     </View>

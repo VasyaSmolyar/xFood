@@ -151,7 +151,7 @@ export default function CartScreen({navigation}) {
 
     const block = included.length > 0 ? (
         <View style={{paddingHorizontal: 25}}>
-            <ScalableText style={[styles.priceText, {fontSize: 22, marginTop: 15, marginLeft: 10}]}>К заказу</ScalableText>
+            <ScalableText style={[styles.priceText, {fontSize: 18, marginTop: 15, marginLeft: 10}]}>К заказу</ScalableText>
             <ScrollView horizontal={true} style={styles.horContainer}>
                 {addData}
             </ScrollView>
@@ -240,7 +240,7 @@ export default function CartScreen({navigation}) {
                         </View>
                     </View>
                     <View style={[styles.horContainer, {borderBottomWidth: 0}]}>
-                        <ScalableText style={[styles.priceText, {fontSize: 20, marginBottom: 10}]}>Скидки и купоны</ScalableText>
+                        <ScalableText style={[styles.priceText, {fontSize: 16, marginBottom: 10}]}>Скидки и купоны</ScalableText>
                         <TextInput style={styles.codeInput} placeholder="Код купона" value={cartCode} onChangeText={(scalabletext) => newCode(scalabletext)} />
                     </View>
                 </ScrollView>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     },
     header: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 26,
+        fontSize: 22,
         fontWeight: 'bold',
         marginLeft: 10,
         marginTop: Constants.statusBarHeight,
@@ -281,12 +281,13 @@ const styles = StyleSheet.create({
     secondHeader: {
         color: '#989898',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
-        marginLeft: 5
+        fontSize: 14,
+        marginLeft: 5,
+        paddingBottom: 10
     },
     titleText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 20,
+        fontSize: 16,
     },
     deviceContainer: {
         flexDirection: 'row',
@@ -324,11 +325,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     lowText: {
-        fontSize: 26,
+        fontSize: 22,
         color: '#fff'
     },
     lowNum: {
-        fontSize: 22,
+        fontSize: 18,
         fontFamily: 'Tahoma-Regular',
         marginHorizontal: ms(15)
     },
@@ -361,12 +362,12 @@ const styles = StyleSheet.create({
     },
     priceText: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 19,
+        fontSize: 15,
         fontWeight: 'bold'
     },
     priceSecond: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
+        fontSize: 14,
         color: '#989898',
     },
     buttonContainer: {
@@ -379,7 +380,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: '#e5e6e7',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 18,
+        fontSize: 14,
         width: '70%',
         borderRadius: 10
     },
@@ -393,7 +394,7 @@ const styles = StyleSheet.create({
 	},
 	phoneText: {
 		fontFamily: 'Tahoma-Regular', 
-        fontSize: 18, 
+        fontSize: 14, 
         fontWeight: 'bold',
 		color: 'white'
     },
@@ -406,11 +407,11 @@ const styles = StyleSheet.create({
     emptyText: {
         color: '#898b8e',
         fontFamily: 'Tahoma-Regular',
-        fontSize: 22,
+        fontSize: 18,
         paddingTop: 30
     },
     bad: {
         color: '#888',
-        fontSize: 18,
+        fontSize: 14,
     }
 });
