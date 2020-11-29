@@ -37,6 +37,12 @@ export default function ProductScreen({navigation}) {
 
     const num = 5;
 
+    const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+        const paddingToBottom = 20;
+        return layoutMeasurement.height + contentOffset.y >=
+          contentSize.height - paddingToBottom;
+    };
+
     const setCart = (json) => {
         const cart = json.items[0].map(item => {
             return {
@@ -57,6 +63,7 @@ export default function ProductScreen({navigation}) {
     
 
     const upload = () => {
+        console.log("UPLOAD");
         if(isLoaded) {
             setOffset(offset + num);
             setLoaded(false);
@@ -67,10 +74,8 @@ export default function ProductScreen({navigation}) {
         setOffset(0);
         setQuery(value);
         setLoaded(true);
-        //const title = "Все категории" ? "all" : title;
         const ret = sub === 0 ? "all" : subs[sub];
         let data = {title: ret, offset: 0, num: num, search: value};
-        console.log("FILTER:");
         if (spec) {
             data.special_offer = true;
             data.title = title;
@@ -80,8 +85,6 @@ export default function ProductScreen({navigation}) {
             data.restaurant_id = route.params.id;
         }
         send('api/catalog/getbycategory', 'GET', data, (json) => {
-            console.log("JSON");
-            console.log(json);
             if(json.details !== undefined) {
                 setData([]);
                 return;
@@ -126,8 +129,6 @@ export default function ProductScreen({navigation}) {
         if(!isLoaded) {
             const value = sub === 0 ? "all" : subs[sub];
             let data = {title: value, offset: offset, num: num, search: query};
-            console.log("SPEC");
-            console.log(spec);
             if (spec) {
                 data.special_offer = true;
                 data.title = title;
@@ -136,8 +137,6 @@ export default function ProductScreen({navigation}) {
             } else {
                 data.restaurant_id = route.params.id;
             }
-            console.log("DATA");
-            console.log(data);
             send('api/catalog/getbycategory', 'GET', data, load, token);
         }
         return () => {
@@ -211,10 +210,10 @@ export default function ProductScreen({navigation}) {
         )
     */
 
-    const flat = isLoaded ? (
-        <FlatList onEndReachedThreshold={0.01}
+    const flat = isLoaded || offset !== 0 ? (
+        <FlatList 
             numColumns={2} columnWrapperStyle={styles.oneRow}
-            onEndReached={upload} keyExtractor={(item, index) => index.toString()} 
+            keyExtractor={(item, index) => index.toString()} 
             data={data.length % 2 === 1 ? [...data, {empty: true}, {empty: true}, {empty: true}] : [...data, {empty: true}, {empty: true}]} 
             renderItem={
               ({ item, index, sep }) => {
@@ -234,7 +233,11 @@ export default function ProductScreen({navigation}) {
             <View style={{width: '100%', paddingHorizontal: 20}}>
                 <ScalableText style={styles.header}>{title}</ScalableText>
             </View>
-            <ScrollView>
+            <ScrollView onScroll={({nativeEvent}) => {
+                if (isCloseToBottom(nativeEvent)) {
+                    upload();
+                }
+            }} scrollEventThrottle={400}>
             {about}
             {horizontal}
             {flat}
