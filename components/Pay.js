@@ -22,6 +22,7 @@ export default function Pay({navigation}) {
     console.log("Ssuum: ", summ);
 
     const makePay = () => {
+        setImp(null);
         send('api/user/get', 'POST', {}, (json) => {
             Tinkoff.Link({	
                 terminalkey: '1602852170629DEMO',
@@ -48,12 +49,14 @@ export default function Pay({navigation}) {
                 <TouchableOpacity style={styles.payBut} onPress={makePay}>
                     <Text style={styles.butText}>Попробовать снова</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={{marginTop: 30}} onPress={() => navigation.navigate('Catalog')}>
+                    <Text style={styles.catText}>В каталог</Text>
+                </TouchableOpacity>
             </View>
         )
     }
 
     useEffect(() => {
-        setImp(null);
         makePay();
     }, []);
 
@@ -112,5 +115,11 @@ const styles = StyleSheet.create({
         fontFamily: 'Tahoma-Regular', 
 		fontSize: 20, 
 		color: 'white'
+    },
+    catText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 20,
+        textAlign: 'center',
+        color: 'black'
     }
 });

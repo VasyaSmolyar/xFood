@@ -43,7 +43,7 @@ export default function MainScreen({navigation}) {
     const banner = banners.map((banner) => {
         return {
             value: (
-            <TouchableWithoutFeedback style={{borderRadius: 20, overflow: 'hidden'}} pressRetentionOffset={5}
+            <TouchableWithoutFeedback style={{width: '95%', height: 200, borderRadius: 20}} pressRetentionOffset={5}
             onPress={() => onBanner(banner)}>
                 <Image source={{uri: banner.image}} style={{width: '95%', height: 200, resizeMode: 'contain', borderRadius: 20, overflow: 'hidden'}} />
             </TouchableWithoutFeedback>

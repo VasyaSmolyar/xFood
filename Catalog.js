@@ -88,8 +88,7 @@ export default function RestaurantScreen({navigation}) {
     }
 
     useEffect(() => {
-        readLocate().then((vl) => {
-            const val = '';
+        readLocate().then((val) => {
             console.log(val);
             if(val) {
                 setCity(val);

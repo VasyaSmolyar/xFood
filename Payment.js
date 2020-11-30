@@ -121,17 +121,11 @@ export default function PaymentScreen({navigation}) {
         if(location === null || location === undefined) {
             return;
         }
-        const loc = location[0];
-        setRegion(loc.city);
-        const tmp = loc.name.split(", ");
-        console.log(tmp);
-        const name = tmp.length > 1 ? tmp[1] : loc.name;
-        setHouse(name);
-        if(loc.street === null) {
-            setStreet(loc.name);
-            setStreetName("");
-        } else {
-            setStreet(loc.street + ', ' + name);
+        const loc = location;
+        if(loc !== undefined) {
+            setRegion(loc.city);
+            setHouse(loc.house);
+            setStreet(loc.street + ', ' + loc.house);
             setStreetName(loc.street);
         }
     }
@@ -223,7 +217,7 @@ export default function PaymentScreen({navigation}) {
                     </View>
                     <View style={styles.geoContainer}>
                         <View style={styles.cellWrap}>
-                            <Text style={styles.inputWrapText}>Корпус</Text>
+                            <Text style={styles.inputWrapText}>Подъезд</Text>
                             <TextInput value={corpus} onChangeText={setCorpus} style={styles.phone} />
                         </View>
                         <View style={styles.cellWrap}>

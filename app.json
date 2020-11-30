@@ -29,6 +29,7 @@
       "config": {
           "googleMaps": { "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM" }   
       }
-    }
+    },
+    "scheme": "xfood"
   }
 }

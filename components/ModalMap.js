@@ -31,6 +31,7 @@ export default function ModalMap(props) {
     const [start, setStart] = useState(null);
     const [block, setBlock] = useState(false);
     const [avaiable, setAvailable] = useState(false);
+    const [street, setAddr] = useState('');
     const token = useSelector(state => state.token);
 
     const inProgress = (reg) => {
@@ -47,6 +48,7 @@ export default function ModalMap(props) {
             setLocation(res);
             const addr = {lat: reg.latitude, lon: reg.longitude};
             send('api/area/check', 'POST', addr, (json) => {
+                serialize(addr);
                 if(json === true) {
                     setAvailable(true);
                 }
@@ -62,18 +64,22 @@ export default function ModalMap(props) {
         }
     }
 
-    const serialize = () => {
-        /*
-        if(errorMsg !== null) {
-            return <Text style={{color: 'red'}}>{errorMsg}</Text>;
-        }
-        */
-        if(location === null || location === undefined || location[0] === undefined) {
-            return '';
-        }
-        const loc = location[0];
-        const arr = [loc.street, loc.name];
-        return arr.join(', ');
+    const serialize = (addr) => {
+        send('api/geocode/reverse', 'GET', {lat: addr.lat, lon: addr.lon}, (json) => {
+            if(json.street && json.house) {
+                setAddr(json.street + ', ' + json.house);
+                setLocation(json);
+            } else if(json.street) {
+                setAddr(json.street);
+                setLocation(json);
+            } else if(json.house) {
+                setAddr(json.house);
+                setLocation(json);
+            } else {
+                setAddr('');
+                setLocation(undefined);
+            }
+        }, token);
     }
 
     useEffect(() => {
@@ -107,6 +113,7 @@ export default function ModalMap(props) {
                     latitudeDelta: 0.0022, 
                     longitudeDelta: 0.0021 
                 });
+
             }
         })();
     }, []);
@@ -157,7 +164,7 @@ export default function ModalMap(props) {
                     <View style={styles.pathContainer}>
                         <View style={styles.geoWrap}>
                             <Text style={styles.inputWrapText}>Адрес</Text>
-                            <Text style={styles.phone}>{serialize()}</Text>
+                            <Text style={styles.phone}>{street}</Text>
                         </View>
                         <TouchableOpacity style={styles.imageContainer} onPress={getPlace}>
                             <Image source={path} resizeMode={'contain'} style={styles.geoImage} />
