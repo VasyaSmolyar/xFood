@@ -12,7 +12,7 @@ export default function ModalStatus() {
     const token = useSelector(state => state.token);
     const navigation = useNavigation();
 
-    useEffect(() => {
+    const check = () => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
             const orders = json.filter((order) => {
                 return  [ 'COOKING', 'TORESTAURANT', 'PERFORMING', 'FINDING', 'WAITCOUR', 'WAITREST' ].indexOf(order.status) !== -1;
@@ -21,6 +21,12 @@ export default function ModalStatus() {
                 setOrder(orders[0]);
             }
         }, token);
+    }
+
+    useEffect(() => {
+        check();
+        const timer = setInterval(check, 1000);
+        return () => clearInterval(timer);
     }, []);
 
     if(order === null) {
