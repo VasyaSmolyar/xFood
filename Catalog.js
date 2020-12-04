@@ -77,6 +77,7 @@ export default function RestaurantScreen({navigation}) {
     const [city, setCity] = useState("");
 
     const load = (json) => {
+        console.log(json);
         if(json.details === undefined) {
             setData(json);
         }
@@ -92,7 +93,8 @@ export default function RestaurantScreen({navigation}) {
             console.log(val);
             if(val) {
                 setCity(val);
-                send('api/restaurants/get', 'GET', {area_name: city}, load, token);
+                console.log(token);
+                send('api/restaurants/get', 'GET', {area_name: val}, load, token);
             } else {
                 console.log("FOUND");
                 setFound(true);

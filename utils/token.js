@@ -1,9 +1,11 @@
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function readToken() {
-    const login = await SecureStore.getItemAsync("login");
-    const times = await SecureStore.getItemAsync("times");
-    const token = await SecureStore.getItemAsync("token");
+    const login = await AsyncStorage.getItem("@login");
+    const times = await AsyncStorage.getItem("@times");
+    const token = await AsyncStorage.getItem("@token");
+    console.log("LOGIN RED");
+    console.log(token);
     return {
         login: login,
         times: times,
@@ -12,13 +14,13 @@ export async function readToken() {
 }
 
 export async function writeToken(token) {
-    await SecureStore.setItemAsync("login", token.login);
-    await SecureStore.setItemAsync("times", token.times);
-    await SecureStore.setItemAsync("token", token.token);
+    await AsyncStorage.setItem("@login", token.login);
+    await AsyncStorage.setItem("@times", token.times);
+    await AsyncStorage.setItem("@token", token.token);
 }
 
 export async function delToken() {
-    await SecureStore.deleteItemAsync("login");
-    await SecureStore.deleteItemAsync("times");
-    await SecureStore.deleteItemAsync("token");
+    await AsyncStorage.removeItem("@login");
+    await AsyncStorage.removeItem("@times");
+    await AsyncStorage.removeItem("@token");
 }

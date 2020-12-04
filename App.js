@@ -24,7 +24,6 @@ import ChatScreen from './ChatScreen';
 import Welcome from './Welcome';
 import * as Linking from 'expo-linking';
 import Pay from './components/Pay';
-import ProductHolder from './components/ProductHolder';
 import RegisterScreen from './Register';
 import Notification, { registerForPushNotificationsAsync } from './components/Notifications';
 import { s, vs, ms, mvs } from 'react-native-size-matters';

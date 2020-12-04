@@ -1,10 +1,10 @@
-import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export async function readLocate() {
-    const locate = await SecureStore.getItemAsync("locate");
+    const locate = await AsyncStorage.getItem("@locate");
     return locate;
 }
 
 export function writeLocate(locate) {
-    SecureStore.setItemAsync("locate", locate);
+    AsyncStorage.setItem("@locate", locate);
 }
