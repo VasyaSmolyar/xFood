@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import ScalableText from 'react-native-text';
@@ -19,6 +19,9 @@ import { s, vs, ms, mvs } from 'react-native-size-matters';
 import { duration } from './components/ProductHolder';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import { Dimensions } from 'react-native';
+import { registerForPushNotificationsAsync } from './components/Notifications';
+
+import { setPush } from './utils/store';
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -70,6 +73,9 @@ function Category(props) {
 
 export default function RestaurantScreen({navigation}) {
     const token = useSelector(state => state.token);
+    const push = useSelector(state => state.push);
+    const dispath = useDispatch();
+
     const [data, setData] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
     const [query, setQuery] = useState("");
@@ -89,6 +95,14 @@ export default function RestaurantScreen({navigation}) {
     }
 
     useEffect(() => {
+        if(push.token === "") {
+            registerForPushNotificationsAsync().then((pt) => {
+                console.log("PT: ", pt);
+                send('api/notifications/setpushtoken', 'POST', {token: pt}, () => {
+                    dispath(setPush(pt));
+                });
+            });
+        }
         readLocate().then((val) => {
             console.log(val);
             if(val) {

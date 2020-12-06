@@ -3,8 +3,6 @@ import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Platform } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { setPush } from '../utils/store';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,7 +18,7 @@ export default function () {
   const notificationListener = useRef();
   const responseListener = useRef();
 
-  const dispath = useDispatch();
+  //const dispath = useDispatch();
 
   useEffect(() => {
     //registerForPushNotificationsAsync().then(token => dispath(setPush(token)));

@@ -35,8 +35,8 @@ function AuthScreen({navigation}) {
 	const dispath = useDispatch();
 
 	useEffect(() => {
-		registerForPushNotificationsAsync().then((token) => {
-			console.log('PUSH 4: ' + token);
+		//registerForPushNotificationsAsync().then((token) => {
+			//console.log('PUSH 4: ' + token);
 			readToken().then((myToken) => {
 				console.log(myToken);
 				send('api/user/get', 'POST', {}, (json) => {
@@ -47,7 +47,7 @@ function AuthScreen({navigation}) {
 					send('api/user/reauth', 'POST', {}, (res) => {
 						dispath(setToken(res.login, res.times, res.token));
 						console.log("PUSH: " + push.token);
-						send('api/notifications/setpushtoken', 'POST', {token: token}, () => {
+						//send('api/notifications/setpushtoken', 'POST', {token: token}, () => {
 							navigation.dispatch(
 								CommonActions.reset({
 									index: 1,
@@ -56,11 +56,11 @@ function AuthScreen({navigation}) {
 									],
 								})
 							);
-						}, res);
+						//}, res);
 					}, myToken);
 				}, myToken);
 			});
-		});
+		//});
 	}, []);
 
 	return (
@@ -106,7 +106,7 @@ function CodeScreen({navigation}) {
 	const [value, setValue] = useState('');
 	const [wrong, setWrong] = useState(false);
 	const dispath = useDispatch();
-	const push = useSelector(state => state.push);
+	//const push = useSelector(state => state.push);
 
 	const navigate = json => {
 		const valid = json.isValid === "true";
@@ -123,7 +123,7 @@ function CodeScreen({navigation}) {
 							return;
 						}
 						dispath(setUser(json.first_name, json.phone));
-						send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
+						//send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
 							navigation.dispatch(
 								CommonActions.reset({
 									index: 1,
@@ -132,7 +132,7 @@ function CodeScreen({navigation}) {
 									],
 								})
 							);
-						});
+						//});
 					}, myToken);
 				});
 			} else {

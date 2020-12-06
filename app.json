@@ -26,6 +26,8 @@
     },
     "android": {
       "package": "com.xgen.xfood",
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json",
       "config": {
           "googleMaps": { "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM" }   
       }

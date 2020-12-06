@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "418908922585",
+    "project_id": "pc-api-8754941873905596585-556",
+    "storage_bucket": "pc-api-8754941873905596585-556.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:418908922585:android:05d96c10562d230be0d4c8",
+        "android_client_info": {
+          "package_name": "com.xgen.xfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "418908922585-5btcc14lsdjj437fedh4gc801n14ucho.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADbdK7SyRgeMInmhufGR1MtUdSorb19Wk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "418908922585-5btcc14lsdjj437fedh4gc801n14ucho.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

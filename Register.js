@@ -13,7 +13,7 @@ import Constants from 'expo-constants';
 export default function RegisterScreen({navigation}) {
     const route = useRoute();
     const [ name, setName ] = useState("");
-    const push = useSelector(state => state.push);
+    //const push = useSelector(state => state.push);
 
 	let { phone, code } = route.params; 
 	const dispath = useDispatch();
@@ -29,7 +29,7 @@ export default function RegisterScreen({navigation}) {
         }
         dispath(setToken(json.login, json.times, json.token));
         dispath(setUser(name, phone));
-        send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
+        //send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
             navigation.dispatch(
                 CommonActions.reset({
                     index: 1,
@@ -38,7 +38,7 @@ export default function RegisterScreen({navigation}) {
                     ],
                 })
             );
-        });
+        //});
 	};
 
 	const press = (text) => {
