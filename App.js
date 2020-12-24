@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer, useRoute, CommonActions} from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput, Text } from 'react-native';
+import { StyleSheet, Keyboard, View, TouchableOpacity, TextInput, Text, Image } from 'react-native';
 import ScalableText from 'react-native-text';
 import { createStore, combineReducers } from 'redux';
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -25,14 +25,31 @@ import Welcome from './Welcome';
 import * as Linking from 'expo-linking';
 import Pay from './components/Pay';
 import RegisterScreen from './Register';
+import * as SplashScreen from 'expo-splash-screen';
 import Notification, { registerForPushNotificationsAsync } from './components/Notifications';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+import { Dimensions } from 'react-native';
 
 const Stack = createStackNavigator();
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+
+function Loading() {
+	return (
+        <View style={{ flex: 1, backgroundColor: "#f08843", justifyContent: 'center', alignItems: 'center' }}>
+          <Image
+            source={require('./assets/splash.png')} style={{width: windowWidth, height: windowHeight}} resizeMode='contain'
+          />
+        </View>
+    );
+}
 
 function AuthScreen({navigation}) {
 	const push = useSelector(state => state.push);
 	const dispath = useDispatch();
+	const [isLoaded, setLoaded] = useState(false);
 
 	useEffect(() => {
 		//registerForPushNotificationsAsync().then((token) => {
@@ -41,6 +58,8 @@ function AuthScreen({navigation}) {
 				console.log(myToken);
 				send('api/user/get', 'POST', {}, (json) => {
 					if(json.detail !== undefined) {
+						setLoaded(true);
+						SplashScreen.hideAsync();
 						return;
 					}
 					dispath(setUser(json.first_name, json.phone));
@@ -48,20 +67,25 @@ function AuthScreen({navigation}) {
 						dispath(setToken(res.login, res.times, res.token));
 						console.log("PUSH: " + push.token);
 						//send('api/notifications/setpushtoken', 'POST', {token: token}, () => {
-							navigation.dispatch(
-								CommonActions.reset({
-									index: 1,
-									routes: [
-										{ name: 'Catalog' },
-									],
-								})
-							);
+								navigation.dispatch(
+									CommonActions.reset({
+										index: 1,
+										routes: [
+											{ name: 'Catalog' },
+										],
+									})
+								);
+							
 						//}, res);
 					}, myToken);
 				}, myToken);
 			});
 		//});
 	}, []);
+
+	if(!isLoaded) {
+		return <Loading />;
+	}
 
 	return (
 			<Welcome navigation={navigation} />
@@ -124,7 +148,8 @@ function CodeScreen({navigation}) {
 						}
 						dispath(setUser(json.first_name, json.phone));
 						//send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
-							navigation.dispatch(
+							navigatioSplashScreen.preventAutoHideAsync();
+							n.dispatch(
 								CommonActions.reset({
 									index: 1,
 									routes: [
@@ -270,7 +295,9 @@ export default class App extends React.Component {
 	  this.setState({ fontsLoaded: true });
 	}
   
-	componentDidMount() {
+	async componentDidMount() {
+		SplashScreen.preventAutoHideAsync();
+
 	  this._loadFontsAsync();
 	  console.log("URL: ", Linking.makeUrl('/'));
 	}

@@ -12,7 +12,7 @@
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "cover",
+      "resizeMode": "contain",
       "backgroundColor": "#f08843"
     },
     "updates": {
@@ -32,6 +32,12 @@
           "googleMaps": { "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM" }   
       }
     },
-    "scheme": "xfood"
+    "scheme": "xfood",
+    "notification": {
+      "color": "#f08843",
+      "androidMode": "default",
+      "androidCollapsedTitle": "xFood",
+      "iosDisplayInForeground": true
+    }
   }
 }

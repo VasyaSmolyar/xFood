@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
 import { View, StyleSheet, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import ModalUser from './components/ModalUser';
 import { delToken } from './utils/token';
@@ -11,6 +11,7 @@ import send from './utils/net';
 import arrow from './files/arrow.png';
 import man from './files/man.png';
 import check from './files/checkbox_yellow.png';
+import { setPush } from './utils/store';
 
 function Header(props) {
     return (
@@ -26,6 +27,7 @@ export default function CabinetScreen({navigation}) {
     const [icon, setIcon] = useState(man);
     const [modal, setModal] = useState(false);
     const token = useSelector(state => state.token);
+    const dispath = useDispatch();
 
     const setUser = () => {
         send('api/user/get', 'POST', {}, (json) => {
@@ -55,7 +57,7 @@ export default function CabinetScreen({navigation}) {
 
     const onExit = () => {
         delToken().then(() => {
-            console.log("TOKEN SSL");
+            dispath(setPush(""));
             navigation.dispatch(
                 CommonActions.reset({
                     index: 1,

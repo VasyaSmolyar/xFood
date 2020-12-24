@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Image, Alert, Clipboard } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
@@ -100,7 +100,7 @@ export default function RestaurantScreen({navigation}) {
                 console.log("PT: ", pt);
                 send('api/notifications/setpushtoken', 'POST', {token: pt}, () => {
                     dispath(setPush(pt));
-                });
+                }, token);
             });
         }
         readLocate().then((val) => {

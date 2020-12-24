@@ -39,7 +39,8 @@
     "react-native-webview": "10.7.0",
     "react-redux": "^7.2.2",
     "react-tinkoff-pay": "^2.8.7",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "expo-splash-screen": "~0.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.7",
