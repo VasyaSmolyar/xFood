@@ -156,7 +156,7 @@ export default function MainScreen({navigation}) {
     return (
         <View style={styles.container}>
             <StatusBar style="dark" />
-            <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} />
+            <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} setItem={setChosen} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={filter} /* onSubmitEditing={seacrhMethod} */ />
             <ScrollView style={{width: '100%'}}>
