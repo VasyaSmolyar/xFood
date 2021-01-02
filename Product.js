@@ -227,7 +227,7 @@ export default function ProductScreen({navigation}) {
         <View style={styles.container}>
             <StatusBar style="dark" />
             <SearchBar placeholder="Поиск по категории" value={query} onChangeText={filterQuery} />
-            <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} />
+            <ModalItem item={chosen} visible={modal} onClose={() => {setModal(false)}} addInCart={addToCart} setItem={showModal} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
             { /* <ModalStatus /> */ }
             <View style={{width: '100%', paddingHorizontal: 20}}>
