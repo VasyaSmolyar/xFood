@@ -35,6 +35,14 @@ export default function ModalItem(props) {
         </TouchableOpacity>
     );
 
+    const sizes = item.sizes((obj) => {
+        return (
+            <View style={styles.sizeField}>
+                <Text style={styles.sizeText}>{obj.size}</Text>
+            </View>
+        )
+    });
+
     /*
     const flag = item.country !== "Русская кухня" ? (
         <View style={{flexDirection: 'row', alignItems: 'center', marginVertical: 5}}>
@@ -60,10 +68,13 @@ export default function ModalItem(props) {
                         <View style={{paddingHorizontal: 35}}>
                             <Text style={styles.itemCompany}>{item.restaurant.title !== undefined ? item.restaurant.title : item.restaurant }</Text>
                             <View style={styles.titleContainer}>
-                                <Text style={styles.itemText}>{item.title}</Text>
+                                <Text style={styles.itemText}>{item.title} {item.size}</Text>
                                 <View style={styles.priceContainer}>
                                     <Text style={styles.itemPrice}>{item.price.toFixed(2).replace(/\.00$/,'')} ₽</Text>
                                 </View>
+                            </View>
+                            <View style={styles.sizesContainer}>
+                                {sizes}
                             </View>
                             {/*
                             {flag}
@@ -198,5 +209,18 @@ const styles = StyleSheet.create({
     indexValue: {
         fontFamily: 'Tahoma-Regular', 
         fontSize: 11,
+    },
+    sizesContainer: {
+        flexDirection: 'row'
+    },
+    sizeField: {
+        backgroundColor: '#f3f4f6',
+        borderRadius: 8,
+        marginRight: 10,
+        marginBottom: 5
+    },
+    sizeText: {
+        fontFamily: 'Tahoma-Regular', 
+        fontSize: 14,
     }
 });
