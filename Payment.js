@@ -21,6 +21,9 @@ import google from './files/google.png';
 import buttonCard from './files/buttonCard.png';
 import apple from './files/apple.png';
 
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import { duration } from './components/CartHolder';
+
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 
 const unzip = (slug) => {
@@ -33,15 +36,15 @@ const unzip = (slug) => {
     if(slug === 'transfer_online') {
         return ['Оплата онлайн', cardOnline, 'transfer_online'];
     }
-    /*
     if(slug === 'online') {
-        return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
-    } */
+        //return Platform.OS === 'ios' ?  ['Apple Pay', apay, 'apple'] : ['Google Pay', gpay, 'google'];
+        return ['Оплата онлайн', cardOnline, 'transfer_online'];
+    }
     return ['', null, ''];
 }
 
 const getButton = (slug, makeOrder) => {
-    if(slug === 'transfer_online') {
+    if(slug === 'transfer_online' || slug === 'online') {
         return (
             <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
                 <View style={styles.buttonContainer}>
@@ -96,7 +99,7 @@ export default function PaymentScreen({navigation}) {
     const [region, setRegion] = useState("");
     const [street, setStreet] = useState("");
     const [streetName, setStreetName] = useState("");
-    const [payType, setPayType] = useState("cash");
+    const [payType, setPayType] = useState("none");
     const [house, setHouse] = useState("");
     const [apartament, setApartament] = useState("");
     const [corpus, setCorpus] = useState("");
@@ -150,7 +153,7 @@ export default function PaymentScreen({navigation}) {
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             if (json["order.id"] !== undefined) {
-                if(payType === 'transfer_online') {
+                if(payType === 'transfer_online' || payType === 'online') {
                 //navigation.navigate('Catalog');
                     navigation.navigate('Pay', {order_id: json["order.id"], summ: summ});
                 } else {
@@ -171,14 +174,19 @@ export default function PaymentScreen({navigation}) {
     }
 
     useEffect(() => {
+        console.log("KKKKKK");
         send('api/cart/getcart', 'POST', {}, (json) => {
             const pays = json.pay_types;
-            if (pays)
+            console.log(pays);
+            if (pays) {
                 if(json.pay_types.some((item) => item === 'online')) {
                     setPayList([...pays, 'transfer_online']);
+                    setPayType([...pays, 'transfer_online'][0]);
                 } else {
                     setPayList(pays);
+                    setPayType(pays[0]);
                 }
+            }
         }, token);
     },[]);
 
@@ -255,10 +263,12 @@ export default function PaymentScreen({navigation}) {
                             <Text style={styles.textButton}>Изменить</Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.methodFull}>
-                        <Image source={src}  style={{width: 25, height: 25}} resizeMode='contain' />
-                        <Text style={styles.methodText}>{title}</Text>
-                    </View>
+                    <ShimmerPlaceholder visible={payType !== 'none'} style={{width: 250, height: 25, borderRadius: 5, marginLeft: 5}} duration={duration}>
+                        <View style={styles.methodFull}>
+                            <Image source={src}  style={{width: 25, height: 25}} resizeMode='contain' />
+                            <Text style={styles.methodText}>{title}</Text>
+                        </View>
+                    </ShimmerPlaceholder>   
                 </View>
                 <View style={[styles.blockConatiner, {borderBottomWidth: 0}]}>
                     <Text style={[styles.header, {marginBottom: 12}]}>Данные получателя</Text>
