@@ -19,7 +19,7 @@ export default function ModalCoupon({item, visible, onClose}) {
                         <Text style={styles.perText}>{item.title}</Text>
                     </View>
                     <TouchableOpacity style={styles.couponButton} onPress={() => onClose(item.code)}>
-                        <Text style={styles.buttonText}>Копировать код</Text>
+                        <Text style={styles.buttonText}>Добавить код в корзину</Text>
                     </TouchableOpacity>
                 </View>
             </View>

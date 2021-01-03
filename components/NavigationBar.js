@@ -57,21 +57,19 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     image: {
-        width: 30,
-        height: 30
+        width: 25,
+        height: 25
     },
     text: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 12,
+        fontSize: 10,
         color: '#989898',
-        marginTop: 5,
         textAlign: 'center'
     },
     ytext: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 12,
+        fontSize: 10,
         color: '#f08741',
-        marginTop: 5,
         textAlign: 'center'
     }
 });
