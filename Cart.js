@@ -46,29 +46,43 @@ export default function CartScreen({navigation}) {
         update(code.code);
     }, []);
 
+    const getData = (callback) => {
+        if(code.code === "") {
+            send('api/cart/getcart', 'POST', {}, (json) => {
+                console.log("CODE IS NONE");
+                callback(json);
+            }, token);
+        } else {
+            send('api/cart/getcart', 'POST', {coupon: code.code}, (json) => {
+                console.log("CODE IS ", code.code);
+                callback(json);
+            }, token);
+        }
+    }  
+
     const addToCart = (item) => {
         addItem(item, () => {
-            send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+            getData((json) => {
                 setOther(json);
                 setAvailable(json.order_available);
-            }, token);
+            });
         });
     }
 
     const removeToCart = (item) => {
         if(!item.activated) {
             removeAll(item, () => {
-                send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                getData((json) => {
                     setOther(json);
                     setAvailable(json.order_available);
-                }, token);
+                });
             });
         } else {
             removeItem(item, () => {
-                send('api/cart/getcart', 'POST', {coupon: code}, (json) => {
+                getData((json) => {
                     setOther(json);
                     setAvailable(json.order_available);
-                }, token);
+                });
             });
         }
     }
@@ -186,16 +200,23 @@ export default function CartScreen({navigation}) {
     }
 
     const orderBlock = !available ? (
-        <View style={{paddingTop: 15}}>
-            <ScalableText style={styles.bad}>{other.message}</ScalableText>
+        <View style={other.message ? {paddingTop: 15} : {}}>
+            {other.message ?
+                <ScalableText style={styles.bad}>{other.message}</ScalableText> : null
+            }
             <TouchableOpacity style={[styles.phoneButton, {backgroundColor: '#bec2c7'}]}>
                 <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
             </TouchableOpacity>
         </View>
     ) : (
-        <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment', {summ: other.summ})}>
-            <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
-        </TouchableOpacity>
+        <View style={other.message ? {paddingTop: 15} : {}}>
+            {other.message ?
+                <ScalableText style={styles.bad}>{other.message}</ScalableText> : null
+            }
+            <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment', {summ: other.summ})}>
+                <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
+            </TouchableOpacity>
+        </View>
     );
 
     return (

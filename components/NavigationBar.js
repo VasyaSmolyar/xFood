@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
         borderTopWidth: 1
     },
     touch: {
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     image: {
         width: 30,
@@ -61,14 +62,14 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 8,
+        fontSize: 12,
         color: '#989898',
         marginTop: 5,
         textAlign: 'center'
     },
     ytext: {
         fontFamily: 'Tahoma-Regular',
-        fontSize: 8,
+        fontSize: 12,
         color: '#f08741',
         marginTop: 5,
         textAlign: 'center'
