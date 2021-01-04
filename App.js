@@ -10,7 +10,7 @@ import { AppLoading } from 'expo';
 import { StatusBar } from 'expo-status-bar';
 import send from './utils/net';
 import { readToken, writeToken } from './utils/token';
-import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer, codeReducer, pushReducer } from './utils/store';
+import { tokenReducer, setToken, setUser, cartReducer, priceReducer, userReducer, pushReducer } from './utils/store';
 import RestaurantScreen from './Catalog';
 import ProductScreen from './Product';
 import CartScreen from './Cart';
@@ -250,7 +250,6 @@ const rootReducer = combineReducers({
 	cart: cartReducer,
 	prices: priceReducer,
 	user: userReducer,
-	code: codeReducer,
 	push: pushReducer
 });
 

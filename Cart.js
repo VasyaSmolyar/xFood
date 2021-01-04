@@ -16,17 +16,20 @@ import ShimmerPlaceholder from 'react-native-shimmer-placeholder'
 
 export default function CartScreen({navigation}) {
     const token = useSelector(state => state.token);
-    const code = useSelector(state => state.code);
     const {cart, addItem, removeItem, removeAll, loadCart} = useCart([], token);
     const [loaded, isLoaded] = useState(false);
     const [addons, setAddons] = useState([]);
     const [wares, setWares] = useState(1);
     const [other, setOther] = useState({});
-    const [cartCode, setCartCode] = useState(code.code);
+    const [cartCode, setCartCode] = useState("");
     const [available, setAvailable] = useState(false);
 
     const update = (scalabletext) => {
-        send('api/cart/getcart', 'POST', {coupon: scalabletext}, (json) => {
+        let coup = {};
+        if(scalabletext) {
+            coup.coupon = scalabletext;
+        }
+        send('api/cart/getcart', 'POST', coup, (json) => {
             const cart = json.items[0].map(item => {
                 return {
                     item: item.product,
@@ -43,18 +46,16 @@ export default function CartScreen({navigation}) {
     }
 
     useEffect(() => {
-        update(code.code);
+        update(cartCode);
     }, []);
 
     const getData = (callback) => {
-        if(code.code === "") {
+        if(cartCode === "") {
             send('api/cart/getcart', 'POST', {}, (json) => {
-                console.log("CODE IS NONE");
                 callback(json);
             }, token);
         } else {
-            send('api/cart/getcart', 'POST', {coupon: code.code}, (json) => {
-                console.log("CODE IS ", code.code);
+            send('api/cart/getcart', 'POST', {coupon: cartCode}, (json) => {
                 callback(json);
             }, token);
         }

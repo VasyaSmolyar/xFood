@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Modal, StyleSheet, Image, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Modal, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import dollar from '../files/dollar.png'; 
 
 export default function ModalCoupon({item, visible, onClose}) {
@@ -19,7 +19,7 @@ export default function ModalCoupon({item, visible, onClose}) {
                         <Text style={styles.perText}>{item.title}</Text>
                     </View>
                     <TouchableOpacity style={styles.couponButton} onPress={() => onClose(item.code)}>
-                        <Text style={styles.buttonText}>Добавить код в корзину</Text>
+                        <Text style={styles.buttonText}>Скопировать код</Text>
                     </TouchableOpacity>
                 </View>
             </View>

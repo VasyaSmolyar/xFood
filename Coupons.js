@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import Constants from 'expo-constants';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Image, Clipboard } from 'react-native';
 import send from './utils/net';
 import ModalCoupon from './components/ModalCoupon';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRoute } from '@react-navigation/native';
-import { setCode } from './utils/store';
 import { StatusBar } from 'expo-status-bar';
 import arrow from './files/blackArrow.png';
 import percent from './files/percent.png';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 function Coupon({item, onPress}) {
     return (
@@ -27,11 +27,9 @@ function Coupon({item, onPress}) {
 
 export default function CouponScreen({navigation}) {
     const token = useSelector(state => state.token);
-    const dispath = useDispatch();
     const route = useRoute();
-    console.log("ROUTE");
-    console.log(route);
     const coupon = (route.params !== undefined) && (route.params.coupon !== undefined) ? route.params.coupon : null;
+    let toast = null;
 
     const [list, setList] = useState([]);
     const [modal, setModal] = useState(coupon !== null);
@@ -50,11 +48,13 @@ export default function CouponScreen({navigation}) {
 
     const load = (text) => {
         setModal(false);
-        dispath(setCode(text));
+        console.log(text);
+        Clipboard.setString(text);
+        toast.show('Скопировано!');
     }
 
     const data = list.map((item) => {
-        return <Coupon item={item} onPress={() => choose(item)} />
+        return <Coupon item={item} onPress={() => choose(item)} key={item.coupon} />
     });
 
     let block = (
@@ -74,6 +74,7 @@ export default function CouponScreen({navigation}) {
 
     return (
         <View style={styles.container}>
+            <Toast ref={(t) => toast = t}/>
             <StatusBar style="dark" />
             <ModalCoupon visible={modal} item={chosen} onClose={load}/>
             <View style={styles.barContainer}>
