@@ -12,6 +12,8 @@ export default function ModalStatus() {
     const token = useSelector(state => state.token);
     const navigation = useNavigation();
 
+    let statusText = null;
+
     const check = () => {
         send('api/order/get', 'POST', {status: 'ALL'}, (json) => {
             const orders = json.filter((order) => {
@@ -19,6 +21,8 @@ export default function ModalStatus() {
             });
             if(orders.length !== 0) {
                 setOrder(orders[0]);
+            } else {
+                setOrder(null);
             }
         }, token);
     }
@@ -33,11 +37,19 @@ export default function ModalStatus() {
         return <View></View>;
     }
 
+    if (order.cooking_t) {
+        statusText = <ScalableText style={styles.timeText}>{'Приготовим в ' + order.cooking_t}</ScalableText>;
+    } else if(order.delivery_time) {
+        statusText = <ScalableText style={styles.timeText}>{'Доставим в ' + order.delivery_time}</ScalableText>;
+    } else {
+        statusText = <ScalableText style={styles.timeText}> </ScalableText>;
+    }
+
     return (
         <View style={styles.backContainer}>
             <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('OrderList', {order: order})}>
                 <ScalableText style={styles.statusText}>{order.status_ru}</ScalableText>
-                <ScalableText style={styles.timeText}>{order.delivery_time !== null ? 'Доставим в ' + order.delivery_time : ' '}</ScalableText>
+                {statusText}
             </TouchableOpacity>
         </View>
     );
