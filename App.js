@@ -133,6 +133,8 @@ function CodeScreen({navigation}) {
 	//const push = useSelector(state => state.push);
 
 	const navigate = json => {
+		console.log("OTVET");
+		console.log(json);
 		const valid = json.isValid === "true";
 		if(!valid) {
 			setWrong(true);
@@ -148,8 +150,8 @@ function CodeScreen({navigation}) {
 						}
 						dispath(setUser(json.first_name, json.phone));
 						//send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
-							navigatioSplashScreen.preventAutoHideAsync();
-							n.dispatch(
+							SplashScreen.preventAutoHideAsync();
+							navigation.dispatch(
 								CommonActions.reset({
 									index: 1,
 									routes: [
@@ -168,6 +170,8 @@ function CodeScreen({navigation}) {
 
 	const press = () => {
 		Keyboard.dismiss();
+		console.log("ZAPROS");
+		console.log({phone: "+7" + phone, code: value});
 		send('api/user/verify', 'POST', {phone: "+7" + phone, code: value}, navigate);
 	};
 
