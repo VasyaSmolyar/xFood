@@ -1,4 +1,4 @@
-const backend = 'http://xfood.store:8000/';
+const backend = 'https://xfood.store/';
 
 export const version = '1.0.0';
 
@@ -44,7 +44,7 @@ function send(url, method, data, callback, token={}) {
     })
     .then((text) => {
         if(text !== null) {
-            console.log("===========SOURCE:=============\n", url , "\n", data , "\n" , text);
+            //console.log("===========SOURCE:=============\n", url , "\n", data , "\n" , text);
             const json = JSON.parse(text);
             //console.log(json);
             callback(json);

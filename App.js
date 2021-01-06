@@ -21,6 +21,7 @@ import OrderListScreen from './OrderList';
 import MainScreen from './Main';
 import AboutScreen from './AboutScreen';
 import ChatScreen from './ChatScreen';
+import SectionScreen from './SectionScreen';
 import Welcome from './Welcome';
 import * as Linking from 'expo-linking';
 import Pay from './components/Pay';
@@ -272,6 +273,7 @@ function AppFunc() {
 					<Stack.Screen name="Code" component={CodeScreen} />
 					<Stack.Screen name="Register" component={RegisterScreen} />
 					<Stack.Screen name="Catalog" component={RestaurantScreen} />
+					<Stack.Screen name="Sections" component={SectionScreen} />
 					<Stack.Screen name="Products" component={ProductScreen} />
 					<Stack.Screen name="Cart" component={CartScreen} />
 					<Stack.Screen name="Payment" component={PaymentScreen} />

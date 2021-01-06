@@ -47,10 +47,20 @@ function Category(props) {
         return "от " + amount + " ₽";
     }
 
-    return (
-        <TouchableOpacity style={styles.category} onPress={() => navigation.navigate('Products', {
+    const onCons = () => {
+        if(cat.sections.length !== 0) {
+            navigation.navigate('Sections', {
+                title: cat.title, id: cat.id, subs: cat.categories, other: cat, secs: cat.sections
+            });
+        } else {
+            navigation.navigate('Products', {
                 title: cat.title, id: cat.id, subs: cat.categories, other: cat
-            })}>
+            });
+        }
+    }
+
+    return (
+        <TouchableOpacity style={styles.category} onPress={onCons}>
             <Image source={{uri: cat.poster}} resizeMode={'cover'} style={styles.catImage} imageStyle={{ borderRadius: 20}} />
             <Text style={styles.catText}>{cat.title}</Text>
             <View style={{flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10}}>

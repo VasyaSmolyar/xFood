@@ -23,6 +23,7 @@ export default function ProductScreen({navigation}) {
     let { subs } = route.params;
     subs = ["Популярное", ...subs];
     const title = route.params.banner !== undefined ? route.params.banner : route.params.title;
+    const section = route.params.section !== undefined ? route.params.section : "";
     const spec = route.params.banner !== undefined;
     const other = route.params.other;
     const [data, setData] = useState([]);
@@ -84,6 +85,9 @@ export default function ProductScreen({navigation}) {
         } else {
             data.restaurant_id = route.params.id;
         }
+        if(section) {
+            data.section = section;
+        }
         send('api/catalog/getbycategory', 'GET', data, (json) => {
             if(json.details !== undefined) {
                 setData([]);
@@ -137,6 +141,10 @@ export default function ProductScreen({navigation}) {
             } else {
                 data.restaurant_id = route.params.id;
             }
+            if(section) {
+                data.section = section;
+            }
+            console.log(data);
             send('api/catalog/getbycategory', 'GET', data, load, token);
         }
         return () => {
