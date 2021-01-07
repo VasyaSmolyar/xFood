@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     },
     itemCompany: {
         fontSize: 18,
-        color: '#f1c40f',
+        color: '#f08843',
     },
     itemText: {
         fontSize: 20,

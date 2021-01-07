@@ -26,7 +26,7 @@ export default function Welcome({navigation}) {
                                 <Text style={styles.labelText}>от 0 ₽</Text>
                             </View> 
                             <View style={styles.label}>
-                                <Text style={styles.labelText}>от 15 мин.</Text>
+                                <Text style={styles.labelText}>от 40 мин.</Text>
                             </View> 
                         </View>
                     </View>
