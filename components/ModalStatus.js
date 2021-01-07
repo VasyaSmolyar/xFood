@@ -38,9 +38,9 @@ export default function ModalStatus() {
     }
 
     if (order.cooking_t) {
-        statusText = <ScalableText style={styles.timeText}>{'Приготовим в ' + order.cooking_t}</ScalableText>;
+        statusText = <ScalableText style={styles.timeText}>{order.islate ? 'Немного опоздаем' : 'Приготовим в ' + order.cooking_t}</ScalableText>;
     } else if(order.delivery_time) {
-        statusText = <ScalableText style={styles.timeText}>{'Доставим в ' + order.delivery_time}</ScalableText>;
+        statusText = <ScalableText style={styles.timeText}>{order.islate ? 'Немного опоздаем' : 'Доставим в ' + order.delivery_time}</ScalableText>;
     } else {
         statusText = <ScalableText style={styles.timeText}> </ScalableText>;
     }
