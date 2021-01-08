@@ -9,6 +9,7 @@ import { readLocate, writeLocate } from './utils/locate';
 import NavigationBar from './components/NavigationBar';
 import ModalStatus from './components/ModalStatus';
 import ModalFind from './components/ModalFind';
+import ModalRest from './components/ModalRest';
 import SearchBar from './components/SearchBar';
 import price from './files/price.png';
 import star from './files/star.png';
@@ -36,7 +37,7 @@ function Place({addr, setPlace}) {
 
 function Category(props) {
     const navigation = useNavigation();
-    const { cat } = props;
+    const { cat, show } = props;
 
     const getTime = (time) => {
         const label = (time % 10) > 4 ? "минут" : "минуты";
@@ -61,6 +62,9 @@ function Category(props) {
 
     return (
         <TouchableOpacity style={styles.category} onPress={onCons}>
+            { !cat.works &&
+                <TouchableOpacity style={styles.banner} onPress={show} />
+            }
             <Image source={{uri: cat.poster}} resizeMode={'cover'} style={styles.catImage} imageStyle={{ borderRadius: 20}} />
             <Text style={styles.catText}>{cat.title}</Text>
             <View style={{flexDirection: 'row', paddingHorizontal: 10, paddingBottom: 10}}>
@@ -91,6 +95,7 @@ export default function RestaurantScreen({navigation}) {
     const [query, setQuery] = useState("");
     const [found, setFound] = useState(false);
     const [city, setCity] = useState("");
+    const [rest, setRest] = useState(null);
 
     const load = (json) => {
         console.log(json);
@@ -159,7 +164,7 @@ export default function RestaurantScreen({navigation}) {
 
         const items = filtered.map((item) => {
             return (
-                <Category cat={item} />
+                <Category cat={item} show={() => setRest(item)} />
             );
         });
 
@@ -180,7 +185,8 @@ export default function RestaurantScreen({navigation}) {
         <View style={styles.container}>
             <StatusBar style="dark" />
             {status}
-            <ModalFind locate={setLocale} visible={found} />            
+            <ModalFind locate={setLocale} visible={found} />
+            <ModalRest rest={rest} onClose={() => setRest(null)} />            
             <SearchBar placeholder="Поиск по ресторанам" value={query} onChangeText={filter} />
             <Place addr={city} setPlace={() => setFound(true)}/>
             <ScrollView style={{width: '90%'}}>
@@ -213,7 +219,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#f2f3f5',
         marginTop: 5,
         marginBottom: 20,
-        paddingBottom: 10
+        paddingBottom: 10,
+        overflow: 'hidden'
     },
     catImage: {
         width: '100%',
@@ -284,5 +291,15 @@ const styles = StyleSheet.create({
         color: '#a1a1a1',
         fontFamily: 'Tahoma-Regular',
         fontSize: 14,
+    },
+    banner: {
+        position: 'absolute',
+        width: '100%',
+        height: '110%',
+        borderRadius: 20,
+        backgroundColor: 'black',
+        opacity: 0.5,
+        zIndex: 4,
+        paddingBottom: 20,
     }
 });
