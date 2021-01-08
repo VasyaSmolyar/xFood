@@ -30,6 +30,8 @@ import * as SplashScreen from 'expo-splash-screen';
 import Notification, { registerForPushNotificationsAsync } from './components/Notifications';
 import { s, vs, ms, mvs } from 'react-native-size-matters';
 import { Dimensions } from 'react-native';
+import * as Analytics from 'expo-firebase-analytics'; 
+
 
 const Stack = createStackNavigator();
 
