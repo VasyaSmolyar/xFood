@@ -22,8 +22,8 @@ function Header(props) {
 }
 
 export default function CabinetScreen({navigation}) {
-    const [name, setName] = useState("Иван Иванов");
-    const [phone, setPhone] = useState("+7(977)517-48-22");
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
     const [icon, setIcon] = useState(man);
     const [modal, setModal] = useState(false);
     const token = useSelector(state => state.token);
