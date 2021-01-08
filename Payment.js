@@ -6,6 +6,7 @@ import Constants from 'expo-constants';
 import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
 import ModalPay from './components/ModalPay';
+import ModalRest from './components/ModalRest';
 import send from './utils/net';
 import { useRoute } from '@react-navigation/native';
 import arrow from './files/blackArrow.png';
@@ -106,6 +107,7 @@ export default function PaymentScreen({navigation}) {
     const [stage, setStage] = useState("");
     const [doorphone, setDoorphone] = useState("");
     const [comment, setComment] = useState("");
+    const [mes, setMes] = useState(null);
 
     const [payModal, setPayModal] = useState(false);
     const [payList, setPayList] = useState([]);
@@ -140,8 +142,25 @@ export default function PaymentScreen({navigation}) {
     const makeOrder = () => {
         let data = coords;
         if(data === null) {
-            return;
+            send('api/geocode/forward', 'GET', {
+                city: region,
+                street: getValue(streetName),
+                house: getValue(house),
+            }, (json) => {
+                if(json[0] && json[1]) {
+                    console.log(json);
+                    makePay({lat: json[0], lon: json[1]});
+                } else {
+                    setMes({message: 'Мы не смогли получить координаты по адресу. Воспользуйтесь указанием на карте'});
+                }
+            }, token);
+        } else {
+            makePay(data);
         }
+        
+    }
+
+    const makePay = (data) => {
         data.pay_type = retSlug;
         data.street = getValue(streetName);
         data.house = getValue(house);
@@ -152,6 +171,7 @@ export default function PaymentScreen({navigation}) {
         data.comment = comment;
         console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
+            console.log(json);
             if (json["order.id"] !== undefined) {
                 if(payType === 'transfer_online' || payType === 'online') {
                 //navigation.navigate('Catalog');
@@ -206,6 +226,7 @@ export default function PaymentScreen({navigation}) {
             <ScrollView style={{backgroundColor: 'white'}}>
                 <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} onExit={() => setModal(false)} />
                 <ModalMap visible={map} close={() => setMap(false)} locate={choiceLocate} />
+                <ModalRest rest={mes} onClose={() => setMes(null)} />
                 <ModalPay visible={payModal} onClose={(val) => onSelect(val)} pay_types={payList} />
                 <View style={styles.blockConatiner}> 
                     <Text style={styles.header}>Доставка</Text>
