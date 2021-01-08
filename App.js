@@ -95,11 +95,16 @@ function AuthScreen({navigation}) {
 
 function PhoneScreen({navigation}) {
 	const [value, setValue] = useState('');
+	const [err, setErr] = useState(false);
+
 	const navigate = json => {
 		navigation.navigate('Code', {phone: value, isExisting: json.isExisting});
 	};
+	const onError = () => {
+		setErr(true);
+	}
 	const press = () => {
-		send('api/user/auth', 'POST', {phone: "+7" + value}, navigate);
+		send('api/user/auth', 'POST', {phone: "+7" + value}, navigate, {}, 0, onError);
 	};
 
 	return (
@@ -114,6 +119,9 @@ function PhoneScreen({navigation}) {
 					<TextInput value={'+7' + value} onChangeText={(scalabletext) => setValue(scalabletext.slice(2))} maxLength = {12} 
 					style={styles.phone} keyboardType='phone-pad' />
 				</View>
+				{err &&
+					<ScalableText style={styles.error}>Слишком много запросов. Попробуйте позже</ScalableText>
+				}
 				<TouchableOpacity style={styles.phoneButton} onPress={() => press()}>
 					<ScalableText style={styles.phoneText}>Отправить код</ScalableText >
 				</TouchableOpacity>

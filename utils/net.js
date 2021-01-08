@@ -2,7 +2,7 @@ const backend = 'https://xfood.store/';
 
 export const version = '1.0.0';
 
-function send(url, method, data, callback, token={}) {
+function send(url, method, data, callback, token={}, count=9999, error=()=>{}) {
     let headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -35,7 +35,11 @@ function send(url, method, data, callback, token={}) {
         }
         */
         if(response.status === 429) {
-            setTimeout(() => send(url, method, data, callback, token), 1000);
+            if(count < 1) {
+                error();
+                return null;
+            }
+            setTimeout(() => send(url, method, data, callback, token, count - 1), 1000);
             console.log("429 Error");
             return null;
         } else {
