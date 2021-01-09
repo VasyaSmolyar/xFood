@@ -7,6 +7,8 @@ import ModalList from './components/ModalList';
 import ModalMap from './components/ModalMap';
 import ModalPay from './components/ModalPay';
 import ModalRest from './components/ModalRest';
+import Address from './components/Address';
+
 import send from './utils/net';
 import { useRoute } from '@react-navigation/native';
 import arrow from './files/blackArrow.png';
@@ -44,7 +46,17 @@ const unzip = (slug) => {
     return ['', null, ''];
 }
 
-const getButton = (slug, makeOrder) => {
+const getButton = (slug, makeOrder, avaliable) => {
+    if(!avaliable) {
+        return (
+            <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15, backgroundColor: '#888'}]} >
+                <View style={styles.buttonContainer}>
+                    <Image source={buttonCard} style={{width: 25, height: 25, marginRight: 10}} resizeMode='contain' />
+                    <Text style={styles.geoText}>Перейти к оплате</Text>
+                </View>
+            </TouchableOpacity>
+        );
+    }
     if(slug === 'transfer_online' || slug === 'online') {
         return (
             <TouchableOpacity style={[styles.geoButton, {paddingVertical: 15}]} onPress={makeOrder}>
@@ -111,12 +123,31 @@ export default function PaymentScreen({navigation}) {
 
     const [payModal, setPayModal] = useState(false);
     const [payList, setPayList] = useState([]);
+    const [avaliable, setAvaliable] = useState(false);
 
     const [title, src, retSlug] = unzip(payType);
 
-    const choiceRegion = (name) => {
-        setRegion(name);
+    const lookUp = (data) => {
+        send('api/area/check', 'POST', data, (json) => {
+            console.log(json);
+            setAvaliable(json === true);
+        }, token);
+    }
+
+    const choiceRegion = (item) => {
+        setRegion(item.city);
+        setStreet(item.title);
+        setCoords({
+            lat: item.lat,
+            lon: item.lon
+        });
+        setHouse(item.house);
+        setStreetName(item.street);
         setModal(false);
+        lookUp({
+            lat: item.lat,
+            lon: item.lon
+        });
         Keyboard.dismiss(); 
     };
 
@@ -132,6 +163,7 @@ export default function PaymentScreen({navigation}) {
             setHouse(loc.house);
             setStreet(loc.street + ', ' + loc.house);
             setStreetName(loc.street);
+            lookUp({lat: geo.latitude, lon: geo.longitude});
         }
     }
 
@@ -140,27 +172,7 @@ export default function PaymentScreen({navigation}) {
     }
 
     const makeOrder = () => {
-        let data = coords;
-        if(data === null) {
-            send('api/geocode/forward', 'GET', {
-                city: region,
-                street: getValue(streetName),
-                house: getValue(house),
-            }, (json) => {
-                if(json[0] && json[1]) {
-                    console.log(json);
-                    makePay({lat: json[0], lon: json[1]});
-                } else {
-                    setMes({message: 'Мы не смогли получить координаты по адресу. Воспользуйтесь указанием на карте'});
-                }
-            }, token);
-        } else {
-            makePay(data);
-        }
-        
-    }
-
-    const makePay = (data) => {
+        let data = coords ? coords : {};
         data.pay_type = retSlug;
         data.street = getValue(streetName);
         data.house = getValue(house);
@@ -169,7 +181,6 @@ export default function PaymentScreen({navigation}) {
         data.stage = getValue(stage);
         data.doorphone = getValue(doorphone);
         data.comment = comment;
-        console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             console.log(json);
             if (json["order.id"] !== undefined) {
@@ -180,7 +191,7 @@ export default function PaymentScreen({navigation}) {
                     navigation.navigate('Catalog');
                 }
             }
-        }, token);
+        }, token);    
     }
 
     const onSelect = (val) => {
@@ -224,17 +235,19 @@ export default function PaymentScreen({navigation}) {
                 </View>
             </View>
             <ScrollView style={{backgroundColor: 'white'}}>
-                <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} onExit={() => setModal(false)} />
+                { /* <ModalList visible={modal} onChoice={(item) => choiceRegion(item.area_name)} onExit={() => setModal(false)} /> */ }
                 <ModalMap visible={map} close={() => setMap(false)} locate={choiceLocate} />
                 <ModalRest rest={mes} onClose={() => setMes(null)} />
                 <ModalPay visible={payModal} onClose={(val) => onSelect(val)} pay_types={payList} />
+                <Address visible={modal} onExit={() => setModal(false)} onSubmit={(item) => choiceRegion(item)} />
                 <View style={styles.blockConatiner}> 
                     <Text style={styles.header}>Доставка</Text>
                     <View style={styles.geoContainer}>
-                        <TouchableOpacity style={[styles.geoWrap, {width: '40%'}]} onPress={() => {setModal(true)}}>
-                            <Text style={styles.inputWrapText}>Город</Text>
-                            <TextInput value={region} style={styles.phone} editable={false} />
+                        <TouchableOpacity style={[styles.geoWrap, {width: '100%'}]} onPress={() => {setModal(true)}}>
+                            <Text style={styles.inputWrapText}>Город, улица, дом</Text>
+                            <TextInput value={street} style={[styles.phone, {color: 'black'}]} editable={false} />
                         </TouchableOpacity>
+                        { /*
                         <View style={[styles.geoWrap, {width: '32%'}]}>
                             <Text style={styles.inputWrapText}>Улица</Text>
                             <TextInput value={streetName} style={styles.phone} onChangeText={setStreetName} />
@@ -243,6 +256,7 @@ export default function PaymentScreen({navigation}) {
                             <Text style={styles.inputWrapText}>Дом</Text>
                             <TextInput value={house} style={styles.phone} onChangeText={setHouse} />
                         </View>
+                        */ }
                     </View>
                     <View style={styles.geoContainer}>
                         <View style={styles.cellWrap}>
@@ -302,7 +316,7 @@ export default function PaymentScreen({navigation}) {
                         <TextInput value={'+7' + phone} onChangeText={(text) => setPhone(text.slice(2))} maxLength = {12} 
                         style={styles.phone} keyboardType='phone-pad' />
                     </View>
-                    {getButton(payType, makeOrder)}
+                    {getButton(payType, makeOrder, avaliable)}
                 </View>
                 <View style={{height: 150}}>
                 </View>
