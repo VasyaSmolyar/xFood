@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Image, TouchableWithoutFeedback} from 'react-native';
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import { StyleSheet, View, TextInput, Image } from 'react-native';
 import Constants from 'expo-constants';
 import search from '../files/lupa.png';
 
-export default function SearchBar({...props}) {
+function SearchBar({...props}) {
+    const inputRef = useRef();
+
+    useImperativeHandle(props.ref, () => ({
+      focus: () => {
+        inputRef.current.focus();
+      }
+    }));
+
     return (
         <View style={styles.barContainer}>
             <View style={styles.inputContainer}>
                 <Image source={search}  style={{width: 25, height: 25}} />
-                <TextInput style={styles.input} {...props} />
+                <TextInput style={styles.input} {...props} ref={inputRef} placeholder='Введите адрес' />
                 { /*
                 <TouchableWithoutFeedback>
                     <Image source={scanner}  style={{width: 30, height: 25}} />
@@ -44,3 +52,7 @@ const styles = StyleSheet.create({
         fontSize: 16
     }
 });
+
+SearchBar = forwardRef(SearchBar);
+
+export default SearchBar;

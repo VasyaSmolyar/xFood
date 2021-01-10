@@ -25,7 +25,7 @@ export default function Pay({navigation}) {
         setImp(null);
         send('api/user/get', 'POST', {}, (json) => {
             Tinkoff.Link({	
-                terminalkey: '1602852170629DEMO',
+                terminalkey: '1602852170629',
                 language: 'ru',
                 amount: summ.toString(),
                 order: order_id.toString(),

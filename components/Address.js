@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Modal, Text, ScrollView, TouchableOpacity, TextInput, Image} from 'react-native';
+import SearchBar from '../components/SearchBar';
 import { useSelector } from 'react-redux';
 import send from '../utils/net';
 
 export default function Address({visible, onExit, onSubmit}) {
     const token = useSelector(state => state.token);
     const [places, setPlaces] = useState([]);
+    const ref = useRef();
     const [q, setQ] = useState("");
 
     const onForward = (text) => {
@@ -14,6 +16,11 @@ export default function Address({visible, onExit, onSubmit}) {
             setPlaces(json);
         }, token);
     };
+
+    const onShow = () => {
+        if(ref.current)
+            ref.current.focus();
+    }
 
     const list = places.map((item) => {
         return (
@@ -25,7 +32,7 @@ export default function Address({visible, onExit, onSubmit}) {
     });
 
     return (
-        <Modal transparent={true} visible={visible}>
+        <Modal transparent={true} visible={visible} onShow={onShow} >
             <View style={styles.modalContainer}>
                 <View style={styles.boxContainer}>
                     <View style={styles.headerContainer}>
@@ -39,7 +46,7 @@ export default function Address({visible, onExit, onSubmit}) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <TextInput style={styles.inputText} value={q} onChangeText={(text) => onForward(text)} />
+                    <SearchBar value={q} onChangeText={(text) => onForward(text)} autoFocus={true} ref={ref} />
                     <ScrollView>
                         {list}
                     </ScrollView>

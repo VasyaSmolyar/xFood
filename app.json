@@ -29,7 +29,9 @@
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "config": {
-          "googleMaps": { "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM" }   
+        "googleMaps": {
+          "apiKey": "AIzaSyDNR5HEZ3RLps-CzADhhXq61drmPBsRYGM"
+        }
       }
     },
     "scheme": "xfood",
@@ -38,6 +40,7 @@
       "androidMode": "default",
       "androidCollapsedTitle": "xFood",
       "iosDisplayInForeground": true
-    }
+    },
+    "description": ""
   }
 }
