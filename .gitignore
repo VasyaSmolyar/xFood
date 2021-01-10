@@ -2,11 +2,14 @@ node_modules/**/*
 .expo/*
 npm-debug.*
 *.jks
+*.cerf
 *.p8
 *.p12
 *.key
 *.mobileprovision
 *.orig.*
+pepk.jar
+x.zip
 web-build/
 web-report/
 

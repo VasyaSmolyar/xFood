@@ -101,6 +101,7 @@ export default function PaymentScreen({navigation}) {
     const token = useSelector(state => state.token);
     const route = useRoute();
     const summ = route.params.summ;
+    const coupon = route.params.coupon;
 
     const [login, setLogin] = useState(user.user);
     const [phone, setPhone] = useState(user.phone.slice(2));
@@ -173,6 +174,8 @@ export default function PaymentScreen({navigation}) {
 
     const makeOrder = () => {
         let data = coords ? coords : {};
+        if(coupon) 
+            data.coupon = coupon;
         data.pay_type = retSlug;
         data.street = getValue(streetName);
         data.house = getValue(house);

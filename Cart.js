@@ -214,7 +214,7 @@ export default function CartScreen({navigation}) {
             {other.message ?
                 <ScalableText style={styles.bad}>{other.message}</ScalableText> : null
             }
-            <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment', {summ: other.summ})}>
+            <TouchableOpacity style={styles.phoneButton} onPress={() => navigation.navigate('Payment', {summ: other.summ, coupon: cartCode})}>
                 <ScalableText style={styles.phoneText}>Оформить заказ</ScalableText>
             </TouchableOpacity>
         </View>
