@@ -25,11 +25,10 @@ export default function RegisterScreen({navigation}) {
 
 	const navigate = (json) => {
         if(json.details) {
-            send('api/user/create', 'POST', data, navigate);
-        }
-        dispath(setToken(json.login, json.times, json.token));
-        dispath(setUser(name, phone));
-        //send('api/notifications/setpushtoken', 'POST', {token: push.token}, () => {
+            //send('api/user/create', 'POST', data, navigate);
+        } else {
+            dispath(setToken(json.login, json.times, json.token));
+            dispath(setUser(name, phone));
             navigation.dispatch(
                 CommonActions.reset({
                     index: 1,
@@ -38,6 +37,7 @@ export default function RegisterScreen({navigation}) {
                     ],
                 })
             );
+        }
         //});
 	};
 

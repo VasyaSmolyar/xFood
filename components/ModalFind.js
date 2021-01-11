@@ -47,7 +47,7 @@ export default function ModalList({locate, visible}) {
         })().then((res) => {
             setLocation(res);
             const addr = {lat: reg.latitude, lon: reg.longitude};
-           
+            serialize(addr);
         });
     }
 
@@ -59,7 +59,7 @@ export default function ModalList({locate, visible}) {
         }
     }
 
-    const serialize = () => {
+    const serialize = (data) => {
         /*
         if(errorMsg !== null) {
             return <Text style={{color: 'red'}}>{errorMsg}</Text>;
@@ -71,9 +71,10 @@ export default function ModalList({locate, visible}) {
         return loc.city;
         {lat: reg.latitude, lon: reg.longitude}
         */
-        send('api/area/get', 'POST', find, (res) => {
-            if(res[0] && res[0].area_name)
-                setName(res[0].area_name);
+        send('api/area/get', 'POST', data, (res) => {
+            console.log(res);
+            if(res.area_name)
+                setName(res.area_name);
         }, token);
 
     }
@@ -109,12 +110,10 @@ export default function ModalList({locate, visible}) {
                     latitudeDelta: 0.0022, 
                     longitudeDelta: 0.0021 
                 });
+
+                serialize({lat: location.coords.latitude, lon: location.coords.longitude});
             }
         })();
-    }, []);
-
-    useEffect(() => {
-        serialize();
     }, []);
 
     const setLocale = () => {
