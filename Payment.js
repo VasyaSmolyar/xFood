@@ -184,6 +184,7 @@ export default function PaymentScreen({navigation}) {
         data.stage = getValue(stage);
         data.doorphone = getValue(doorphone);
         data.comment = comment;
+        console.log(data);
         send('api/order/createorder', 'POST', data, (json) => {
             console.log(json);
             if (json["order.id"] !== undefined) {
