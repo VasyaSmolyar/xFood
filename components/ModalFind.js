@@ -33,6 +33,7 @@ export default function ModalList({locate, visible}) {
     const [avaiable, setAvailable] = useState(false);
     const token = useSelector(state => state.token);
     const [start, setStart] = useState(null);
+    const [stat, setStatus] = useState(false);
 
     const inProgress = (reg) => {
         setBlock(false);
@@ -82,6 +83,7 @@ export default function ModalList({locate, visible}) {
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestPermissionsAsync();
+            setStatus(true);
             if (status !== 'granted') {
                 setErrorMsg('Permission to access location was denied');
             } else {
@@ -136,7 +138,7 @@ export default function ModalList({locate, visible}) {
     }
 
     return (
-        <Modal visible={visible}>
+        <Modal visible={visible && stat}>
             <View style={styles.container}>
                 <View style={{flex: 3}}>
                     <MapView style={{flex: 1}} region={region} 

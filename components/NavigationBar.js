@@ -47,14 +47,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         backgroundColor: 'white',
         padding: 10,
-        justifyContent: 'space-around',
         alignItems: 'center',
         borderTopColor: '#ede9e9',
         borderTopWidth: 1
     },
     touch: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '25%'
     },
     image: {
         width: 25,

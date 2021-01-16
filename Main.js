@@ -158,8 +158,10 @@ export default function MainScreen({navigation}) {
             <StatusBar style="dark" />
             <ModalItem item={chosen} visible={visible} onClose={() => {setVisible(false)}} addInCart={addToCart} setItem={setChosen} />
             <ModalCart item={chosen} visible={reset} onClose={() => {setReset(false)}} addInCart={onReset} />
-            <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={filter} /* onSubmitEditing={seacrhMethod} */ />
-            <ScrollView style={{width: '100%'}}>
+            { /*
+            <SearchBar placeholder="Поиск на xFood" value={query} onChangeText={filter} onSubmitEditing={seacrhMethod} />
+            */ }
+            <ScrollView style={{width: '100%', paddingTop: 10}}>
                 {isLoaded ? <Carousel style="stats" itemsPerInterval={1} items={banner} /> : (
                     <View style={{alignItems: 'center'}}>
                         <ShimmerPlaceholder duration={duration} width={windowWidth * 0.95} height={200} shimmerStyle={{borderRadius: 20, marginBottom: 30}}></ShimmerPlaceholder>

@@ -46,7 +46,7 @@ export default function Address({visible, onExit, onSubmit}) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <SearchBar value={q} onChangeText={(text) => onForward(text)} autoFocus={true} ref={ref} />
+                    <SearchBar value={q} onChangeText={(text) => onForward(text)} autoFocus={true} ref={ref} placeholder='Введите адрес' />
                     <ScrollView>
                         {list}
                     </ScrollView>

@@ -7,7 +7,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -25,11 +25,13 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.xgen.xfood",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "1) Для получения ресторанов поблизости\n2) Для указания адреса доставки"
-      }
+        "NSLocationWhenInUseUsageDescription": "Для получения ресторанов поблизости\n Для указания адреса доставки"
+      },
+      "buildNumber": "1.0.2"
     },
     "android": {
       "package": "com.xgen.xfood",
+      "versionCode": 3,
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
       "config": {
